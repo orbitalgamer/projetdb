@@ -2,8 +2,8 @@
 <?php 
 
 require_once "bdd.php";
-include_once "course.php";
-include_once "personne.php";
+include_once "classes/course.php";
+include_once "classes/personne.php";
 
 
     /**

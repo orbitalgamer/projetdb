@@ -2,7 +2,54 @@
 <html lang="fr">
     <?php
     session_start();
-	
+
+    include_once 'classes/personne.php'; //ajoute personne
+
+    if(!empty($_POST)){ //si déjà recu message
+
+        $pers = new Personne();
+        if(!empty($_POST['login-submit'])){ // pour quand
+            if(!empty($_POST['Email']) && !empty($_POST['Mdp'])) {
+                if (empty($pers->connection($_POST['Email'], $_POST['Mdp']) )){
+                    //header('location: index.php'); //renvoie vers header si tout a bien été
+                }
+                else{
+                    header('location: index.php?error=1');
+                }
+            }
+            else{
+                header('location: index.php?error=1');
+            }
+        }
+        if(!empty($_POST['register-submit'])){
+            if(!empty($_POST['Nom']) && !empty($_POST['Prenom']) && !empty($_POST['Email']) && !empty($_POST['Mdp']) && !empty($_POST['MdpConfirm']) && !empty($_POST['Telephone'])) { //vérifier que on a bien mis toutes les infos)
+                $pers->Nom = strtolower($_POST['Nom']);
+                $pers->Prenom = strtolower($_POST['Prenom']);
+                $pers->Email = strtolower($_POST['Email']);
+                $pers->NumTel = $_POST['Telephone'];
+                $pers->Mdp = $_POST['Mdp'];
+                $retour = $pers->creation($_POST['MdpConfirm']);
+                if(!empty($retour['error'])){
+                    switch ($retour['error']){
+                        case 'existe deja':
+                            header("location: index.php?erreur=3");
+                            break;
+                        case 'mdp different':
+                            header("location: index.php?erreur=2");
+                            break;
+                    }
+                }
+                else{
+                    header('location: index.php');
+                }
+            }
+            else{
+                header("location: index.php?erreur=1");
+            }
+        }
+    }
+
+
     ?>
   <head>
     <meta charset="utf-8">
@@ -200,7 +247,7 @@ $('#register-form-link').click(function(e) {
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-lg-12">
-								<form id="login-form" method="post" action="connection/LoginEngine.php" role="form" 
+								<form id="login-form" method="post" action="" role="form"
 								<?php if(!isset($_GET['erreur'])){
 									echo "style='display: block;'";
 								}
@@ -228,7 +275,7 @@ $('#register-form-link').click(function(e) {
 										</div>
 									</div>
 								</form>
-								<form id="register-form" action="connection/RegisterEngine.php" method="post" role="form" 
+								<form id="register-form" action="" method="post" role="form"
 								<?php if(isset($_GET['erreur'])){
 									echo "style='display: block;'";
 								}else{
