@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : ven. 10 nov. 2023 à 15:17
+-- Généré le : dim. 26 nov. 2023 à 22:52
 -- Version du serveur : 5.7.36
 -- Version de PHP : 7.4.26
 
@@ -38,7 +38,16 @@ CREATE TABLE IF NOT EXISTS `adresse` (
   `Vile` varchar(50) NOT NULL,
   PRIMARY KEY (`Id`),
   KEY `FK_Ville` (`Vile`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `adresse`
+--
+
+INSERT INTO `adresse` (`Id`, `Numero`, `Rue`, `NomAdresse`, `Vile`) VALUES
+(1, 40, 'debut', NULL, 'mons'),
+(2, 60, 'fin', NULL, 'chaleroi'),
+(3, 20, 'accident', NULL, 'mont de l\'enlcus');
 
 -- --------------------------------------------------------
 
@@ -66,7 +75,6 @@ DROP TABLE IF EXISTS `course`;
 CREATE TABLE IF NOT EXISTS `course` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `DateReservation` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `Paye` tinyint(1) NOT NULL DEFAULT '0',
   `DistanceParcourue` float NOT NULL,
   `IdClient` int(11) NOT NULL,
   `IdChauffeur` int(11) NOT NULL,
@@ -81,7 +89,16 @@ CREATE TABLE IF NOT EXISTS `course` (
   KEY `FK_IdTarification` (`IdTarification`),
   KEY `FK_IdChauffeur` (`IdChauffeur`),
   KEY `FK_IdClient` (`IdClient`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `course`
+--
+
+INSERT INTO `course` (`Id`, `DateReservation`, `DistanceParcourue`, `IdClient`, `IdChauffeur`, `IdAdresseDepart`, `IdAdresseFin`, `IdTarification`, `IdMajoration`) VALUES
+(1, '2023-11-26 23:26:04', 40, 7, 6, 1, 2, 7, 1),
+(2, '2023-11-26 23:42:02', 60, 8, 6, 2, 3, 3, 1),
+(3, '2023-11-26 23:43:56', 90, 7, 6, 1, 2, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -94,7 +111,7 @@ CREATE TABLE IF NOT EXISTS `etat` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `Nom` varchar(50) NOT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `etat`
@@ -106,7 +123,8 @@ INSERT INTO `etat` (`Id`, `Nom`) VALUES
 (3, 'En cours'),
 (4, 'Annulé par client'),
 (5, 'Annulé par chauffeur'),
-(6, 'Terminé');
+(6, 'Terminé'),
+(7, 'Paye');
 
 -- --------------------------------------------------------
 
@@ -138,6 +156,32 @@ CREATE TABLE IF NOT EXISTS `localite` (
   PRIMARY KEY (`Ville`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Déchargement des données de la table `localite`
+--
+
+INSERT INTO `localite` (`Ville`, `CodePostal`) VALUES
+('chaleroi', 6000),
+('mons', 7000),
+('mont de l\'enlcus', 7750);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `maintenance`
+--
+
+DROP TABLE IF EXISTS `maintenance`;
+CREATE TABLE IF NOT EXISTS `maintenance` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `Description` varchar(512) NOT NULL,
+  `DateDebut` date NOT NULL,
+  `DateFin` date NOT NULL,
+  `IdProbleme` int(11) NOT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `FK_IdProblem` (`IdProbleme`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 -- --------------------------------------------------------
 
 --
@@ -155,14 +199,16 @@ CREATE TABLE IF NOT EXISTS `personne` (
   `IdStatus` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`Id`),
   KEY `FK_IdStatus` (`IdStatus`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `personne`
 --
 
 INSERT INTO `personne` (`Id`, `Nom`, `Prenom`, `Email`, `Mdp`, `NumeroDeTelephone`, `IdStatus`) VALUES
-(6, 'test', 'test', 'test.test@test.test', '$2y$10$lHHfwPjCkspNTqID9LGfWuT5Tt8DCpDuFOdBdnveSFOZ0MW48NzSy', 479739695, 1);
+(6, 'test', 'test', 'test.test@test.test', '$2y$10$lHHfwPjCkspNTqID9LGfWuT5Tt8DCpDuFOdBdnveSFOZ0MW48NzSy', 479739695, 1),
+(7, 'aa', 'aa', 'aa@aa.be', '$2y$10$.fvEITUNJfBwphA1.Oc/2O7ZNAdOAaByxUKaew1BLV3PVLPPge0aa', 0, 1),
+(8, 'admin', 'admin2', 'admin@admin.be', '$2y$10$UqCLTVPPRuhWdxBvoKiCAeEcCpM/Cw3Ir81eaQnFyi.94DNhzMFjq', 0, 3);
 
 -- --------------------------------------------------------
 
@@ -213,7 +259,16 @@ CREATE TABLE IF NOT EXISTS `probleme` (
   KEY `FK_IdCourseProbleme` (`IdCourse`),
   KEY `FK_IdTypeProbleme` (`IdTypeProbleme`),
   KEY `FK_IdAdresseProblem` (`IdAdresse`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `probleme`
+--
+
+INSERT INTO `probleme` (`Id`, `Description`, `Regle`, `Rouler`, `IdCourse`, `IdAdresse`, `IdTypeProbleme`) VALUES
+(1, 'crash avec camion', 1, 0, 1, 3, 5),
+(2, 'autre accident', 0, 1, 1, 3, 4),
+(3, 'accident', 0, 1, 2, 3, 4);
 
 -- --------------------------------------------------------
 
@@ -229,7 +284,44 @@ CREATE TABLE IF NOT EXISTS `tarification` (
   `PlaqueVehicule` varchar(12) NOT NULL,
   PRIMARY KEY (`Id`),
   KEY `FK_Vehicule` (`PlaqueVehicule`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `tarification`
+--
+
+INSERT INTO `tarification` (`Id`, `PrixAuKilometre`, `Date`, `PlaqueVehicule`) VALUES
+(1, 1, '2023-11-26 21:39:14', '2avh069'),
+(2, 2, '2023-11-26 21:44:59', '2avh069'),
+(3, 1.5, '2023-11-26 22:13:11', '2avh069'),
+(4, 1, '2023-11-26 22:53:25', '1ahe302'),
+(5, 1, '2023-11-26 22:53:34', '1csx987'),
+(6, 42, '2023-11-26 23:04:44', '1ahe302'),
+(7, 3, '2023-11-26 23:06:39', '1ahe302');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `typecarburant`
+--
+
+DROP TABLE IF EXISTS `typecarburant`;
+CREATE TABLE IF NOT EXISTS `typecarburant` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `Nom` varchar(50) NOT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `typecarburant`
+--
+
+INSERT INTO `typecarburant` (`Id`, `Nom`) VALUES
+(1, 'Diesel'),
+(2, 'Essence'),
+(3, 'Diesel Hybride'),
+(4, 'Essence Hybrirde'),
+(5, 'Electrique');
 
 -- --------------------------------------------------------
 
@@ -240,10 +332,17 @@ CREATE TABLE IF NOT EXISTS `tarification` (
 DROP TABLE IF EXISTS `typemajoration`;
 CREATE TABLE IF NOT EXISTS `typemajoration` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
-  `Nom` int(11) NOT NULL,
+  `Nom` varchar(20) NOT NULL,
   `Coefficient` float NOT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `typemajoration`
+--
+
+INSERT INTO `typemajoration` (`Id`, `Nom`, `Coefficient`) VALUES
+(1, 'normal', 1);
 
 -- --------------------------------------------------------
 
@@ -304,13 +403,24 @@ CREATE TABLE IF NOT EXISTS `vehicule` (
   `Marque` varchar(40) NOT NULL,
   `Modele` varchar(60) NOT NULL,
   `Couleur` varchar(30) NOT NULL,
-  `Annee` date NOT NULL,
-  `Carburant` varchar(30) NOT NULL,
+  `Annee` int(11) NOT NULL,
+  `Carburant` int(30) NOT NULL,
   `Kilometrage` int(11) NOT NULL,
   `PlaceDisponible` int(11) NOT NULL,
-  `PMR` tinyint(1) NOT NULL,
-  PRIMARY KEY (`PlaqueVoiture`)
+  `PMR` varchar(3) NOT NULL,
+  PRIMARY KEY (`PlaqueVoiture`),
+  KEY `FK_IdCarburan` (`Carburant`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `vehicule`
+--
+
+INSERT INTO `vehicule` (`PlaqueVoiture`, `Marque`, `Modele`, `Couleur`, `Annee`, `Carburant`, `Kilometrage`, `PlaceDisponible`, `PMR`) VALUES
+('1ahe302', 'skoda', 'fabia', 'beige', 2011, 1, 200000, 4, '0'),
+('1csx987', 'volkwagen', 'polo 6', 'grise', 2012, 1, 130000, 4, '0'),
+('1yme000', 'volkwagen', 'golf', 'noir', 2019, 1, 30000, 4, '0'),
+('2avh069', 'peugeot', '208', 'rouge', 2017, 5, 113000, 4, 'PMR');
 
 --
 -- Contraintes pour les tables déchargées
@@ -347,6 +457,12 @@ ALTER TABLE `liencourseetat`
   ADD CONSTRAINT `FK_IdEtat` FOREIGN KEY (`IdEtat`) REFERENCES `etat` (`Id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 --
+-- Contraintes pour la table `maintenance`
+--
+ALTER TABLE `maintenance`
+  ADD CONSTRAINT `FK_IdProblem` FOREIGN KEY (`IdProbleme`) REFERENCES `probleme` (`Id`);
+
+--
 -- Contraintes pour la table `personne`
 --
 ALTER TABLE `personne`
@@ -377,6 +493,12 @@ ALTER TABLE `probleme`
 --
 ALTER TABLE `tarification`
   ADD CONSTRAINT `FK_Vehicule` FOREIGN KEY (`PlaqueVehicule`) REFERENCES `vehicule` (`PlaqueVoiture`) ON UPDATE CASCADE;
+
+--
+-- Contraintes pour la table `vehicule`
+--
+ALTER TABLE `vehicule`
+  ADD CONSTRAINT `FK_IdCarburan` FOREIGN KEY (`Carburant`) REFERENCES `typecarburant` (`Id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

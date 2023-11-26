@@ -2,16 +2,37 @@
 <html lang="fr">
     <?php
     session_start();
+    if(!empty($_SESSION['Role'])){
+        echo 'ici';
+        switch ($_SESSION['Role']){
+            case 'Admin':
+
+                header('location:Admin/dashboard.php');
+                break;
+            case 'Chauffeur':
+                header(''); //mettre lien vesr chauffeur
+                break;
+            case 'Client':
+                header(''); //mettre lien vesr client
+                break;
+            default:
+                echo 'deconnection';
+                //header('location:deconnection.php'); //mettre lien vesr chauffeur
+                break;
+
+        }
+    }
 
     include_once 'classes/personne.php'; //ajoute personne
 
-    if(!empty($_POST)){ //si déjà recu message
+    if(!empty($_POST)){ //verifie que a recu message
 
-        $pers = new Personne();
+        $pers = new Personne(); //crée objet personne
         if(!empty($_POST['login-submit'])){ // pour quand
             if(!empty($_POST['Email']) && !empty($_POST['Mdp'])) {
-                if (empty($pers->connection($_POST['Email'], $_POST['Mdp']) )){
-                    //header('location: index.php'); //renvoie vers header si tout a bien été
+                if ($pers->connection($_POST['Email'], $_POST['Mdp']) == array('succes' => '1')){
+                    header('location: index.php'); //renvoie vers header si tout a bien été
+                    echo 'ok';
                 }
                 else{
                     header('location: index.php?error=1');
@@ -238,7 +259,7 @@ $('#register-form-link').click(function(e) {
 								<a href="#" 
 								<?php if(isset($_GET['erreur'])){
 									echo "class='active'";
-								} ?> 
+								} ?>
 								id="register-form-link">S'enregistrer</a>
 							</div>
 						</div>

@@ -79,20 +79,26 @@ class Personne  {
      * @return void
      */
    public function connection($email, $mdp){
-
-       $req=$this->Bdd->prepare("SELECT personne.Id, personne.Mdp, typepersonne.NomTitre as 'titre' FROM personne 
+       $req=$this->Bdd->prepare("SELECT personne.Id, personne.Mdp, personne.Nom, personne.Prenom, typepersonne.NomTitre as 'titre' FROM personne 
                                 JOIN typepersonne on typepersonne.Id = personne.IdStatus 
                                 WHERE personne.Email = :email"); // va cherche status et mdp hashé par rapport à son email
         $req->bindParam(':email', $email);
         $req->execute();
         if($rep=$req->fetch()){ //prend résultat s'il y a
-            if(password_verify($mdp, $rep['Mdp'])) { //vérifie mots de passe
-                $_SESSION['Id'] = $rep['Id']; //si bon mets en sessions pour plus tard
-                $_SESSION['Role'] = $rep['titre']; //stock titre
-                return array('succes'=>'1'); //renvoie que tout a été
+            if($rep['titre'] != 'Banni') {
+                if (password_verify($mdp, $rep['Mdp'])) { //vérifie mots de passe
+                    $_SESSION['Id'] = $rep['Id']; //si bon mets en sessions pour plus tard
+                    $_SESSION['Role'] = $rep['titre']; //stock titre
+                    $_SESSION['Nom']=$rep['Nom'];
+                    $_SESSION['Prenom']=$rep['Prenom'];
+
+                    return array('succes' => '1'); //renvoie que tout a été
+                } else {
+                    return array('error' => 'erreur'); //renvoie erreur
+                }
             }
             else{
-                return array('error'=>'erreur'); //renvoie erreur
+                return array('error'=>'Banni');
             }
         }
         else{
