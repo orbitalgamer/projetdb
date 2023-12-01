@@ -21,7 +21,7 @@ function Afficher($liste){
             <td>' . $auto["NomCarburant"] . '</td>
             <td>' . $auto["Kilometrage"] . '</td>
             <td>' . $auto["PMR"] . '</td>
-            <td>' . $auto["PrixAuKilometre"] . '</td>
+            <td>' . $auto["PrixDernier"] . '</td>
             <th><button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`modificationVehicule.php?Id=' . $auto["PlaqueVoiture"] . '`">voir plus</button></th> </tr>';
         echo $ligne;
     }
