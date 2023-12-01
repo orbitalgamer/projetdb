@@ -36,12 +36,25 @@ public function __construct(){
     
     public function Getcourseold($Id){
         $req = $this->Bdd->prepare("
-    SELECT DISTINCT course.*, personne.Nom, personne.Prenom
-    FROM  course, personne
-    WHERE course.IdChauffeur =  :Id 
-    AND personne.Id = course.IdClient
-    AND course.DateReservation < CURRENT_DATE
-    
+        SELECT DISTINCT
+        course.*,
+        personne.Nom,
+        personne.Prenom,
+        adresse_depart.Vile AS ville_depart,
+        adresse_depart.Rue AS rue_depart,
+        adresse_depart.Numero AS num_depart,
+        adresse_fin.Vile AS ville_fin,
+        adresse_fin.Rue AS rue_fin,
+        adresse_fin.Numero AS num_fin
+    FROM
+        course
+    JOIN personne ON personne.Id = course.IdClient
+    JOIN adresse AS adresse_depart ON adresse_depart.Id = course.IdAdresseDepart
+    JOIN adresse AS adresse_fin ON adresse_fin.Id = course.IdAdresseFin
+    WHERE
+        course.IdChauffeur = :Id
+        AND course.DateReservation < CURRENT_DATE;
+
     "); 
     $req->bindParam(':Id', $Id);
     $req->execute();
@@ -49,35 +62,53 @@ public function __construct(){
     return $resultats;
     
 }
-    public function Getcoursefutur($Id){
-        $req = $this->Bdd->prepare("
-    SELECT DISTINCT course.*, personne.Nom, personne.Prenom
-    FROM  course, personne
-    WHERE course.IdChauffeur =  :Id 
-    AND personne.Id = course.IdClient
-    AND course.DateReservation > CURRENT_DATE
+public function Getcoursefutur($Id){
+    $req = $this->Bdd->prepare("
+        SELECT DISTINCT
+            course.*,
+            personne.Nom,
+            personne.Prenom,
+            CONCAT(adresse_depart.vile, ', ', adresse_depart.rue, ' ', adresse_depart.Numero) AS adresse_depart,
+            CONCAT(adresse_fin.vile, ', ', adresse_fin.rue, ' ', adresse_fin.Numero) AS adresse_fin
+        FROM
+            course
+        JOIN personne ON personne.Id = course.IdClient
+        JOIN adresse AS adresse_depart ON adresse_depart.Id = course.IdAdresseDepart
+        JOIN adresse AS adresse_fin ON adresse_fin.Id = course.IdAdresseFin
+        WHERE
+            course.IdChauffeur = :Id
+            AND course.DateReservation > CURRENT_DATE;
+    ");
 
-    "); 
+
     $req->bindParam(':Id', $Id);
     $req->execute();
     $resultats = $req->fetchAll(PDO::FETCH_ASSOC);
     return $resultats;
 
 }
-    public function Getavis($IdChauffeur, $Idcourse){
-     
+    public function Getavis($Idchauffeur,$Idcourse){
+        
+
         $req = $this->Bdd->prepare("
-        SELECT DISTINCT course.*, personne.Nom, personne.Prenom, avis.note, avis.description
-        FROM course, personne, avis
-        WHERE course.IdChauffeur = :Id 
-        AND personne.Id = course.IdClient
-        AND avis.IdCourse = course.Id_course
-        AND course.Id = :Id_course
-");
-    $req->bindParam(':Id', $IdChauffeur);
+        SELECT DISTINCT
+    course.*,
+    personne.Nom,
+    personne.Prenom,
+    avis.note,
+    avis.description
+FROM
+    course
+JOIN personne ON personne.Id = course.IdClient
+JOIN avis ON avis.IdCourse = course.Id
+WHERE
+    course.IdChauffeur = :Id
+    AND course.Id = :Id_course;");
+    $req->bindParam(':Id', $Idchauffeur);
     $req->bindParam(':Id_course', $Idcourse);
     $req->execute();
     $resultats = $req->fetchAll(PDO::FETCH_ASSOC);
+
     return $resultats;
 
 }

@@ -2,7 +2,7 @@
 include_once 'navbar.php';
 
 include_once '../classes/chauffeur.php';
-include_once '../classes/course.php';
+
 
 
 $chauffeur = new chauffeur();
@@ -21,8 +21,9 @@ function Afficher($liste){
             <td>' . $auto["DateReservation"] . '</td>
             <td>' . $auto["Nom"] . '</td>
             <td>' . $auto["Prenom"] . '</td>
-            <td>' . $auto["IdAdresseDepart"] . '</td>
-            <td>' . $auto["IdAdresseFin"] . '</td>
+            <td>' . $auto["adresse_depart"] . '</td>
+            <td>' . $auto["adresse_fin"] . '</td>
+            
      </tr>';
         echo $ligne;
     }
@@ -51,8 +52,8 @@ function Afficher($liste){
             <th scope="col h3">DateReservation</th>
             <th scope="col h3">Nom</th>
             <th scope="col h3">Prenom</th>
-            <th scope="col h3">IdAdresseDepart</th>
-            <th scope="col h3">IdAddresseFin</th>
+            <th scope="col h3">Adresse Depart</th>
+            <th scope="col h3">Adresse Fin</th>
             <th scope="col-md-1 h3"></th>
 
         </tr>

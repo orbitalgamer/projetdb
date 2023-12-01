@@ -24,8 +24,16 @@ function Afficher($liste){
             <td>' . $auto["Prenom"] . '</td>
             <td>' . $auto["IdAdresseDepart"] . '</td>
             <td>' . $auto["IdAdresseFin"] . '</td>
+            <td>' . $auto["description"] . '</td>
+            <td>';
+            for ($i = 0; $i < $auto["note"]; $i++) {
+                $ligne .= '★'; 
+            }
+            '</td>
         </tr>';
+       
         echo $ligne;
+        
     }
 }
 ?>
@@ -51,6 +59,8 @@ function Afficher($liste){
             <th scope="col h3">Prenom</th>
             <th scope="col h3">IdAdresseDepart</th>
             <th scope="col h3">IdAdresseFin</th>
+            <th scope="col h3">Descritpion</th>
+            <th scope="col h3">Note</th>
             <th scope="col-md-1 h3"></th>
 
         </tr>
@@ -60,7 +70,8 @@ function Afficher($liste){
             <?php
             
             if(empty($_GET['search']) && empty($_GET['maitenance'])) {
-                $all = $chauffeur->Getavis($_SESSION['Id'], $Id);
+                $IdCourse = $_GET['Id'];
+                $all = $chauffeur->Getavis($_SESSION['Id'], $IdCourse);
                 Afficher($all);
             }
             else{

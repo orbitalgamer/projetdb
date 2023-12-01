@@ -2,7 +2,7 @@
 include_once 'navbar.php';
 
 include_once '../classes/chauffeur.php';
-include_once '../classes/course.php';
+
 
 
 $chauffeur = new chauffeur();
@@ -18,11 +18,17 @@ function Afficher($liste){
             $ligne = '<tr>';
         }
         $ligne .= ' <th>' . $auto["Id"] . '</th>
-            <td>' . $auto["DateReservation"] . '</td>
-            <td>' . $auto["Nom"] . '</td>
-            <td>' . $auto["Prenom"] . '</td>
-            <td>' . $auto["IdAdresseDepart"] . '</td>
-            <td>' . $auto["IdAdresseFin"] . '</td>
+        <td>' . $auto["DateReservation"] . '</td>
+        <td>' . $auto["Nom"] . '</td>
+        <td>' . $auto["Prenom"] . '</td>
+        <td>' . $auto["ville_depart"] . '</td>
+        <td>' . $auto["rue_depart"] . '</td>
+        <td>' . $auto["num_depart"] . '</td>
+
+        <td>' . $auto["ville_fin"] . '</td>
+        <td>' . $auto["rue_fin"] . '</td>
+        <td>' . $auto["num_fin"] . '</td>
+ 
             <th><button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`avis.php?Id=' . $auto["Id"] . '`">afficher avis</button></th> </tr>';
         echo $ligne;
     }
@@ -48,8 +54,12 @@ function Afficher($liste){
             <th scope="col h3">DateReservation</th>
             <th scope="col h3">Nom</th>
             <th scope="col h3">Prenom</th>
-            <th scope="col h3">IdAdresseDepart</th>
-            <th scope="col h3">IdAdresseFin</th>
+            <th scope="col h3">Ville depart</th>
+            <th scope="col h3">Rue depart</th>
+            <th scope="col h3">Num depart</th>
+            <th scope="col h3">Ville Fin</th>
+            <th scope="col h3">Rue Fin</th>
+            <th scope="col h3">Num Fin</th>
             <th scope="col-md-1 h3"></th>
 
         </tr>
