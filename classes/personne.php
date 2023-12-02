@@ -106,17 +106,6 @@ class Personne  {
         }
 }
 
-   public function suppression(){
-       $query = "DELETE FROM $this->NomTable WHERE Nom='$this->Nom'";
-       $rq = $this->Bdd->prepare($query);
-
-       if($rq->execute()){
-        echo"Suppr Marché";
-       }
-       else{
-        echo "SUppr pas marché";
-       }
-   }
    public function modification(){
     $query = "SELECT Nom,Prenom,Email,Mdp,NumeroDeTelephone FROM $this->NomTable WHERE Id='$this->Id'"; 
     $rq = $this->Bdd->prepare($query);
@@ -152,7 +141,26 @@ class Personne  {
     echo json_encode($rep);
 
 
-   } 
+   }
+
+   public function Recherche($requete){
+       $req=$this->Bdd->prepare("SELECT * FROM personne
+                            INNER JOIN typepersonne on personne.IdStatus = typepersonne.Id
+                            WHERE typepersonne.NomTitre = 'Client' AND(Nom LIKE :rq OR 
+                           Prenom LIKE :rq OR 
+                           Email LIKe :rq OR
+                           NumeroDeTelephone LIKE :rq)");
+       $requete = '%'.$requete.'%';
+       $req->bindParam(':rq', $requete);
+       $req->execute();
+
+       $retour = array();
+       while($rep = $req->fetch()){
+           array_push($retour, $rep);
+       }
+       return $retour;
+   }
+
 }
 
 
