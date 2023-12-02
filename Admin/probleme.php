@@ -3,7 +3,11 @@ include 'navbar.php';
 include '../classes/probleme.php';
 
 $prob = new probleme();
-$liste = $prob->GetAll();
+if(!empty($_GET['search'])){
+    $liste = $prob->Recherche($_GET['search']);
+}else {
+    $liste = $prob->GetAll();
+}
 if(!empty($_GET['search'])){
 
 }

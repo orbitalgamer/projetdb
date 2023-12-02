@@ -101,6 +101,77 @@ class probleme
         }
         return $retour;
     }
+    public function GetAccidentId($Id){
+        $req = $this->Bdd->prepare("SELECT 
+            probleme.*,
+            vehicule.PlaqueVoiture as 'plaque',
+            vehicule.Modele as 'model',
+            vehicule.Marque as 'marque',
+            vehicule.Annee as 'annee',
+            vehicule.Kilometrage as 'kilometrage',
+            typeprobleme.Nom as 'NomProbleme',
+            personne.Nom as 'nomChauffeur',
+            personne.Prenom as 'prenomChauffeur',
+            IF(maintenance.Id is not null, '1', '0') as 'MaitenancePrevu'
+             FROM probleme
+        INNER JOIN typeprobleme on probleme.IdTypeProbleme = typeprobleme.Id
+        INNER JOIN course on probleme.IdCourse = course.Id
+        INNER JOIN personne on course.IdChauffeur = personne.Id
+        INNER JOIN tarification on course.IdTarification = tarification.Id
+        INNER JOIN vehicule on tarification.PlaqueVehicule = vehicule.PlaqueVoiture
+        LEFT JOIN maintenance on probleme.Id = maintenance.IdProbleme
+        WHERE probleme.Id = :Id
+        "); //recherche tous les historique de problème pour une voiture
+
+        $req->bindParam(':Id', $Id);
+        $req->execute();
+        $rep = $req->fetch();
+        return $rep;
+    }
+    public function GetPhoto($Id){//pour avoir photo
+        $req = $this->Bdd->prepare("SELECT 
+            * FROM photoprobleme
+        WHERE IdProbleme = :Id
+        "); //recherche tous les historique de problème pour une voiture
+
+        $req->bindParam(':Id', $Id);
+        $req->execute();
+        $retour = array();
+        while($rep = $req->fetch()){
+            array_push($retour, $rep);
+        }
+        return $retour;
+    }
+
+    public function GetMaintenance($Id){//pour avoir photo
+        $req = $this->Bdd->prepare("SELECT 
+            * FROM maintenance
+        WHERE IdProbleme = :Id
+        "); //recherche tous les historique de problème pour une voiture
+
+        $req->bindParam(':Id', $Id);
+        $req->execute();
+        $retour = array();
+        while($rep = $req->fetch()){
+            array_push($retour, $rep);
+        }
+        return $retour;
+    }
+
+    public function Regler($Id){
+        $rep= $this->Bdd->prepare("UPDATE probleme SET Regle = 1 WHERE Id =:Id");
+        $rep->bindParam(':Id', $Id);
+        if($rep->execute()){
+            return array("succes"=>1);
+        }
+        else{
+            return array("error"=>1);
+        }
+
+    }
+
+
+
 
 }
 
