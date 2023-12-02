@@ -78,6 +78,30 @@ class probleme
         return $retour;
     }
 
+    public function GetAccident($plaque){
+        $req = $this->Bdd->prepare("SELECT 
+            probleme.*,
+            typeprobleme.Nom as 'NomProbleme',
+            IF(maintenance.Id is not null, '1', '0') as 'MaitenancePrevu'
+             FROM probleme
+        INNER JOIN typeprobleme on probleme.IdTypeProbleme = typeprobleme.Id
+        INNER JOIN course on probleme.IdCourse = course.Id
+        INNER JOIN tarification on course.IdTarification = tarification.Id
+        INNER JOIN vehicule on tarification.PlaqueVehicule = vehicule.PlaqueVoiture
+        LEFT JOIN maintenance on probleme.Id = maintenance.IdProbleme
+        WHERE vehicule.PlaqueVoiture = :plaque
+        "); //recherche tous les historique de problème pour une voiture
+
+        $req->bindParam(':plaque', $plaque);
+        $req->execute();
+
+        $retour = array();
+        while($rep=$req->fetch()){
+            array_push($retour, $rep);
+        }
+        return $retour;
+    }
+
 }
 
 ?>

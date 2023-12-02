@@ -222,17 +222,35 @@ public function GetInfo($plaque){
 
     }
 
-    public function NewPrix($prix, $plaque){
-    $req = $this->Bdd->prepare("INSERT INTO tarification (PrixAuKilometre, PlaqueVehicule) VALUES (:prix, :plaque)");
-    $req->bindParam(':prix', $prix);
+    public function NewPrix($prix, $plaque)
+    {
+        //vérifie si pas rafréchit page et a le même pour réencoder le même
+
+        $allprix = $this->GetAllPrix($plaque);
+        $lastprix = end($allprix);
+
+        if ($lastprix['PrixAuKilometre'] != $prix) {
+
+            $req = $this->Bdd->prepare("INSERT INTO tarification (PrixAuKilometre, PlaqueVehicule) VALUES (:prix, :plaque)");
+            $req->bindParam(':prix', $prix);
+            $req->bindParam(':plaque', $plaque);
+            if ($req->execute()) {
+                return array("succes" => "1");
+            } else {
+                return array("error" => "erreur requette");
+            }
+
+        }
+    }
+    public function Delete($plaque){
+
+    $req = $this->Bdd->prepare("DELETE FROM vehicule WHERE PlaqueVoiture = :plaque");
     $req->bindParam(':plaque', $plaque);
     if($req->execute()){
-        return array("succes"=>"1");
+        return array("succes" => "1");
+    } else {
+        return array("error" => "erreur requette");
     }
-    else{
-        return array("error"=>"erreur requette");
-    }
-
     }
 
 }
