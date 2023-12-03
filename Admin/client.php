@@ -23,28 +23,6 @@ else{
     $resultats = $chauf->RequetteAffichage($_GET['search']);
 }
 
-function Afficher($liste){
-    $compteur = 1;
-    foreach ($liste as $elem) {
-        if($elem['Inpaye'] != 0) {
-            $ligne = '<tr class="table-danger">'; //pour mettre en évidence ceux qui ont problème
-        }
-        else{
-            $ligne = '<tr>';
-        }
-        $ligne .= ' <th>' . $compteur . '</th>
-            <td>' . $elem['Nom'] . '</td>
-            <td>' . $elem["Prenom"] . '</td>
-            <td>' . $elem["Email"] . '</td>
-            <td>' . $elem["NumeroDeTelephone"] . '</td>
-            <td>' . $elem["Inpaye"] . '</td>
-            <td><button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`voiravis.php?IdPersonne=' . $elem["Id"] . '`">voir avis</button></td>
-            <td><button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`client.php?Id=' . $elem["Id"] . '`">Bannir</button></td>
-     </tr>';
-        echo $ligne;
-        $compteur += 1;
-    }
-}
 ?>
 
 <html>
