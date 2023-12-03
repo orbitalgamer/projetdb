@@ -161,6 +161,100 @@ class Personne  {
        return $retour;
    }
 
+   public function GetAll(){
+       $req = $this->Bdd->query("SELECT personne.*, prix.Inpaye FROM personne 
+                                    INNER JOIN typepersonne ON personne.IdStatus = typepersonne.Id
+                                    LEFT JOIN course ON personne.Id = course.IdClient
+                                    LEFT JOIN (SELECT course.Id, 
+                                                      course.IdClient, 
+                                                      count(tarification.PrixAuKilometre * course.DistanceParcourue) as 'Inpaye' 
+                                                FROM course
+                                                LEFT JOIN  liencourseetat on course.Id = liencourseetat.IdCourse
+                                                LEFT JOIN tarification on course.IdTarification = tarification.Id
+                                                WHERE liencourseetat.IdEtat = 6
+                                                GROUP BY course.IdClient) prix ON personne.Id = course.IdClient
+                                    LEFT JOIN liencourseetat ON course.Id = liencourseetat.IdCourse
+                                    WHERE typepersonne.NomTitre = 'Client'
+                                    GROUP BY personne.Id");
+       $retour = array();
+       while($rep = $req->fetch()){
+           array_push($retour, $rep);
+       }
+       return $retour;
+   }
+
+   public function RequetteAffichage($requete){
+       $req = $this->Bdd->prepare("SELECT personne.*, prix.Inpaye as 'Inpaye' FROM personne 
+                                    INNER JOIN typepersonne ON personne.IdStatus = typepersonne.Id
+                                    LEFT JOIN course ON personne.Id = course.IdClient
+                                    LEFT JOIN (SELECT course.Id, 
+                                                      course.IdClient, 
+                                                      count(tarification.PrixAuKilometre * course.DistanceParcourue) as 'Inpaye' 
+                                                FROM course
+                                                LEFT JOIN  liencourseetat on course.Id = liencourseetat.IdCourse
+                                                LEFT JOIN tarification on course.IdTarification = tarification.Id
+                                                WHERE liencourseetat.IdEtat = 6
+                                                GROUP BY course.IdClient) prix ON personne.Id = course.IdClient
+                                    LEFT JOIN liencourseetat ON course.Id = liencourseetat.IdCourse
+                                    WHERE typepersonne.NomTitre = 'Client'
+                                    AND(personne.Nom LIKE :rq 
+                                            OR personne.Prenom LIKE :rq 
+                                            OR personne.NumeroDeTelephone LIKE :rq 
+                                            OR personne.Email LIKE :rq)
+                                    GROUP BY personne.Id");
+       $requete = '%'.$requete.'%';
+       $req->bindParam(':rq', $requete);
+       $req->execute();
+
+       $retour = array();
+       while($rep = $req->fetch()){
+           array_push($retour, $rep);
+       }
+       return $retour;
+   }
+
+   public function Bannir($Id){
+       $req = $this->Bdd->prepare("UPDATE personne SET IdStatus = 4 WHERE Id =:Id AND IdStatus = 1");
+       $req->bindParam(':Id', $Id);
+       if($req->execute()){
+           return array("succes"=>1);
+       }
+       else{
+           return array("error"=>1);
+       }
+   }
+    public function DeBannir($Id){
+        $req = $this->Bdd->prepare("UPDATE personne SET IdStatus = 1 WHERE Id =:Id AND IdStatus = 4");
+        $req->bindParam(':Id', $Id);
+        if($req->execute()){
+            return array("succes"=>1);
+        }
+        else{
+            return array("error"=>1);
+        }
+    }
+
+    public function GetAllBanni(){
+        $req = $this->Bdd->query("SELECT personne.*, prix.Inpaye FROM personne 
+                                    INNER JOIN typepersonne ON personne.IdStatus = typepersonne.Id
+                                    LEFT JOIN course ON personne.Id = course.IdClient
+                                    LEFT JOIN (SELECT course.Id, 
+                                                      course.IdClient, 
+                                                      count(tarification.PrixAuKilometre * course.DistanceParcourue) as 'Inpaye' 
+                                                FROM course
+                                                LEFT JOIN  liencourseetat on course.Id = liencourseetat.IdCourse
+                                                LEFT JOIN tarification on course.IdTarification = tarification.Id
+                                                WHERE liencourseetat.IdEtat = 6
+                                                GROUP BY course.IdClient) prix ON personne.Id = course.IdClient
+                                    LEFT JOIN liencourseetat ON course.Id = liencourseetat.IdCourse
+                                    WHERE typepersonne.NomTitre = 'Banni'
+                                    GROUP BY personne.Id");
+        $retour = array();
+        while($rep = $req->fetch()){
+            array_push($retour, $rep);
+        }
+        return $retour;
+    }
 }
 
 

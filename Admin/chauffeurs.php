@@ -14,6 +14,7 @@ function Afficher($liste){
             <td>' . $elem["Prenom"] . '</td>
             <td>' . $elem["Email"] . '</td>
             <td>' . $elem["NumeroDeTelephone"] . '</td>
+            <td><button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`voiravis.php?IdChauffeur=' . $elem["Id"] . '`">voir avis</button></td>
             <td><button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`modificationchauffeur.php?Id=' . $elem["Id"] . '`">Supprimers</button></td>
      </tr>';
         echo $ligne;
@@ -50,6 +51,7 @@ function Afficher($liste){
             <th scope="col h3">Prenom</th>
             <th scope="col h3">Email</th>
             <th scope="col h3">NumeroDeTelephone</th>
+            <th scope="col h3">avis</th>
             <th scope="col h3">Supprimer</th>
 
         </tr>

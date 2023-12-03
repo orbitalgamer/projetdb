@@ -50,7 +50,7 @@ if(!empty($_GET['search'])){
                         <th>'.$elem["Rouler"].'</th>
                         <th>'.$elem["MaitenancePrevu"].'</th>
                         <th>'.$elem["Regle"].'</th>
-                        <td><button type="button" class="btn btn-outline-secondary bg-dark text-white" onclick="window.location.href=`voirproblem.php?Id=' . $elem["Id"] . '`">voir en détail</button></td>
+                        <td><button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`voirproblem.php?Id=' . $elem["Id"] . '`">voir en détail</button></td>
             ';
             echo $ligne;
         }
