@@ -167,11 +167,12 @@ class Personne  {
                                     LEFT JOIN course ON personne.Id = course.IdClient
                                     LEFT JOIN (SELECT course.Id, 
                                                       course.IdClient, 
-                                                      count(tarification.PrixAuKilometre * course.DistanceParcourue) as 'Inpaye' 
+                                                      SUM(tarification.PrixAuKilometre * course.DistanceParcourue) as 'Inpaye' 
                                                 FROM course
                                                 LEFT JOIN  liencourseetat on course.Id = liencourseetat.IdCourse
                                                 LEFT JOIN tarification on course.IdTarification = tarification.Id
-                                                WHERE liencourseetat.IdEtat = 6
+                                                INNER JOIN etat on liencourseetat.IdEtat = etat.Id
+                                                WHERE etat.Nom = 'Termine'
                                                 GROUP BY course.IdClient) prix ON personne.Id = course.IdClient
                                     LEFT JOIN liencourseetat ON course.Id = liencourseetat.IdCourse
                                     WHERE typepersonne.NomTitre = 'Client'
@@ -193,7 +194,8 @@ class Personne  {
                                                 FROM course
                                                 LEFT JOIN  liencourseetat on course.Id = liencourseetat.IdCourse
                                                 LEFT JOIN tarification on course.IdTarification = tarification.Id
-                                                WHERE liencourseetat.IdEtat = 6
+                                                INNER JOIN etat on liencourseetat.IdEtat = etat.Id
+                                                WHERE etat.Nom = 'Termine'
                                                 GROUP BY course.IdClient) prix ON personne.Id = course.IdClient
                                     LEFT JOIN liencourseetat ON course.Id = liencourseetat.IdCourse
                                     WHERE typepersonne.NomTitre = 'Client'

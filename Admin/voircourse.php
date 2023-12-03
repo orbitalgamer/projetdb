@@ -94,7 +94,7 @@ else{
     </div>';
     }
 
-    if(!empty($photo)){
+    if(!empty($photo)){ //afficahge photo
         echo '<div class="form-group">
                 <a class="h4">Photo du chauffeur</a><br>
 

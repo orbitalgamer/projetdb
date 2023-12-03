@@ -20,7 +20,7 @@ if(!empty($_GET['search'])){
     </div>
     <div class="row align-items-center">
         <form class="col-md-4 form-group" action="" method="">
-            <input type="search" class="form-control rounded" name="search" placeholder="rechercher" aria-label="Rechercher" aria-describedby="inputGroup-sizing-sm"/>
+            <input type="search" class="form-control rounded" name="search" placeholder="rechercher : plaque, type problème, Nom" aria-label="Rechercher" aria-describedby="inputGroup-sizing-sm"/>
         </form>
     </div>
     <table class="table table-striped table-responsive-md">

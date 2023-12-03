@@ -43,7 +43,7 @@ function Afficher($liste){
     <div class="row align-items-center">
 
         <form class="col-md-4 form-group" action="" method="">
-            <input type="search" class="form-control rounded" name="search" placeholder="rechercher" aria-label="Rechercher" aria-describedby="inputGroup-sizing-sm"/>
+            <input type="search" class="form-control rounded" name="search" placeholder="rechercher : Nom, Status" aria-label="Rechercher" aria-describedby="inputGroup-sizing-sm"/>
         </form>
     </div>
     <table class="table table-striped table-responsive-md">

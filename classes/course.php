@@ -120,14 +120,14 @@ class Course {
                                              chuffeur.Nom as 'NomChauffeur', 
                                              client.Nom as 'NomClient', 
                                              etat.Nom as 'NomEtat',
-                                             IF(paye.IdEtat = 8 AND lien.IdEtat != 6, 1, 0) as 'Inpaye'
+                                             IF(paye.IdEtat = (SELECT Id FROM etat WHERE Nom='Termine') AND lien.IdEtat != (SELECT Id FROM etat WHERE Nom='Annule par chauffeur'), 1, 0) as 'Inpaye'
                                     FROM course
                                     INNER JOIN personne chuffeur on course.IdChauffeur = chuffeur.Id
                                     INNER JOIN personne client on course.IdClient = client.Id
-                                    LEFT JOIN (SELECT * FROM liencourseetat WHERE IdEtat < 8 ORDER BY IdEtat DESC) lien on course.Id = lien.IdCourse
-                                    LEFT JOIN (SELECT * FROM liencourseetat WHERE IdEtat = 8) paye on course.Id = paye.IdCourse
+                                    LEFT JOIN (SELECT * FROM liencourseetat WHERE IdEtat < (SELECT Id FROM etat WHERE Nom='Termine') ORDER BY IdEtat DESC) lien on course.Id = lien.IdCourse
+                                    LEFT JOIN (SELECT * FROM liencourseetat WHERE IdEtat = (SELECT Id FROM etat WHERE Nom='Termine')) paye on course.Id = paye.IdCourse
                                     INNER JOIN etat on lien.IdEtat = etat.Id
-                                    WHERE lien.IdEtat >4
+                                    WHERE lien.IdEtat > (SELECT Id FROM etat WHERE Nom='En cours')
                                     AND(
                                         chuffeur.Nom LIKE :rq OR
                                         client.Nom LIKE :rq OR
@@ -161,7 +161,7 @@ class Course {
                                              client.Email as 'EmailClient',
                                              etat.Nom as 'NomEtat',
                                              
-                                             IF(paye.IdEtat = 8 AND lien.IdEtat != 6, 1, 0) as 'Inpaye',
+                                             IF(paye.IdEtat = (SELECT Id FROM etat WHERE Nom='Termine') AND lien.IdEtat != (SELECT Id FROM etat WHERE Nom='Annule par chauffeur'), 1, 0) as 'Inpaye',
                                              depart.Numero as 'NumeroDepart',
                                              depart.Rue as 'RueDepart',
                                              depart.Vile as 'VileDepart',
@@ -178,8 +178,8 @@ class Course {
                                     FROM course
                                     INNER JOIN personne chuffeur on course.IdChauffeur = chuffeur.Id
                                     INNER JOIN personne client on course.IdClient = client.Id
-                                    LEFT JOIN (SELECT * FROM liencourseetat WHERE IdEtat < 8 ORDER BY IdEtat DESC) lien on course.Id = lien.IdCourse
-                                    LEFT JOIN (SELECT * FROM liencourseetat WHERE IdEtat = 8) paye on course.Id = paye.IdCourse
+                                    LEFT JOIN (SELECT * FROM liencourseetat WHERE IdEtat < (SELECT Id FROM etat WHERE Nom='Termine') ORDER BY IdEtat DESC) lien on course.Id = lien.IdCourse
+                                    LEFT JOIN (SELECT * FROM liencourseetat WHERE IdEtat = (SELECT Id FROM etat WHERE Nom='Termine')) paye on course.Id = paye.IdCourse
                                     INNER JOIN etat on lien.IdEtat = etat.Id
                                         
                                     INNER JOIN adresse depart on depart.Id = course.IdAdresseDepart
@@ -195,6 +195,7 @@ class Course {
                                     GROUP BY course.Id
                                     ORDER BY Inpaye ASC
                                     ");
+                        //recherche en dynamique l'id terminé qui est dernier
         $req->bindParam(':Id', $Id);
         $req->execute();
         return $req->fetch();
