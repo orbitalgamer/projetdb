@@ -10,7 +10,7 @@
                 header('location:Admin/dashboard.php');
                 break;
             case 'Chauffeur':
-                header(''); //mettre lien vesr chauffeur
+                header('location:Chauffeur/dashboard.php'); //mettre lien vesr chauffeur
                 break;
             case 'Client':
                 header(''); //mettre lien vesr client
