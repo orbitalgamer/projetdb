@@ -24,18 +24,21 @@ function Afficher($liste){
             <td>' . $auto["Prenom"] . '</td>
             <td>' . $auto["IdAdresseDepart"] . '</td>
             <td>' . $auto["IdAdresseFin"] . '</td>
-            <td>' . $auto["description"] . '</td>
             <td>';
             for ($i = 0; $i < $auto["note"]; $i++) {
                 $ligne .= '★'; 
             }
-            '</td>
-        </tr>';
+            
+            $ligne .= '</td>
+        <td>' . $auto["description"] . '</td>
+    </tr>';
+
        
         echo $ligne;
         
     }
 }
+
 ?>
 
 <html>
@@ -59,8 +62,9 @@ function Afficher($liste){
             <th scope="col h3">Prenom</th>
             <th scope="col h3">IdAdresseDepart</th>
             <th scope="col h3">IdAdresseFin</th>
-            <th scope="col h3">Descritpion</th>
             <th scope="col h3">Note</th>
+            <th scope="col h3">Descritpion</th>
+
             <th scope="col-md-1 h3"></th>
 
         </tr>

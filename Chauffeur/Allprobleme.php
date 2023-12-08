@@ -2,10 +2,11 @@
 include_once 'navbar.php';
 
 include_once '../classes/chauffeur.php';
-
+include_once '../classes/course.php';
 
 
 $chauffeur = new chauffeur();
+$course = new course();
 
 
 function Afficher($liste){
@@ -18,26 +19,26 @@ function Afficher($liste){
             $ligne = '<tr>';
         }
         $ligne .= ' <th>' . $auto["Id"] . '</th>
-        <td>' . $auto["DateReservation"] . '</td>
-        <td>' . $auto["Nom"] . '</td>
-        <td>' . $auto["Prenom"] . '</td>
-        <td>' . $auto["adresse_depart"] . '</td>
-        <td>' . $auto["adresse_fin"] . '</td>
- 
-            <th>
-            <button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`avis.php?Id=' . $auto["Id"] . '`">Afficher avis</button>
-            <button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`probleme.php?Id=' . $auto["Id"] . '`">Afficher probleme</button>
-            </th> </tr>';
+            <td>' . $auto["DateReservation"] . '</td>
+            <td>' . $auto["Nom"] . '</td>
+            <td>' . $auto["Prenom"] . '</td>
+            <td>' . $auto["Idcourse"] . '</td>
+            <td>' . $auto["CheminDacces"] . '</td>
+        
             
+     </tr>';
+       
         echo $ligne;
+        
     }
 }
+
 ?>
 
 <html>
 <div class="container">
     <div class="text-center">
-        <p class="display-4 pt-4 pb-2 bold">Liste de vos anciennes courses</p>
+        <p class="display-4 pt-4 pb-2 bold">Liste de vos problemes</p>
     </div>
         
     <div class="row align-items-center">
@@ -53,9 +54,9 @@ function Afficher($liste){
             <th scope="col h3">DateReservation</th>
             <th scope="col h3">Nom</th>
             <th scope="col h3">Prenom</th>
-            <th scope="col h3">Adresse Depart</th>
-            <th scope="col h3">Adresse Fin</th>
-
+            <th scope="col h3">Idcourse</th>
+            <th scope="col h3">Chemin D'acces</th>
+          
             <th scope="col-md-1 h3"></th>
 
         </tr>
@@ -65,19 +66,16 @@ function Afficher($liste){
             <?php
             
             if(empty($_GET['search']) && empty($_GET['maitenance'])) {
-                $all = $chauffeur->GetCourseold($_SESSION['Id']);
+                $all = $chauffeur->GetAllprobleme($_SESSION['Id']);
                 Afficher($all);
             }
             else{
                 if(!empty($_GET['search'])){
-
-                    $resultat = $chauffeur->Rechercher($_SESSION['Id'],$_GET['search']);
+                    $resultat = $chauffeur->Rechercher($_GET['search']);
                     Afficher($resultat);
                 }
-                
 
             }
-
             ?>
         </tbody>
     </table>

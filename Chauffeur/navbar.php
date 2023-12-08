@@ -7,7 +7,9 @@ if(!empty($_SESSION['Id'])){
         echo 'essaye de rentrer dans système';
     }
     elseif ($_SESSION['Role'] != 'Chauffeur'){
+
         echo 'pas droit Chauffeur';
+
         header('location:../index.php');
     }
 }
@@ -28,13 +30,16 @@ else{
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" href="course.php">Courses</a>
+                <a class="nav-link" href="newcourse.php">Ajouter des Courses</a>
+
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="vehicule.php">Véhicule</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="probleme.php">Problème</a>
+
+                <a class="nav-link" href="Allprobleme.php">Vos Problèmes</a>
+
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="chauffeur.php">Chauffeurs</a>
