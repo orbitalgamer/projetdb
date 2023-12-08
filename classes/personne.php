@@ -1,7 +1,10 @@
 
+
+
 <?php
 
 require_once 'Bdd.php';
+
 
 
 class Personne  {
@@ -16,6 +19,23 @@ class Personne  {
    private $Bdd;
    private $NomTable = "personne";
    private $NomTableType = "typepersonne";
+
+   
+
+
+
+   public function suppression(){
+       $query = "DELETE FROM $this->NomTable WHERE Nom='$this->Nom'";
+       $rq = $this->Bdd->prepare($query);
+
+       if($rq->execute()){
+        echo"Suppr Marché";
+       }
+       else{
+        echo "SUppr pas marché";
+       }
+   }
+
 
    public function __construct()
     {
@@ -105,6 +125,7 @@ class Personne  {
             return array('error'=>'erreur'); //renvoie erreur
         }
 }
+
 
    public function modification(){
     $query = "SELECT Nom,Prenom,Email,Mdp,NumeroDeTelephone FROM $this->NomTable WHERE Id='$this->Id'"; 
@@ -257,6 +278,7 @@ class Personne  {
         }
         return $retour;
     }
+
 }
 
 
