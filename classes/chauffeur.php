@@ -33,7 +33,7 @@ public function __construct(){
     $resultats = $req->fetchAll(PDO::FETCH_ASSOC);
     return $resultats;
     }
-    
+
     public function Getcourseold($Id){
         $req = $this->Bdd->prepare("
         SELECT DISTINCT
@@ -110,8 +110,48 @@ WHERE
     $resultats = $req->fetchAll(PDO::FETCH_ASSOC);
 
     return $resultats;
-
 }
+
+    public function RetirerChauffeur($Id){
+        $req = $this->Bdd->prepare("UPDATE personne SET IdStatus = 1 WHERE Id =:Id");
+        $req->bindParam(':Id', $Id);
+        if($req->execute()){
+            return array("succes"=>1);
+        }
+        else{
+            return array("error"=>1);
+        }
+    }
+
+    public function Recherche($requete){
+        $req = $this->Bdd->prepare("SELECT * FROM personne 
+            INNER JOIN typepersonne on personne.IdStatus = typepersonne.Id
+            WHERE typepersonne.NomTitre ='Chauffeur' AND
+                  (personne.Nom LIKE :rq OR
+                   personne.Prenom LIKE :rq OR 
+                   personne.Email LIKE :rq OR 
+                   personne.NumeroDeTelephone LIKE :rq) ");
+        $requete = '%'.$requete.'%';
+        $req->bindParam(':rq', $requete);
+
+        $req->execute();
+        $retour = array();
+        while($rep = $req->fetch()){
+            array_push($retour, $rep);
+        }
+        return $retour;
+    }
+
+    public function Ajout($Id){
+        $req = $this->Bdd->prepare("UPDATE personne SET IdStatus = 2 WHERE Id = :Id");
+        $req->bindParam(':Id', $Id);
+        if($req->execute()){
+            return array("succes"=>1);
+        }
+        else{
+            return array("error"=>1);
+        }
+    }
 
 }
 

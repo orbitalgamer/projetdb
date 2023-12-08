@@ -85,22 +85,31 @@ public function GetInfo($plaque){
 
     public function GetAll(){
         $req = $this->Bdd->query("
-    SELECT DISTINCT vehicule.*, 
-           typecarburant.Nom as 'NomCarburant', 
-           prix.PrixAuKilometre,
-            MAX(IF(probleme.Regle = false, 1, 0)) as 'problem'
-    FROM vehicule 
-    LEFT JOIN (SELECT t.Id,t.PlaqueVehicule,  t.PrixAuKilometre FROM tarification t WHERE Id IN 
-    (SELECT MAX(e.Id) FROM tarification e GROUP BY e.PlaqueVehicule)) prix 
-        ON prix.PlaqueVehicule = vehicule.PlaqueVoiture
-    LEFT JOIN typecarburant ON typecarburant.Id = vehicule.Carburant
-    LEFT JOIN course ON course.IdTarification = prix.Id
-    LEFT JOIN probleme ON course.Id = probleme.IdCourse
+    SELECT 
+        vehicule.*, 
+        typecarburant.Nom as 'NomCarburant',
+        prixMax.PrixAuKilometre as 'PrixDernier',
+        MAX(IF(NOT probleme.Regle, 1, 0)) as 'problem'
+    FROM vehicule
+    INNER JOIN typecarburant on typecarburant.Id = vehicule.Carburant
+    LEFT JOIN tarification prix on vehicule.PlaqueVoiture = prix.PlaqueVehicule 
+    LEFT JOIN (SELECT PrixAuKilometre, PlaqueVehicule FROM tarification WHERE Id IN(
+        SELECT MAX(Id) FROM tarification GROUP BY PlaqueVehicule)) prixMax 
+        on prixMax.PlaqueVehicule = vehicule.PlaqueVoiture
+    LEFT JOIN course on prix.Id = course.IdTarification
+    LEFT JOIN probleme on course.Id = probleme.IdCourse
+    
     GROUP BY vehicule.PlaqueVoiture
     ORDER BY problem DESC
     
-    
-    "); //requète permet de rechercher le dernier prix pour chauque véhicule
+    "); //inner jion pour type carburant car toujours un carburant
+        // left join tarificaiton c'est pour avoir tous les prix pour rechercher pour accidnet
+        //l'autre left join avec requète imbrique c'est pour avoir le dernier prix
+        //lie avec cours sur tous les Id tarification
+        // lie sur problème pour avoir tous les problème
+        // crée nouveau champ càd que regarder toute les problème et va regarde si réglé ou pas si pas rélgé 1 sinon 0 et prend 1 pour être sur de na pas louper 1 seul pas réglé
+        // groupe à la fin
+        //requète permet de rechercher le dernier prix pour chauque véhicule
         //esuite lie tout jusque problem
         //group à la fin
 
@@ -119,19 +128,19 @@ public function GetInfo($plaque){
 
     public function Rechercher($querry){ //pour rechercher peut rechercher selon carburant, plaque, marque, modele, pmr, annee
         $req = $this->Bdd->prepare("
-                SELECT DISTINCT 
+                SELECT 
                     vehicule.*, 
                     typecarburant.Nom as 'NomCarburant',
-                    PrixAuKilometre,
-                    MAX(IF(probleme.Regle = false, 1, 0)) as 'problem'
-                FROM vehicule 
-                
-                LEFT JOIN (SELECT t.Id,t.PlaqueVehicule,  t.PrixAuKilometre FROM tarification t WHERE Id IN 
-                (SELECT MAX(e.Id) FROM tarification e GROUP BY e.PlaqueVehicule)) prix 
-                ON prix.PlaqueVehicule = vehicule.PlaqueVoiture
-                LEFT JOIN typecarburant ON typecarburant.Id = vehicule.Carburant
-                LEFT JOIN course ON course.IdTarification = prix.Id
-                LEFT JOIN probleme ON course.Id = probleme.IdCourse
+                    prixMax.PrixAuKilometre as 'PrixDernier',
+                    MAX(IF(NOT probleme.Regle, 1, 0)) as 'problem'
+                FROM vehicule
+                INNER JOIN typecarburant on typecarburant.Id = vehicule.Carburant
+                LEFT JOIN tarification prix on vehicule.PlaqueVoiture = prix.PlaqueVehicule 
+                LEFT JOIN (SELECT PrixAuKilometre, PlaqueVehicule FROM tarification WHERE Id IN(
+                    SELECT MAX(Id) FROM tarification GROUP BY PlaqueVehicule)) prixMax 
+                    on prixMax.PlaqueVehicule = vehicule.PlaqueVoiture
+                LEFT JOIN course on prix.Id = course.IdTarification
+                LEFT JOIN probleme on course.Id = probleme.IdCourse
     
                 WHERE typecarburant.Nom LIKE :rq 
                 OR PlaqueVoiture LIKE :rq 
@@ -213,17 +222,35 @@ public function GetInfo($plaque){
 
     }
 
-    public function NewPrix($prix, $plaque){
-    $req = $this->Bdd->prepare("INSERT INTO tarification (PrixAuKilometre, PlaqueVehicule) VALUES (:prix, :plaque)");
-    $req->bindParam(':prix', $prix);
+    public function NewPrix($prix, $plaque)
+    {
+        //vérifie si pas rafréchit page et a le même pour réencoder le même
+
+        $allprix = $this->GetAllPrix($plaque);
+        $lastprix = end($allprix);
+
+        if ($lastprix['PrixAuKilometre'] != $prix) {
+
+            $req = $this->Bdd->prepare("INSERT INTO tarification (PrixAuKilometre, PlaqueVehicule) VALUES (:prix, :plaque)");
+            $req->bindParam(':prix', $prix);
+            $req->bindParam(':plaque', $plaque);
+            if ($req->execute()) {
+                return array("succes" => "1");
+            } else {
+                return array("error" => "erreur requette");
+            }
+
+        }
+    }
+    public function Delete($plaque){
+
+    $req = $this->Bdd->prepare("DELETE FROM vehicule WHERE PlaqueVoiture = :plaque");
     $req->bindParam(':plaque', $plaque);
     if($req->execute()){
-        return array("succes"=>"1");
+        return array("succes" => "1");
+    } else {
+        return array("error" => "erreur requette");
     }
-    else{
-        return array("error"=>"erreur requette");
-    }
-
     }
 
 }
