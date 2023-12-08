@@ -55,6 +55,7 @@ function Afficher($liste){
             <th scope="col h3">Prenom</th>
             <th scope="col h3">Adresse Depart</th>
             <th scope="col h3">Adresse Fin</th>
+
             <th scope="col-md-1 h3"></th>
 
         </tr>
@@ -69,13 +70,14 @@ function Afficher($liste){
             }
             else{
                 if(!empty($_GET['search'])){
+
                     $resultat = $chauffeur->Rechercher($_SESSION['Id'],$_GET['search']);
                     Afficher($resultat);
                 }
                 
 
             }
-            
+
             ?>
         </tbody>
     </table>

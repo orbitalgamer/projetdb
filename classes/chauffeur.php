@@ -33,6 +33,7 @@ public function __construct(){
     $resultats = $req->fetchAll(PDO::FETCH_ASSOC);
     return $resultats;
     }
+
     
     public function Getcourseold($Id){
         $req = $this->Bdd->prepare("
@@ -40,8 +41,10 @@ public function __construct(){
         course.*,
         personne.Nom,
         personne.Prenom,
+
         CONCAT(adresse_depart.vile, ', ', adresse_depart.rue, ' ', adresse_depart.Numero) AS adresse_depart,
         CONCAT(adresse_fin.vile, ', ', adresse_fin.rue, ' ', adresse_fin.Numero) AS adresse_fin
+
     FROM
         course
     JOIN personne ON personne.Id = course.IdClient
@@ -106,6 +109,7 @@ WHERE
     $resultats = $req->fetchAll(PDO::FETCH_ASSOC);
 
     return $resultats;
+
 
 }
 
@@ -230,6 +234,50 @@ public function GetnewCourse(){
     return $resultats;
 
 }
+
+
+}
+
+    public function RetirerChauffeur($Id){
+        $req = $this->Bdd->prepare("UPDATE personne SET IdStatus = 1 WHERE Id =:Id");
+        $req->bindParam(':Id', $Id);
+        if($req->execute()){
+            return array("succes"=>1);
+        }
+        else{
+            return array("error"=>1);
+        }
+    }
+
+    public function Recherche($requete){
+        $req = $this->Bdd->prepare("SELECT * FROM personne 
+            INNER JOIN typepersonne on personne.IdStatus = typepersonne.Id
+            WHERE typepersonne.NomTitre ='Chauffeur' AND
+                  (personne.Nom LIKE :rq OR
+                   personne.Prenom LIKE :rq OR 
+                   personne.Email LIKE :rq OR 
+                   personne.NumeroDeTelephone LIKE :rq) ");
+        $requete = '%'.$requete.'%';
+        $req->bindParam(':rq', $requete);
+
+        $req->execute();
+        $retour = array();
+        while($rep = $req->fetch()){
+            array_push($retour, $rep);
+        }
+        return $retour;
+    }
+
+    public function Ajout($Id){
+        $req = $this->Bdd->prepare("UPDATE personne SET IdStatus = 2 WHERE Id = :Id");
+        $req->bindParam(':Id', $Id);
+        if($req->execute()){
+            return array("succes"=>1);
+        }
+        else{
+            return array("error"=>1);
+        }
+    }
 
 
 }
