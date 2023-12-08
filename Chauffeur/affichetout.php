@@ -1,4 +1,5 @@
 <?php
+Bonjour
 include_once 'navbar.php';
 
 include_once '../classes/chauffeur.php';
