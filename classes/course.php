@@ -79,7 +79,7 @@ class Course {
         return $array_result;
     }
 
-=======
+
   public $Date;
   public $IdEtat;
 
@@ -185,12 +185,10 @@ class Course {
 
 
    } 
-}
 
 
 
 
-  }
 
     public function Update(){
       if(!empty($this->Id) && !empty($this->DateReservation) && !empty($this->Payee) && !empty($this->DistanceParcourue) && !empty($this->IdClient) && !empty($this->IdChauffeur) && !empty($this->IdAdresseDepart) && !empty($this->IdAdresseFin) && !empty($this->IdTarification) && isset($this->IdMajoration)) {
@@ -203,7 +201,7 @@ class Course {
                                   UPDATE course SET 
                                                       Id =:Idcourse,
                                                       DateReservation =:DateReservation, 
-                                                      Payee = :Payee,
+                                                    
                     DistanceParcourue = :DistanceParcourue,
                     IdClient = :IdClient,
                     IdChauffeur = :IdChauffeur,
@@ -276,7 +274,7 @@ class Course {
 
 
 
-  }
+
       public function suppression()
       {
         $query = "DELETE FROM $this->NomTable WHERE Nom='$this->Id'";

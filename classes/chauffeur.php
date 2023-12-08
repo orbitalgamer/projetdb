@@ -28,7 +28,6 @@ public function __construct(){
     SELECT DISTINCT personne.*   
     FROM  personne
     WHERE IdStatus = 2
-    
     ");
     $resultats = $req->fetchAll(PDO::FETCH_ASSOC);
     return $resultats;
@@ -225,8 +224,8 @@ public function GetnewCourse(){
         JOIN adresse AS adresse_fin ON adresse_fin.Id = course.IdAdresseFin
         WHERE
             course.IdChauffeur = 13
-            AND course.DateReservation > CURRENT_DATE;
-        ORDER BY course.DateReservation DESC
+            AND course.DateReservation > CURRENT_DATE
+            ORDER BY course.DateReservation DESC
     ");
 
     $req->execute();
@@ -236,10 +235,10 @@ public function GetnewCourse(){
 }
 
 
-}
+
 
     public function RetirerChauffeur($Id){
-        $req = $this->Bdd->prepare("UPDATE personne SET IdStatus = 1 WHERE Id =:Id");
+    $req = $this->Bdd->prepare("UPDATE personne SET IdStatus = 1 WHERE Id =:Id");
         $req->bindParam(':Id', $Id);
         if($req->execute()){
             return array("succes"=>1);
