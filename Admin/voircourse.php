@@ -13,6 +13,7 @@ if(!empty($_GET['Id'])) {
     $etats = $course->GetEtat($Id);
     $avis = $avisObjet->GetId($Id);
     $photo = $course->GetPhoto($Id);
+
 }
 else{
     header('location: course.php');

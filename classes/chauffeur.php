@@ -238,7 +238,7 @@ public function GetnewCourse(){
 
 
     public function RetirerChauffeur($Id){
-    $req = $this->Bdd->prepare("UPDATE personne SET IdStatus = 1 WHERE Id =:Id");
+    $req = $this->Bdd->prepare("UPDATE personne SET IdStatus = (SELECT  Id FROM typepersonne WHERE NomTitre ='Client') WHERE Id =:Id");
         $req->bindParam(':Id', $Id);
         if($req->execute()){
             return array("succes"=>1);
@@ -268,7 +268,7 @@ public function GetnewCourse(){
     }
 
     public function Ajout($Id){
-        $req = $this->Bdd->prepare("UPDATE personne SET IdStatus = 2 WHERE Id = :Id");
+        $req = $this->Bdd->prepare("UPDATE personne SET IdStatus = (SELECT  Id FROM typepersonne WHERE NomTitre ='Chauffeur') WHERE Id = :Id");
         $req->bindParam(':Id', $Id);
         if($req->execute()){
             return array("succes"=>1);

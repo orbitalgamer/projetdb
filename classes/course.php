@@ -363,7 +363,7 @@ class Course {
                                              client.Email as 'EmailClient',
                                              etat.Nom as 'NomEtat',
                                              
-                                             IF(paye.IdEtat = (SELECT Id FROM etat WHERE Nom='Termine') AND lien.IdEtat != (SELECT Id FROM etat WHERE Nom='Annule par chauffeur'), 1, 0) as 'Inpaye',
+                                             IF(paye.IdEtat = (SELECT Id FROM etat WHERE Nom='Paye') AND lien.IdEtat != (SELECT Id FROM etat WHERE Nom='Annule par chauffeur'), 1, 0) as 'Inpaye',
                                              depart.Numero as 'NumeroDepart',
                                              depart.Rue as 'RueDepart',
                                              depart.Vile as 'VileDepart',
@@ -374,14 +374,16 @@ class Course {
                                              localiteFin.CodePostal as 'CPFin',
                                              tarification.PlaqueVehicule as 'Plaque' ,
                                              (tarification.PrixAuKilometre * course.DistanceParcourue) as 'Prix',
-                                             tarification.PrixAuKilometre as 'Tarif'
+                                             tarification.PrixAuKilometre as 'Tarif',
+                                             course.DistanceParcourue
+            
                                              
                                              
                                     FROM course
                                     INNER JOIN personne chuffeur on course.IdChauffeur = chuffeur.Id
                                     INNER JOIN personne client on course.IdClient = client.Id
-                                    LEFT JOIN (SELECT * FROM liencourseetat WHERE IdEtat < (SELECT Id FROM etat WHERE Nom='Termine') ORDER BY IdEtat DESC) lien on course.Id = lien.IdCourse
-                                    LEFT JOIN (SELECT * FROM liencourseetat WHERE IdEtat = (SELECT Id FROM etat WHERE Nom='Termine')) paye on course.Id = paye.IdCourse
+                                    LEFT JOIN (SELECT * FROM liencourseetat WHERE IdEtat < (SELECT Id FROM etat WHERE Nom='Paye') ORDER BY IdEtat DESC) lien on course.Id = lien.IdCourse
+                                    LEFT JOIN (SELECT * FROM liencourseetat WHERE IdEtat = (SELECT Id FROM etat WHERE Nom='Paye')) paye on course.Id = paye.IdCourse
                                     INNER JOIN etat on lien.IdEtat = etat.Id
                                         
                                     INNER JOIN adresse depart on depart.Id = course.IdAdresseDepart
@@ -393,9 +395,6 @@ class Course {
                                     INNER JOIN tarification on course.IdTarification = tarification.Id
                                     
                                     WHERE course.Id = :Id
-                                    
-                                    GROUP BY course.Id
-                                    ORDER BY Inpaye ASC
                                     ");
                         //recherche en dynamique l'id terminé qui est dernier
         $req->bindParam(':Id', $Id);
@@ -420,6 +419,50 @@ class Course {
         $req = $this->Bdd->prepare("SELECT * FROM photocourse WHERE IdCourse = :Id");
         $req->bindParam(':Id', $Id);
         $req->execute();
+        $retour = array();
+        while($rep = $req->fetch()){
+            array_push($retour, $rep);
+        }
+        return $retour;
+    }
+
+    public function GetEncoure(){ //sélectionne toutes les courses en cours
+      $req=$this->Bdd->query('SELECT course.Id, 
+                                        chauffeur.Nom as "NomChauffeur", 
+                                        client.Nom as "NomClient", 
+                                        etat.Nom as "NomEtat",
+                                        course.DateReservation
+                                FROM course
+                                
+                                INNER JOIN (SELECT * FROM liencourseetat WHERE Id IN (SELECT MAX(Id) as "Id" FROM liencourseetat GROUP BY IdCourse)) lienmax on course.Id = lienmax.IdCourse
+                                INNER JOIN personne chauffeur on course.IdChauffeur = chauffeur.Id
+                                INNER JOIN personne client on course.IdChauffeur = client.Id
+                                INNER JOIN tarification on course.IdTarification = tarification.Id
+                                INNER JOIN etat on lienmax.IdEtat = etat.Id
+                                WHERE lienmax.IdEtat BETWEEN (SELECT Id FROM etat WHERE Nom ="Chauffeur en route") AND (SELECT Id FROM etat WHERE Nom ="En cours")
+                                GROUP BY tarification.PlaqueVehicule');
+      $retour = array();
+      while($rep = $req->fetch()){
+          array_push($retour, $rep);
+      }
+      return $retour;
+    }
+
+    public function GetSuivante(){ //sélectionne toutes les courses en cours
+        $req=$this->Bdd->query('SELECT course.Id, 
+                                        chauffeur.Nom as "NomChauffeur", 
+                                        client.Nom as "NomClient", 
+                                        
+                                        course.DateReservation
+                                FROM course
+                                
+                                
+                                INNER JOIN personne chauffeur on course.IdChauffeur = chauffeur.Id
+                                INNER JOIN personne client on course.IdChauffeur = client.Id
+                                INNER JOIN tarification on course.IdTarification = tarification.Id
+                                
+                                WHERE DateReservation > CURRENT_TIMESTAMP
+                                GROUP BY tarification.PlaqueVehicule');
         $retour = array();
         while($rep = $req->fetch()){
             array_push($retour, $rep);

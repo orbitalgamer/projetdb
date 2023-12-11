@@ -27,6 +27,7 @@ function Afficher($liste){
             <td>' . $elem["DistanceParcourue"] . '</td>
             <td>' . $elem["NomEtat"] . '</td>
             <td>' . $elem["Inpaye"] . '</td>
+            <td><button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`facture.php?Id=' . $elem["Id"] . '`">voir facture</button></td>
             <td><button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`voircourse.php?Id=' . $elem["Id"] . '`">voir course</button></td>
      </tr>';
         echo $ligne;
@@ -55,6 +56,7 @@ function Afficher($liste){
             <th scope="col h3">Distance parcourue</th>
             <th scope="col h3">Status</th>
             <th scope="col h3">Payé</th>
+            <th scope="col h3">Facture</th>
             <th scope="col h3"></th>
 
         </tr>

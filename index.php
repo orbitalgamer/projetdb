@@ -3,7 +3,6 @@
     <?php
     session_start();
     if(!empty($_SESSION['Role'])){
-        echo 'ici';
         switch ($_SESSION['Role']){
             case 'Admin':
 
@@ -13,11 +12,11 @@
                 header('location:Chauffeur/dashboard.php'); //mettre lien vesr chauffeur
                 break;
             case 'Client':
-                header(''); //mettre lien vesr client
+                header('location:client/selectionCourse.php'); //mettre lien vesr client
                 break;
             default:
                 echo 'deconnection';
-                //header('location:deconnection.php'); //mettre lien vesr chauffeur
+                header('location:deconnection.php'); //mettre lien vesr chauffeur
                 break;
 
         }
