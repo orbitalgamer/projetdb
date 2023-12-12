@@ -41,7 +41,9 @@ function Afficher($liste){
     </div>
         
     <div class="row align-items-center">
-    
+        <form class="col-md-3 form-group" action="ajouterprobleme.php">
+            <input type="submit" value="Ajouter un probleme" class="form-control bg-dark text-light" name="New"/>
+        </form>
         <form class="col-md-4 form-group" action="" method="">
             <input type="search" class="form-control rounded" name="search" placeholder="rechercher" aria-label="Rechercher" aria-describedby="inputGroup-sizing-sm"/>
         </form>
