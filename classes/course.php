@@ -325,14 +325,14 @@ public function AbandonChauffeur($Id){
                                              chuffeur.Nom as 'NomChauffeur', 
                                              client.Nom as 'NomClient', 
                                              etat.Nom as 'NomEtat',
-                                             IF(paye.IdEtat = 8 AND lien.IdEtat != 6, 1, 0) as 'Inpaye'
+                                             IF(paye.IdEtat = (SELECT Id FROM etat WHERE Nom='Paye') AND lien.IdEtat != (SELECT Id FROM etat WHERE Nom='Annule par chauffeur'), 1, 0) as 'Inpaye'
                                     FROM course
                                     INNER JOIN personne chuffeur on course.IdChauffeur = chuffeur.Id
                                     INNER JOIN personne client on course.IdClient = client.Id
-                                    LEFT JOIN (SELECT * FROM liencourseetat WHERE IdEtat < 8 ORDER BY IdEtat DESC) lien on course.Id = lien.IdCourse
-                                    LEFT JOIN (SELECT * FROM liencourseetat WHERE IdEtat = 8) paye on course.Id = paye.IdCourse
+                                    LEFT JOIN (SELECT * FROM liencourseetat WHERE IdEtat < (SELECT Id FROM etat WHERE Nom='Paye') ORDER BY IdEtat DESC) lien on course.Id = lien.IdCourse
+                                    LEFT JOIN (SELECT * FROM liencourseetat WHERE IdEtat = (SELECT Id FROM etat WHERE Nom='Paye')) paye on course.Id = paye.IdCourse
                                     INNER JOIN etat on lien.IdEtat = etat.Id
-                                    WHERE lien.IdEtat >4
+                                    WHERE lien.IdEtat > (SELECT Id FROM etat WHERE Nom='En cours')
                                     GROUP BY course.Id
                                     ORDER BY Inpaye ASC
                                     ");
