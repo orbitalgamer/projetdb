@@ -6,32 +6,32 @@ include_once '../classes/chauffeur.php';
 include_once '../classes/course.php';
 
 $course = new course();
-//$linkCourseEtat = 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['Id'])) {
         $courseId = $_POST['Id'];
         $chauffeurId = $_SESSION['Id'];
-        
+        // Effectuez votre requête SQL ici avec $courseId
        
-        $course->IdChauffeur = $chauffeurId;
-        $result = $course->UpdateChauffeur($courseId);
+            //$course->IdChauffeur = $chauffeurId;
+        
         // Retournez une réponse si nécessaire
         //var_dump($result);
-        if (isset($result['succes']) && $result['succes'] == '1'){
+       
             echo 'Course acceptée avec succès!';
-            $linkCourseEtat = new course(); 
-            $linkCourseEtat->Date = date("Y-m-d H:i:s"); // Date d'aujourd'hui
+            
+            $linkCourseEtat = new course(); // Assurez-vous que vous avez une classe pour liencourseetat
+            $linkCourseEtat->Date = date("Y-m-d H:i:s");// Date d'aujourd'hui
             $linkCourseEtat->IdCourse = $courseId;
-            $linkCourseEtat->IdEtat = 2;
+            $linkCourseEtat->IdEtat = 7; 
 
-            $linkCourseEtat->creationlien(); // Appel de la fonction pour insérer dans la table liencourseetat
+            $linkCourseEtat->creationlien();
             header("location:dashboard.php");
             //echo $_POST['Id'];
             //echo $_SESSION['Id'];
-        } else {
+        
             echo 'Erreur lors de la mise à jour de la course.';
-        }
+        
         return array();
         
 

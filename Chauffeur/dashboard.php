@@ -32,6 +32,30 @@ function Afficher($liste){
         echo $ligne;
     }
 }
+function AfficherEncours($liste){
+    foreach ($liste as $auto) {
+        if(empty($auto)){
+            break;
+        }
+     
+        else{
+            $ligne = '<tr>';
+        }
+        $ligne .= ' <th>' . $auto["Id"] . '</th>
+            <td>' . $auto["DateReservation"] . '</td>
+            <td>' . $auto["Nom"] . '</td>
+            <td>' . $auto["Prenom"] . '</td>
+            <td>' . $auto["adresse_depart"] . '</td>
+            <td>' . $auto["adresse_fin"] . '</td>
+            <th>
+            <form action="terminer_course.php" method="post">
+            <input type="hidden" name="Id" value="' . $auto["Id"] . '">
+            <button type="submit" class="btn btn-outline-secondary">Course terminée</button>
+        </form>
+     </tr>';
+        echo $ligne;
+    }
+}
 ?>
 
 <html>
@@ -67,12 +91,15 @@ function Afficher($liste){
             <?php
             
             if(empty($_GET['search']) && empty($_GET['maitenance'])) {
+                $all = $chauffeur->GetCoursetermine($_SESSION['Id']);
+                AfficherEncours($all);
                 $all = $chauffeur->GetCoursefutur($_SESSION['Id']);
                 Afficher($all);
+                
             }
             else{
                 if(!empty($_GET['search'])){
-                    $resultat = $chauffeur->Rechercher($_GET['search']);
+                    $resultat = $chauffeur->Rechercherfutur($_SESSION['Id'],$_GET['search']);
                     Afficher($resultat);
                 }
 

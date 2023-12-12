@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $linkCourseEtat = new course(); // Assurez-vous que vous avez une classe pour liencourseetat
             $linkCourseEtat->Date = date("Y-m-d H:i:s");// Date d'aujourd'hui
             $linkCourseEtat->IdCourse = $courseId;
-            $linkCourseEtat->IdEtat = 5; // IdEtat 1 (à ajuster selon votre logique)
+            $linkCourseEtat->IdEtat = 6; 
 
             $linkCourseEtat->creationlien();
             header("location:dashboard.php");
