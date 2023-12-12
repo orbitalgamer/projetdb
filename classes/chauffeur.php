@@ -194,6 +194,7 @@ public function Rechercher($Idchauffeur, $query){
         AND course.IdChauffeur = :Id
     ORDER BY course.DateReservation DESC
     ");
+    $query = "%".$query.'%';
 
     $req->bindParam(':query', $query);
     $req->bindParam(':Id', $Idchauffeur);

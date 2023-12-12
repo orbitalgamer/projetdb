@@ -22,7 +22,12 @@ class Course {
   public $IdAdresseFin;
   public $IdTarification;
   public $IdMajoration;
+  public $Date;
+  public $IdEtat;
 
+  private $Bdd;
+  private $NomTable = "course";
+  private $NomTableLien = "liencourseetat";
 
   
   private  $API_KEY = "7b4c8d7743b6c61264f7955d3305fe99"; 
@@ -80,13 +85,7 @@ class Course {
     }
 
 
-  public $Date;
-  public $IdEtat;
-
-
-
-  private $Bdd;
-  private $NomTable = "course";
+  
 
   public function __construct(){
       $db = new Bdd();
@@ -94,7 +93,7 @@ class Course {
   }
 
   public function creationlien(){
-    $query = "INSERT INTO $this->NomTable (
+    $query = "INSERT INTO $this->NomTableLien (
       Id,
       Date,
       IdCourse,
@@ -109,19 +108,19 @@ class Course {
       )";
      $rq = $this->Bdd->prepare($query);
 
-     $rq->bindParam(':Date',$this->Date);
-     $rq->bindParam(':IdCourse',$this->IdCourse);
-     $rq->bindParam(':IdEtat',$this->IdEtat);
-     if($rq->execute()){
+     $rq->bindParam(':Date', $this->Date);
+     $rq->bindParam(':IdCourse', $this->IdCourse);
+     $rq->bindParam(':IdEtat', $this->IdEtat);
+
+     if ($rq->execute()) {
        $rep=$rq->fetch(PDO::FETCH_ASSOC);
        echo "Marché";
        echo json_decode($rep);
-     }
-     else 
-     {
-       echo "pas marché";
-   };
-  }
+    }
+    else {
+        echo "pas marché";
+    };
+}
 
 
   public function creation(){
@@ -151,7 +150,6 @@ class Course {
       $rq = $this->Bdd->prepare($query);
 
       $rq->bindParam(':DateReservation',$this->DateReservation);
-
       $rq->bindParam(':DistanceParcourue',$this->DistanceParcourue);
       $rq->bindParam(':IdClient',$this->IdClient);
       $rq->bindParam(':IdChauffeur',$this->IdChauffeur);
@@ -267,6 +265,38 @@ class Course {
     }
 }
 
+public function AbandonChauffeur($Id){
+  if (!empty($this->IdChauffeur)) {
+      $req = $this->Bdd->prepare("SELECT Id FROM course WHERE Id = :Idcourse");
+      $req->bindParam(':Idcourse', $Id);
+      $req->execute();
+
+      if ($req->fetch()) {
+          $req = $this->Bdd->prepare("
+              UPDATE course SET 
+              IdChauffeur = 13
+              WHERE Id = :Idcourse
+              
+              
+          ");
+
+          // Assurez-vous d'inclure également :Idcourse dans le bindParam
+         
+          $req->bindParam(':Idcourse', $Id);
+
+          if ($req->execute()) {
+              return array('succes' => '1');
+          } else {
+              //var_dump($req->errorInfo());
+              return array('error' => 'erreur requete');
+          }
+      } else {
+          return array('error' => 'course n\'existe pas');
+      }
+  } else {
+      return array('error' => 'manque param');
+  }
+}
   
 
 
