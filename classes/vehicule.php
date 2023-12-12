@@ -17,6 +17,9 @@ public $Carburant;
 public $Kilometrage;
 public $PlaceDisponible;
 public $PMR;
+
+public $Autonome;
+
 public $Bdd;
 
 public function __construct(){
@@ -32,8 +35,8 @@ public function Insert(){
 
         if (!$req->fetch()) {
             $req = $this->Bdd->prepare("
-                                    INSERT INTO vehicule (PlaqueVoiture, Marque, Modele, Couleur, Annee, Carburant, Kilometrage, PlaceDisponible, PMR) 
-                                    VALUES (:PlaqueVoiture, :Marque, :Modele, :Couleur, :Annee, :Carburant, :Kilometrage, :PlaceDisponible, :PMR)");
+                                    INSERT INTO vehicule (PlaqueVoiture, Marque, Modele, Couleur, Annee, Carburant, Kilometrage, PlaceDisponible, PMR, Autonome) 
+                                    VALUES (:PlaqueVoiture, :Marque, :Modele, :Couleur, :Annee, :Carburant, :Kilometrage, :PlaceDisponible, :PMR, :Autonome)");
             $req->bindParam(':PlaqueVoiture', $this->PlaqueVoiture);
             $req->bindParam(':Marque', $this->Marque);
             $req->bindParam(':Modele', $this->Modele);
@@ -43,6 +46,7 @@ public function Insert(){
             $req->bindParam(':Kilometrage', $this->Kilometrage);
             $req->bindParam(':PlaceDisponible', $this->PlaceDisponible);
             $req->bindParam(':PMR', $this->PMR);
+            $req->bindParam(':Autonome', $this->Autonome);
             if ($req->execute()) {
 
                 return array('succes' => '1');
@@ -148,6 +152,7 @@ public function GetInfo($plaque){
                 OR Modele LIKE :rq
                 OR PMR LIKE :rq
                 OR Annee LIKE :rq
+                OR Autonome LIKE :rq
                 
                 GROUP BY vehicule.PlaqueVoiture
                 ORDER BY problem DESC");
@@ -179,7 +184,8 @@ public function GetInfo($plaque){
                                                         Carburant=:Carburant, 
                                                         Kilometrage =:Kilometrage, 
                                                         PlaceDisponible=:PlaceDisponible, 
-                                                        PMR =:PMR 
+                                                        PMR =:PMR,
+                                                        Autonome= :Autonome
                                                         WHERE PlaqueVoiture =:PlaqueVoiture");
                 $req->bindParam(':PlaqueVoiture', $this->PlaqueVoiture);
                 $req->bindParam(':Marque', $this->Marque);
@@ -190,6 +196,7 @@ public function GetInfo($plaque){
                 $req->bindParam(':Kilometrage', $this->Kilometrage);
                 $req->bindParam(':PlaceDisponible', $this->PlaceDisponible);
                 $req->bindParam(':PMR', $this->PMR);
+                $req->bindParam(':Autonome', $this->Autonome);
                 if ($req->execute()) {
 
                     return array('succes' => '1');
@@ -229,8 +236,7 @@ public function GetInfo($plaque){
         $allprix = $this->GetAllPrix($plaque);
         $lastprix = end($allprix);
 
-        if ($lastprix['PrixAuKilometre'] != $prix) {
-
+        if(empty($lastprix)){
             $req = $this->Bdd->prepare("INSERT INTO tarification (PrixAuKilometre, PlaqueVehicule) VALUES (:prix, :plaque)");
             $req->bindParam(':prix', $prix);
             $req->bindParam(':plaque', $plaque);
@@ -239,7 +245,20 @@ public function GetInfo($plaque){
             } else {
                 return array("error" => "erreur requette");
             }
+        }
+        else{
+            if ($lastprix['PrixAuKilometre'] != $prix) {
 
+                $req = $this->Bdd->prepare("INSERT INTO tarification (PrixAuKilometre, PlaqueVehicule) VALUES (:prix, :plaque)");
+                $req->bindParam(':prix', $prix);
+                $req->bindParam(':plaque', $plaque);
+                if ($req->execute()) {
+                    return array("succes" => "1");
+                } else {
+                    return array("error" => "erreur requette");
+                }
+
+            }
         }
     }
     public function Delete($plaque){

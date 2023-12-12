@@ -45,6 +45,9 @@ else{
             <li class="nav-item">
                 <a class="nav-link" href="avis.php">Avis</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="majoration.php">Majoration</a>
+            </li>
         </ul>
     </div>
         <div class="d-flex row">

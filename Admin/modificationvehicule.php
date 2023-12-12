@@ -23,6 +23,7 @@ if(!empty($_POST)){
         $voiture->Carburant = $_POST['Caruburant'];
         $voiture->PlaceDisponible = $_POST['PlaceDisponible'];
         $voiture->PMR = $_POST['PMR'];
+        $voiture->Autonome = $_POST['Autonome'];
         $retour =$voiture->Insert();
         if($retour == array('succes'=>'1')){
             header('location:vehicule.php');
@@ -39,9 +40,10 @@ if(!empty($_POST)){
         $voiture->Carburant = $_POST['Caruburant'];
         $voiture->PlaceDisponible = $_POST['PlaceDisponible'];
         $voiture->PMR = $_POST['PMR'];
+        $voiture->Autonome = $_POST['Autonome'];
         $retour =$voiture->Update();
         if($retour == array('succes'=>'1')){
-            header('location:vehicule.php');
+            header('location:modificationvehicule.php?Id='.$Id);
         }
     }
     if(!empty($_POST['NewPrix'])){ //si c'est bien pour ajouter
@@ -142,6 +144,16 @@ if(!empty($_POST)){
                 <option value="PMR">Oui</option>
             </select>
         </div>
+        
+         <div class="form-group">
+            
+            <label for="PMR" class="h5" name="PMR"/>Autonome</label>
+            <select class="form-control" id="Autonome" name="Autonome">
+                <option selected="selected" value="Non"> Non</option>
+                <option value="Autonome">Oui</option>
+            </select>
+        </div>
+        
         <div class="d-flex row">
             <div class="col-sm-4 justify-content-center">
                 <input type="submit" value="ajouter vehicule" class="form-control bg-dark text-light" name="ajout"/>
@@ -228,10 +240,29 @@ if(!empty($_POST)){
             }
 
             $stirng .= '
+
                 
             </select>
         </div>
-        <div class="d-flex row">
+        
+        <div class="form-group">
+            
+            <label for="Autonome" class="h5" name="Autonome"/>Autonome</label>
+            <select class="form-control" id="Autonome" name="Autonome">';
+
+            if ($info['Autonome'] == 'Autonome') { //sauvgerarde en texte ainsi peut juster noté autonome dans bar de recherche
+                $stirng .= '<option selected="selected" value="Autonome"> Oui</option>
+                <option value="Non">non</option>';
+            } else {
+                $stirng .= '<option selected="selected" value="Non"> Non</option>
+                <option value="Autonome">Oui</option>';
+            }
+
+
+        $stirng .= '
+                    </select>   
+                </div>
+                <div class="d-flex row">
             <div class="col-sm-4 justify-content-center">
                 <input type="submit" value="modifier le vehicule" class="form-control bg-dark text-light" name="modif"/>
             </div>

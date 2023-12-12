@@ -22,6 +22,7 @@ function Afficher($liste){
             <td>' . $auto["NomCarburant"] . '</td>
             <td>' . $auto["Kilometrage"] . '</td>
             <td>' . $auto["PMR"] . '</td>
+            <td>' . $auto["Autonome"] . '</td>
             <td>' . $auto["PrixDernier"] . '</td>
             <th><button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`modificationVehicule.php?Id=' . $auto["PlaqueVoiture"] . '`">voir plus</button></th> </tr>';
         echo $ligne;
@@ -39,7 +40,7 @@ function Afficher($liste){
             <input type="submit" value="ajouter vehicule" class="form-control bg-dark text-light" name="New"/>
         </form>
         <form class="col-md-4 form-group" action="" method="">
-            <input type="search" class="form-control rounded" name="search" placeholder="rechercher" aria-label="Rechercher" aria-describedby="inputGroup-sizing-sm"/>
+            <input type="search" class="form-control rounded" name="search" placeholder="rechercher plaque, PMR, Autnome, ..." aria-label="Rechercher" aria-describedby="inputGroup-sizing-sm"/>
         </form>
     </div>
     <table class="table table-striped table-responsive-md">
@@ -50,6 +51,7 @@ function Afficher($liste){
             <th scope="col h3">Carburant</th>
             <th scope="col h3">killométrage</th>
             <th scope="col h3">PMR</th>
+            <th scope="col h3">Autonome</th>
             <th scope="col h3">Tarrif (€/km)</th>
             <th scope="col-md-1 h3"></th>
 
