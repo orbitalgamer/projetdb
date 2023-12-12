@@ -23,7 +23,11 @@ function Afficher($liste){
             <td>' . $auto["Prenom"] . '</td>
             <td>' . $auto["adresse_depart"] . '</td>
             <td>' . $auto["adresse_fin"] . '</td>
-            
+            <th>
+            <form action="abandonner_course.php" method="post">
+            <input type="hidden" name="Id" value="' . $auto["Id"] . '">
+            <button type="submit" class="btn btn-outline-secondary">Abandonner course</button>
+        </form>
      </tr>';
         echo $ligne;
     }
