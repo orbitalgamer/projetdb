@@ -102,9 +102,7 @@ class Course {
       (NULL,
       :Date,
       :IdCourse,
-      :IdEtat,
-      :IdClient,
-      :IdChauffeur,
+      :IdEtat
       )";
      $rq = $this->Bdd->prepare($query);
 

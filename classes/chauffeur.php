@@ -49,9 +49,16 @@ public function __construct(){
     JOIN personne ON personne.Id = course.IdClient
     JOIN adresse AS adresse_depart ON adresse_depart.Id = course.IdAdresseDepart
     JOIN adresse AS adresse_fin ON adresse_fin.Id = course.IdAdresseFin
+    JOIN liencourseetat ON course.Id = liencourseetat.IdCourse
     WHERE
         course.IdChauffeur = :Id
-        AND course.DateReservation < CURRENT_DATE;
+        AND course.DateReservation < CURRENT_DATE
+        AND (
+            SELECT MAX(liencourseetat.Date)
+            FROM liencourseetat
+            WHERE IdCourse = course.Id
+        ) = liencourseetat.Date
+        AND liencourseetat.IdEtat = 7;
 
     "); 
     $req->bindParam(':Id', $Id);
@@ -73,10 +80,19 @@ public function Getcoursefutur($Id){
         JOIN personne ON personne.Id = course.IdClient
         JOIN adresse AS adresse_depart ON adresse_depart.Id = course.IdAdresseDepart
         JOIN adresse AS adresse_fin ON adresse_fin.Id = course.IdAdresseFin
+        JOIN liencourseetat ON course.Id = liencourseetat.IdCourse
         WHERE
             course.IdChauffeur = :Id
-            AND course.DateReservation > CURRENT_DATE;
+            AND course.DateReservation > CURRENT_DATE
+            AND (
+                SELECT MAX(liencourseetat.Date)
+                FROM liencourseetat
+                WHERE IdCourse = course.Id
+            ) = liencourseetat.Date
+            AND liencourseetat.IdEtat = 2;
+            
     ");
+
 
 
     $req->bindParam(':Id', $Id);
@@ -84,6 +100,42 @@ public function Getcoursefutur($Id){
     $resultats = $req->fetchAll(PDO::FETCH_ASSOC);
     return $resultats;
 
+}
+public function Getcoursetermine($Id){
+    $req = $this->Bdd->prepare("
+        SELECT DISTINCT
+            course.*,
+            personne.Nom,
+            personne.Prenom,
+            CONCAT(adresse_depart.vile, ', ', adresse_depart.rue, ' ', adresse_depart.Numero) AS adresse_depart,
+            CONCAT(adresse_fin.vile, ', ', adresse_fin.rue, ' ', adresse_fin.Numero) AS adresse_fin
+        FROM
+            course
+        JOIN personne ON personne.Id = course.IdClient
+        JOIN adresse AS adresse_depart ON adresse_depart.Id = course.IdAdresseDepart
+        JOIN adresse AS adresse_fin ON adresse_fin.Id = course.IdAdresseFin
+        JOIN liencourseetat ON course.Id = liencourseetat.IdCourse
+        
+        
+        
+        WHERE
+            course.IdChauffeur = :Id
+            AND course.DateReservation < CURRENT_DATE
+            AND (
+                SELECT MAX(liencourseetat.Date)
+                FROM liencourseetat
+                WHERE IdCourse = course.Id
+            ) = liencourseetat.Date
+            AND liencourseetat.IdEtat = 4;
+            
+    ");
+
+
+
+    $req->bindParam(':Id', $Id);
+    $req->execute();
+    $resultats = $req->fetchAll(PDO::FETCH_ASSOC);
+    return $resultats;
 }
     public function Getavis($Idchauffeur,$Idcourse){
         
@@ -205,7 +257,54 @@ public function Rechercher($Idchauffeur, $query){
     while ($rep = $req->fetch(PDO::FETCH_ASSOC)) {
         $resultats[] = $rep;
     }
-    var_dump($resultats);
+    
+
+    return $resultats;
+}
+public function Rechercherfutur($Idchauffeur, $query){
+    
+    $query = '%'.$query.'%';
+
+    $req = $this->Bdd->prepare("
+        SELECT DISTINCT 
+        course.*,
+        personne.Nom,
+        personne.Prenom,
+        CONCAT(adresse_depart.vile, ', ', adresse_depart.rue, ' ', adresse_depart.Numero) AS adresse_depart,
+        CONCAT(adresse_fin.vile, ', ', adresse_fin.rue, ' ', adresse_fin.Numero) AS adresse_fin
+            
+        FROM course
+        LEFT JOIN personne ON personne.Id = course.IdClient
+        LEFT JOIN adresse AS adresse_depart ON adresse_depart.Id = course.IdAdresseDepart
+        LEFT JOIN adresse AS adresse_fin ON adresse_fin.Id = course.IdAdresseFin
+        LEFT JOIN avis ON avis.IdCourse = course.Id
+        WHERE
+        (
+            course.Id LIKE :query
+            OR personne.Nom LIKE :query
+            OR personne.Prenom LIKE :query
+            OR adresse_depart.vile LIKE :query
+            OR adresse_fin.vile LIKE :query
+            OR course.DateReservation LIKE :query
+            OR avis.note LIKE :query
+            OR avis.description LIKE :query
+        )
+        AND course.IdChauffeur = :Id
+        AND course.DateReservation > CURRENT_DATE
+    ORDER BY course.DateReservation DESC
+    ");
+    $query = "%".$query.'%';
+
+    $req->bindParam(':query', $query);
+    $req->bindParam(':Id', $Idchauffeur);
+    
+    $req->execute();
+
+    $resultats = array();
+    while ($rep = $req->fetch(PDO::FETCH_ASSOC)) {
+        $resultats[] = $rep;
+    }
+    
 
     return $resultats;
 }
