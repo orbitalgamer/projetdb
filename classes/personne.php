@@ -3,7 +3,7 @@
 
 <?php
 
-require_once 'Bdd.php';
+require_once 'bdd.php';
 
 
 

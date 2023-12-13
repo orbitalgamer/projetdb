@@ -7,7 +7,7 @@
  * En effet, ces méthodes sont en interaction avec une api "gratuit" de géocoding 
  */
 
-include_once 'Bdd.php';
+include_once 'bdd.php';
 
 
 
