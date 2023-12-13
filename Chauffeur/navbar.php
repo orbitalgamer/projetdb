@@ -33,23 +33,15 @@ else{
                 <a class="nav-link" href="newcourse.php">Ajouter des Courses</a>
 
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="vehicule.php">Véhicule</a>
-            </li>
+           
             <li class="nav-item">
 
                 <a class="nav-link" href="Allprobleme.php">Vos Problèmes</a>
 
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="chauffeur.php">Chauffeurs</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="client.php">Clients</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="avis.php">Avis</a>
-            </li>
+            
+            
+            
         </ul>
     </div>
         <div class="d-flex row">

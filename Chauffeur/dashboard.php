@@ -27,7 +27,11 @@ function Afficher($liste){
             <form action="abandonner_course.php" method="post">
             <input type="hidden" name="Id" value="' . $auto["Id"] . '">
             <button type="submit" class="btn btn-outline-secondary">Abandonner course</button>
-        </form>
+            </form>
+            <form action="demarrer_course.php" method="post">
+            <input type="hidden" name="Id" value="' . $auto["Id"] . '">
+            <button type="submit" class="btn btn-outline-secondary">Demarrer course</button>
+            </form>
      </tr>';
         echo $ligne;
     }
@@ -91,7 +95,7 @@ function AfficherEncours($liste){
             <?php
             
             if(empty($_GET['search']) && empty($_GET['maitenance'])) {
-                $all = $chauffeur->GetCoursetermine($_SESSION['Id']);
+                $all = $chauffeur->GetCourseencours($_SESSION['Id']);
                 AfficherEncours($all);
                 $all = $chauffeur->GetCoursefutur($_SESSION['Id']);
                 Afficher($all);
