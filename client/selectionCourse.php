@@ -48,10 +48,10 @@
     
    
         <?php 
-        require_once "bdd.php";
-        include_once "course.php";
-        include_once "personne.php";
-        require_once "adresse.php";
+        require_once "../classes/bdd.php";
+        include_once "../classes/course.php";
+        include_once "../classes/personne.php";
+        require_once "../classes/adresse.php";
         include_once "info_adresse.php";
     /**
      * Documentation :  
