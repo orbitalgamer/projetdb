@@ -1,5 +1,5 @@
 <?php 
-include 'bdd.php';
+include_once 'bdd.php';
 class localite {
     public $Ville;
     public $CodePostal;
