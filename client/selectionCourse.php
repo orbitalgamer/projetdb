@@ -48,7 +48,7 @@
     
    
         <?php 
-        require_once "../classes/bdd.php";
+
         include_once "../classes/course.php";
         include_once "../classes/personne.php";
         require_once "../classes/adresse.php";
