@@ -1,5 +1,5 @@
 <?php 
-require_once 'bdd.php';
+require_once '../classes/bdd.php';
 /**
  * InfosAdresse: cette fonction a pour but d'extraire et de trier les différentes informations présentes dans les adresses rentrèes par les users.
  * A l'aide de Regex (RegularExpression) et des fonctions PHP permettant de traiter des strings, j'ai pu le faire. Peu importe la manière dont est formulée l'adresse
@@ -88,16 +88,16 @@ function InfosAdresse($adresse,$base) {
 }
 
 // Exemple d'utilisation
-$adresseEntree = "Rue du Docq 10 5140 Sombreffe";
-$infosAdresse = InfosAdresse($adresseEntree,$base);
-echo "<br>";
-    print_r( $infosAdresse['Numero']);
-    echo "<br>";
-    print_r($infosAdresse['Rue']);
-    echo "<br>";
+// $adresseEntree = "Rue du Docq 10 5140 Sombreffe";
+// $infosAdresse = InfosAdresse($adresseEntree,$base);
+// echo "<br>";
+//     print_r( $infosAdresse['Numero']);
+//     echo "<br>";
+//     print_r($infosAdresse['Rue']);
+//     echo "<br>";
 
-    print_r($infosAdresse['codePostal']);
-    echo "<br>";
+//     print_r($infosAdresse['codePostal']);
+//     echo "<br>";
 
-    print_r($infosAdresse['Ville']);
+//     print_r($infosAdresse['Ville']);
 ?>

@@ -1,6 +1,6 @@
 <?php
-include "bdd.php";
-include "localite.php";
+include_once "bdd.php";
+include_once "localite.php";
 
 
 
