@@ -1,8 +1,7 @@
 <?php
 include "bdd.php";
 include "localite.php";
-$adresse = "rue de houdain 9c blaregnies";
-$adresse1 = "rue des martyrs frameries";
+
 
 
 
