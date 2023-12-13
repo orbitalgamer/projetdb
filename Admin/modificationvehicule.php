@@ -140,7 +140,7 @@ if(!empty($_POST)){
             
             <label for="PMR" class="h5" name="PMR"/>Adapté au personne a mobilité réduite</label>
             <select class="form-control" id="PMR" name="PMR">
-                <option selected="selected" value="0"> Non</option>
+                <option selected="selected" value="Non"> Non</option>
                 <option value="PMR">Oui</option>
             </select>
         </div>
@@ -233,9 +233,9 @@ if(!empty($_POST)){
 
             if ($info['PMR'] == 'PMR') {
                 $stirng .= '<option selected="selected" value="PMR"> Oui</option>
-                <option value="0">non</option>';
+                <option value="Non">non</option>';
             } else {
-                $stirng .= '<option selected="selected" value="0"> Non</option>
+                $stirng .= '<option selected="selected" value="Non"> Non</option>
                 <option value="PMR">Oui</option>';
             }
 

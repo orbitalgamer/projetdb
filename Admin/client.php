@@ -33,7 +33,7 @@ else{
     <div class="row align-items-center">
 
         <form class="col-md-4 form-group" action="" method="">
-            <input type="search" class="form-control rounded" name="search" placeholder="rechercher" aria-label="Rechercher" aria-describedby="inputGroup-sizing-sm"/>
+            <input type="search" class="form-control rounded" name="search" placeholder="rechercher nom, prenom, N° tel..." aria-label="Rechercher" aria-describedby="inputGroup-sizing-sm"/>
         </form>
     </div>
     <table class="table table-striped table-responsive-md">
@@ -84,9 +84,7 @@ else{
     </div>
     <div class="row align-items-center">
 
-        <form class="col-md-4 form-group" action="" method="">
-            <input type="search" class="form-control rounded" name="search" placeholder="rechercher" aria-label="Rechercher" aria-describedby="inputGroup-sizing-sm"/>
-        </form>
+
     </div>
     <table class="table table-striped table-responsive-md">
         <thead class="table-light">
@@ -106,6 +104,9 @@ else{
 
         <?php
         $resultats = $chauf->GetAllBanni();
+        if(!empty($_GET['search'])){
+            $resultats = $chauf->RequetteAffichageBanni($_GET['search']);
+        }
         $compteur = 1;
         foreach ($resultats as $elem) {
             if($elem['Inpaye'] != 0) {

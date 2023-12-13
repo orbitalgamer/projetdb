@@ -56,7 +56,7 @@ $resultat = $majo->Get();
             <td> <input type="text" class="form-control" name="Nom" value="' . $elem["Nom"] . '" required/></td>
             <td><input type="number" step="any" class="form-control" name="Coef" value="' . $elem["Coefficient"] . '" required/></td>
             <td><input type="submit" value="modifier" class="form-control" name="modif"/></td>
-            <td><button type="button" class="btn btn-outline-danger btn-danger" onclick="window.location.href=`suppressionmajoration.php?Id=' . $elem["Id"] . '`">Supprimers</button></td>
+            <td><button type="button" class="btn btn-outline-danger btn-danger" onclick="window.location.href=`suppressionmajoration.php?Id=' . $elem["Id"] . '`">Supprimer</button></td>
             </tr> </form>';
 
             echo $ligne;
@@ -74,5 +74,8 @@ $resultat = $majo->Get();
 
         </tbody>
     </table>
+    <div class="text-center">
+        <p class="pt-4 pb-2 bold h6">Attention il est impossible de supprimer un type de majoration si des courses ont été réalisées avec. Le bouton supprimer n'est que là pour les erreurs du gestionnaire</p>
+    </div>
 </div>
 </html>
