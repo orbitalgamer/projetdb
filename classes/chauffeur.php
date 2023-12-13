@@ -52,7 +52,7 @@ public function __construct(){
     JOIN liencourseetat ON course.Id = liencourseetat.IdCourse
     WHERE
         course.IdChauffeur = :Id
-        AND course.DateReservation < CURRENT_DATE
+        
         AND (
             SELECT MAX(liencourseetat.Date)
             FROM liencourseetat
@@ -83,7 +83,7 @@ public function Getcoursefutur($Id){
         JOIN liencourseetat ON course.Id = liencourseetat.IdCourse
         WHERE
             course.IdChauffeur = :Id
-            AND course.DateReservation > CURRENT_DATE
+            
             AND (
                 SELECT MAX(liencourseetat.Date)
                 FROM liencourseetat
@@ -101,7 +101,7 @@ public function Getcoursefutur($Id){
     return $resultats;
 
 }
-public function Getcoursetermine($Id){
+public function Getcourseencours($Id){
     $req = $this->Bdd->prepare("
         SELECT DISTINCT
             course.*,
@@ -120,7 +120,7 @@ public function Getcoursetermine($Id){
         
         WHERE
             course.IdChauffeur = :Id
-            AND course.DateReservation < CURRENT_DATE
+            
             AND (
                 SELECT MAX(liencourseetat.Date)
                 FROM liencourseetat

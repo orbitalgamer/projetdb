@@ -15,7 +15,7 @@ function Afficher($liste){
             <td>' . $elem["Email"] . '</td>
             <td>' . $elem["NumeroDeTelephone"] . '</td>
             <td><button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`voiravis.php?IdChauffeur=' . $elem["Id"] . '`">voir avis</button></td>
-            <td><button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`modificationchauffeur.php?Id=' . $elem["Id"] . '`">Supprimers</button></td>
+            <td><button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`modificationchauffeur.php?Id=' . $elem["Id"] . '`">Supprimer</button></td>
      </tr>';
         echo $ligne;
         $compteur += 1;
@@ -40,7 +40,7 @@ function Afficher($liste){
     <div class="row align-items-center">
     
         <form class="col-md-4 form-group" action="" method="">
-            <input type="search" class="form-control rounded" name="search" placeholder="rechercher" aria-label="Rechercher" aria-describedby="inputGroup-sizing-sm"/>
+            <input type="search" class="form-control rounded" name="search" placeholder="rechercher : Nom, Prenom, N° tel..." aria-label="Rechercher" aria-describedby="inputGroup-sizing-sm"/>
         </form>
     </div>
     <table class="table table-striped table-responsive-md">

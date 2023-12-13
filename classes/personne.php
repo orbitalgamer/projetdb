@@ -279,6 +279,37 @@ class Personne  {
         return $retour;
     }
 
+    public function RequetteAffichageBanni($requete){
+        $req = $this->Bdd->prepare("SELECT personne.*, prix.Inpaye as 'Inpaye' FROM personne 
+                                    INNER JOIN typepersonne ON personne.IdStatus = typepersonne.Id
+                                    LEFT JOIN course ON personne.Id = course.IdClient
+                                    LEFT JOIN (SELECT course.Id, 
+                                                      course.IdClient, 
+                                                      count(tarification.PrixAuKilometre * course.DistanceParcourue) as 'Inpaye' 
+                                                FROM course
+                                                LEFT JOIN  liencourseetat on course.Id = liencourseetat.IdCourse
+                                                LEFT JOIN tarification on course.IdTarification = tarification.Id
+                                                INNER JOIN etat on liencourseetat.IdEtat = etat.Id
+                                                WHERE etat.Nom = 'Termine'
+                                                GROUP BY course.IdClient) prix ON personne.Id = course.IdClient
+                                    LEFT JOIN liencourseetat ON course.Id = liencourseetat.IdCourse
+                                    WHERE typepersonne.NomTitre = 'Banni'
+                                    AND(personne.Nom LIKE :rq 
+                                            OR personne.Prenom LIKE :rq 
+                                            OR personne.NumeroDeTelephone LIKE :rq 
+                                            OR personne.Email LIKE :rq)
+                                    GROUP BY personne.Id");
+        $requete = '%'.$requete.'%';
+        $req->bindParam(':rq', $requete);
+        $req->execute();
+
+        $retour = array();
+        while($rep = $req->fetch()){
+            array_push($retour, $rep);
+        }
+        return $retour;
+    }
+
 }
 
 
