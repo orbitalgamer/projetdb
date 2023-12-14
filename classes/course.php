@@ -535,7 +535,7 @@ public function AbandonChauffeur($Id){
   
    $rq->execute();
    $array_duration_course =  $rq->fetchAll(PDO::FETCH_ASSOC);
-   print_r($array_duration_course);
+   
   
    $Diff_Time_array_Previous = array();
    $Diff_Time_array_Next = array();
@@ -639,12 +639,13 @@ public function AbandonChauffeur($Id){
       $reponse_boolean_Previous = TRUE;
       echo "<br>";
       echo "Possible par rapport à la course precedent";
+      echo "<br>";
        
      }
      else
      {
       
-
+      echo "<br>";
        echo "Pas possible par rapport à la course precedent";
        echo "<br>";
        $reponse_boolean_Previous = FALSE; 
@@ -683,7 +684,8 @@ public function AbandonChauffeur($Id){
     
 
      if(abs($min_Diff_Time_Next) > $time_btw_course_next OR !isset($min_Diff_Time_Next)){
-        echo "COurse suivant possible";
+        echo "<br>";
+        echo "Course suivante possible";
         echo "<br>";
        $reponse_boolean_Next = TRUE; 
  
@@ -692,7 +694,8 @@ public function AbandonChauffeur($Id){
      {
        $reponse_boolean_Next = FALSE;  
        echo "<br>";
-       echo "Course suivant impossible";
+       echo "Course suivante impossible";
+       echo "<br>";
      }
  
  

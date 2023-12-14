@@ -101,7 +101,7 @@ public function selection(){
     
     if($rq->execute()){
       $rep=$rq->fetch(PDO::FETCH_ASSOC);
-      echo "la";
+     
       
       return $rep;
    
