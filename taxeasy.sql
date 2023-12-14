@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : mer. 13 déc. 2023 à 19:55
+-- Généré le : jeu. 14 déc. 2023 à 15:15
 -- Version du serveur : 5.7.36
 -- Version de PHP : 7.4.26
 
@@ -92,6 +92,7 @@ CREATE TABLE IF NOT EXISTS `course` (
   `IdAdresseFin` int(11) NOT NULL,
   `IdTarification` int(11) NOT NULL,
   `IdMajoration` int(11) NOT NULL,
+  `duree` int(11) DEFAULT NULL,
   PRIMARY KEY (`Id`),
   KEY `FK_IdAdresseDepart` (`IdAdresseDepart`),
   KEY `FK_IdAdresseFin` (`IdAdresseFin`),
@@ -105,12 +106,12 @@ CREATE TABLE IF NOT EXISTS `course` (
 -- Déchargement des données de la table `course`
 --
 
-INSERT INTO `course` (`Id`, `DateReservation`, `DistanceParcourue`, `IdClient`, `IdChauffeur`, `IdAdresseDepart`, `IdAdresseFin`, `IdTarification`, `IdMajoration`) VALUES
-(1, '2023-11-26 23:26:04', 40, 7, 6, 1, 2, 7, 1),
-(2, '2023-11-26 23:42:02', 60, 8, 6, 2, 3, 8, 1),
-(3, '2023-11-26 23:43:56', 90, 7, 6, 1, 2, 3, 1),
-(4, '2023-12-11 19:35:55', 69, 9, 7, 1, 2, 24, 1),
-(5, '2033-12-21 20:21:54', 69, 9, 8, 1, 2, 18, 1);
+INSERT INTO `course` (`Id`, `DateReservation`, `DistanceParcourue`, `IdClient`, `IdChauffeur`, `IdAdresseDepart`, `IdAdresseFin`, `IdTarification`, `IdMajoration`, `duree`) VALUES
+(1, '2023-11-26 23:26:04', 40, 7, 6, 1, 2, 7, 1, NULL),
+(2, '2023-11-26 23:42:02', 60, 8, 6, 2, 3, 8, 1, NULL),
+(3, '2023-11-26 23:43:56', 90, 7, 6, 1, 2, 3, 1, NULL),
+(4, '2023-12-11 19:35:55', 69, 9, 7, 1, 2, 24, 1, NULL),
+(5, '2033-12-21 20:21:54', 69, 9, 8, 1, 2, 18, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -138,6 +139,30 @@ INSERT INTO `etat` (`Id`, `Nom`) VALUES
 (6, 'Annule par chauffeur'),
 (7, 'Termine'),
 (8, 'Paye');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `lienautonome`
+--
+
+DROP TABLE IF EXISTS `lienautonome`;
+CREATE TABLE IF NOT EXISTS `lienautonome` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `PlaqueVehicule` varchar(10) NOT NULL,
+  `IdChauffeur` int(11) NOT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `FK_plaque` (`PlaqueVehicule`),
+  KEY `FK_chauffeur31` (`IdChauffeur`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `lienautonome`
+--
+
+INSERT INTO `lienautonome` (`Id`, `PlaqueVehicule`, `IdChauffeur`) VALUES
+(5, 'T-AUT-001', 21),
+(6, 'T-AUT-002', 22);
 
 -- --------------------------------------------------------
 
@@ -238,7 +263,7 @@ CREATE TABLE IF NOT EXISTS `personne` (
   `IdStatus` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`Id`),
   KEY `FK_IdStatus` (`IdStatus`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `personne`
@@ -249,7 +274,10 @@ INSERT INTO `personne` (`Id`, `Nom`, `Prenom`, `Email`, `Mdp`, `NumeroDeTelephon
 (7, 'aa', 'aa', 'aa@aa.be', '$2y$10$.fvEITUNJfBwphA1.Oc/2O7ZNAdOAaByxUKaew1BLV3PVLPPge0aa', 0, 1),
 (8, 'admin', 'admin2', 'admin@admin.be', '$2y$10$UqCLTVPPRuhWdxBvoKiCAeEcCpM/Cw3Ir81eaQnFyi.94DNhzMFjq', 0, 3),
 (9, 'Client', 'test', 'client@test.be', 'ptdr il pourra jamais se conncter', 6942000, 1),
-(10, 'demo', 'chauffeur', 'demo@chauffeur.be', '$2y$10$lM.FtatJw5DpNnbqf8UCJO6dieYlK91lkz.ERAHg5jZGMr4DC9eNW', 123456789, 2);
+(10, 'demo', 'chauffeur', 'demo@chauffeur.be', '$2y$10$lM.FtatJw5DpNnbqf8UCJO6dieYlK91lkz.ERAHg5jZGMr4DC9eNW', 123456789, 2),
+(20, 'Autonome', 'supprimer', 'taxeasy', 'autonome', 65000000, 6),
+(21, 'Autonome', 'T-AUT-001', 'taxeasy', 'autonome', 65000000, 6),
+(22, 'Autonome', 'T-AUT-002', 'taxeasy', 'autonome', 65000000, 6);
 
 -- --------------------------------------------------------
 
@@ -342,7 +370,7 @@ CREATE TABLE IF NOT EXISTS `tarification` (
   `PlaqueVehicule` varchar(12) DEFAULT NULL,
   PRIMARY KEY (`Id`),
   KEY `FK_Vehicule` (`PlaqueVehicule`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `tarification`
@@ -371,7 +399,11 @@ INSERT INTO `tarification` (`Id`, `PrixAuKilometre`, `Date`, `PlaqueVehicule`) V
 (23, 4, '2023-12-02 11:25:03', NULL),
 (24, 7, '2023-12-02 11:32:17', '2avh069'),
 (25, 7.1, '2023-12-02 11:33:59', '2avh069'),
-(26, 20, '2023-12-12 21:54:03', 'auto');
+(26, 20, '2023-12-12 21:54:03', NULL),
+(28, 666, '2023-12-14 15:59:24', 'T-AUT-001'),
+(29, 667, '2023-12-14 15:59:28', 'T-AUT-001'),
+(30, 668, '2023-12-14 15:59:33', 'T-AUT-001'),
+(31, 300, '2023-12-14 16:10:08', 'T-AUT-002');
 
 -- --------------------------------------------------------
 
@@ -431,7 +463,7 @@ CREATE TABLE IF NOT EXISTS `typepersonne` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `NomTitre` varchar(12) NOT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `typepersonne`
@@ -442,7 +474,8 @@ INSERT INTO `typepersonne` (`Id`, `NomTitre`) VALUES
 (2, 'Chauffeur'),
 (3, 'Admin'),
 (4, 'Banni'),
-(5, 'Attente');
+(5, 'Attente'),
+(6, 'Autonome');
 
 -- --------------------------------------------------------
 
@@ -485,7 +518,6 @@ CREATE TABLE IF NOT EXISTS `vehicule` (
   `Kilometrage` int(11) NOT NULL,
   `PlaceDisponible` int(11) NOT NULL,
   `PMR` varchar(3) NOT NULL,
-  `Autonome` varchar(12) DEFAULT '0',
   PRIMARY KEY (`PlaqueVoiture`),
   KEY `FK_IdCarburan` (`Carburant`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -494,13 +526,14 @@ CREATE TABLE IF NOT EXISTS `vehicule` (
 -- Déchargement des données de la table `vehicule`
 --
 
-INSERT INTO `vehicule` (`PlaqueVoiture`, `Marque`, `Modele`, `Couleur`, `Annee`, `Carburant`, `Kilometrage`, `PlaceDisponible`, `PMR`, `Autonome`) VALUES
-('1ahe302', 'skoda', 'fabia', 'beige', 2011, 1, 200000, 4, '0', '0'),
-('1csx987', 'volkwagen', 'polo 6', 'grise', 2012, 1, 130000, 4, 'Non', 'Autonome'),
-('1yme000', 'volkwagen', 'golf', 'noir', 2019, 1, 30000, 4, 'Non', 'Non'),
-('2avh069', 'peugeot', '208', 'rouge', 2017, 5, 113000, 4, 'PMR', 'Autonome'),
-('Aacb998', 'memee', 'mee', '?', 99, 1, 66550, 50, 'Non', 'Non'),
-('auto', 'nome', '??', 'jesaispas', 3489, 5, 46, 1, 'PMR', 'Autonome');
+INSERT INTO `vehicule` (`PlaqueVoiture`, `Marque`, `Modele`, `Couleur`, `Annee`, `Carburant`, `Kilometrage`, `PlaceDisponible`, `PMR`) VALUES
+('1ahe302', 'skoda', 'fabia', 'beige', 2011, 1, 200000, 4, '0'),
+('1csx987', 'volkwagen', 'polo 6', 'grise', 2012, 1, 130000, 4, 'Non'),
+('1yme000', 'volkwagen', 'golf', 'noir', 2019, 1, 30000, 4, 'Non'),
+('2avh069', 'peugeot', '208', 'rouge', 2017, 5, 113000, 4, 'PMR'),
+('Aacb998', 'memee', 'mee', '?', 99, 1, 66550, 50, 'Non'),
+('T-AUT-001', 'Tesla du futur', 'MAGIQUE', 'peu importe', 546, 5, 153, 100, 'PMR'),
+('T-AUT-002', 'Tesla du futur', 'MAGIQUE2', 'gris', 4564665, 5, 48456465, 5, 'PMR');
 
 --
 -- Contraintes pour les tables déchargées
@@ -528,6 +561,13 @@ ALTER TABLE `course`
   ADD CONSTRAINT `FK_IdClient` FOREIGN KEY (`IdClient`) REFERENCES `personne` (`Id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `FK_IdMajoration` FOREIGN KEY (`IdMajoration`) REFERENCES `typemajoration` (`Id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `FK_IdTarification` FOREIGN KEY (`IdTarification`) REFERENCES `tarification` (`Id`) ON UPDATE CASCADE;
+
+--
+-- Contraintes pour la table `lienautonome`
+--
+ALTER TABLE `lienautonome`
+  ADD CONSTRAINT `FK_chauffeur31` FOREIGN KEY (`IdChauffeur`) REFERENCES `personne` (`Id`),
+  ADD CONSTRAINT `FK_plaque` FOREIGN KEY (`PlaqueVehicule`) REFERENCES `vehicule` (`PlaqueVoiture`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `liencourseetat`
