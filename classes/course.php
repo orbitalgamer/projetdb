@@ -392,7 +392,7 @@ public function AbandonChauffeur($Id){
                                              client.Email as 'EmailClient',
                                              etat.Nom as 'NomEtat',
                                              
-                                             IF(paye.IdEtat = (SELECT Id FROM etat WHERE Nom='Paye') AND lien.IdEtat != (SELECT Id FROM etat WHERE Nom='Annule par chauffeur'), 1, 0) as 'Inpaye',
+                                             IF(paye.IdEtat > (SELECT Id FROM etat WHERE Nom='En cours') AND paye.IdEtat != (SELECT Id FROM etat WHERE Nom='Annule par chauffeur') , 0, 1) as 'Inpaye',
                                              depart.Numero as 'NumeroDepart',
                                              depart.Rue as 'RueDepart',
                                              depart.Vile as 'VileDepart',
@@ -404,7 +404,8 @@ public function AbandonChauffeur($Id){
                                              tarification.PlaqueVehicule as 'Plaque' ,
                                              (tarification.PrixAuKilometre * course.DistanceParcourue) as 'Prix',
                                              tarification.PrixAuKilometre as 'Tarif',
-                                             course.DistanceParcourue
+                                             course.DistanceParcourue,
+                                             paye.IdEtat as 'debug'
             
                                              
                                              
@@ -412,7 +413,7 @@ public function AbandonChauffeur($Id){
                                     INNER JOIN personne chuffeur on course.IdChauffeur = chuffeur.Id
                                     INNER JOIN personne client on course.IdClient = client.Id
                                     LEFT JOIN (SELECT * FROM liencourseetat WHERE IdEtat < (SELECT Id FROM etat WHERE Nom='Paye') ORDER BY IdEtat DESC) lien on course.Id = lien.IdCourse
-                                    LEFT JOIN (SELECT * FROM liencourseetat WHERE IdEtat = (SELECT Id FROM etat WHERE Nom='Paye')) paye on course.Id = paye.IdCourse
+                                    LEFT JOIN (SELECT MAX(IdEtat) as 'IdEtat', IdCourse FROM liencourseetat WHERE IdCourse =:Id) paye on course.Id = paye.IdCourse
                                     INNER JOIN etat on lien.IdEtat = etat.Id
                                         
                                     INNER JOIN adresse depart on depart.Id = course.IdAdresseDepart

@@ -29,7 +29,7 @@
         $pers = new Personne(); //crée objet personne
         if(!empty($_POST['login-submit'])){ // pour quand
             if(!empty($_POST['Email']) && !empty($_POST['Mdp'])) {
-                if ($pers->connection($_POST['Email'], $_POST['Mdp']) == array('succes' => '1')){
+                if ($pers->connection(strtolower($_POST['Email']), strtolower($_POST['Mdp'])) == array('succes' => '1')){
                     header('location: index.php'); //renvoie vers header si tout a bien été
                     echo 'ok';
                 }

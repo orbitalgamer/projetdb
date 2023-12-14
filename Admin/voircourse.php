@@ -52,9 +52,9 @@ else{
         <a class="h4"> <?php echo $resultat['EmailChauffeur']; ?></a>
     </div>
     <div class="form-group">
-        <a class="h5">La course a été effectué le </a> <a class="h4"> <?php echo $resultat['DateDebut'];  ?></a>
-        <a class="h5"> Partant de </a> <a class="h4"> <?php echo $resultat['NumeroDepart'].' '.$resultat['RueDepart'].' à '.$resultat['CPDepart'].' '.$resultat['VileDepart']; ?></a> <a class="h5"> jusque </a>
-        <a class="h4"> <?php echo $resultat['NumeroFin'].' '.$resultat['RueFin'].' à '.$resultat['CPFin'].' '.$resultat['VileFin']; ?></a> <a class="h5"> par la voiture </a> <a class="h4"> <?php echo $resultat['Plaque'];?></a>
+        <a class="h5">La course a été effectué le </a> <a class="h5"> <?php echo $resultat['DateDebut'];  ?></a><br>
+        <a class="h5"> Partant de </a> <a class="h5"> <?php echo $resultat['NumeroDepart'].' '.$resultat['RueDepart'].' à '.$resultat['CPDepart'].' '.$resultat['VileDepart']; ?></a> <a class="h5"> jusque </a>
+        <a class="h5"> <?php echo $resultat['NumeroFin'].' '.$resultat['RueFin'].' à '.$resultat['CPFin'].' '.$resultat['VileFin']; ?></a> <a class="h5"> par la voiture </a> <a class="h5"> <?php echo $resultat['Plaque'];?></a>
     </div>
     <div class="form-group">
         <a class="h5">Le chauffeur à roulé sur </a> <a class="h4"> <?php echo $resultat['DistanceParcourue'];?></a>
