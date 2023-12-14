@@ -1,6 +1,7 @@
 <?php
 
 require_once 'Bdd.php';
+include_once 'chauffeur.php';
 
 
 /**
@@ -35,8 +36,8 @@ public function Insert(){
 
         if (!$req->fetch()) {
             $req = $this->Bdd->prepare("
-                                    INSERT INTO vehicule (PlaqueVoiture, Marque, Modele, Couleur, Annee, Carburant, Kilometrage, PlaceDisponible, PMR, Autonome) 
-                                    VALUES (:PlaqueVoiture, :Marque, :Modele, :Couleur, :Annee, :Carburant, :Kilometrage, :PlaceDisponible, :PMR, :Autonome)");
+                                    INSERT INTO vehicule (PlaqueVoiture, Marque, Modele, Couleur, Annee, Carburant, Kilometrage, PlaceDisponible, PMR) 
+                                    VALUES (:PlaqueVoiture, :Marque, :Modele, :Couleur, :Annee, :Carburant, :Kilometrage, :PlaceDisponible, :PMR)");
             $req->bindParam(':PlaqueVoiture', $this->PlaqueVoiture);
             $req->bindParam(':Marque', $this->Marque);
             $req->bindParam(':Modele', $this->Modele);
@@ -46,9 +47,32 @@ public function Insert(){
             $req->bindParam(':Kilometrage', $this->Kilometrage);
             $req->bindParam(':PlaceDisponible', $this->PlaceDisponible);
             $req->bindParam(':PMR', $this->PMR);
-            $req->bindParam(':Autonome', $this->Autonome);
             if ($req->execute()) {
+                if($this->Autonome == 'Autonome'){
+                    //va ajouter qu'il est autonome
 
+                    //crée le chauffeur autonome
+                    $req = $this->Bdd->prepare('INSERT INTO personne 
+                                                        ( Nom, Prenom, Email, Mdp, NumeroDeTelephone, IdStatus)
+                                                        VALUES("Autonome", :plaque, "taxeasy", "autonome", "065000000", (SELECT Id FROM typepersonne WHERE NomTitre="Autonome"))');
+                    $req ->bindParam(':plaque', $this->PlaqueVoiture);
+                    $req ->execute();
+
+
+
+                    //recherche Id de cette perseonne
+                    $pers = new chauffeur();
+                    $personne = $pers->GetIdChauffeurAutonome($this->PlaqueVoiture); //normalement que 1 seul personne qui a la plaque comme tag dans prenom, nom et n° tel
+
+
+                    //rajoute dans le lien
+                    $req = $this->Bdd->prepare("INSERT INTO lienautonome (PlaqueVehicule, IdChauffeur) VALUES (:plaque, :idchauffeur)");
+                    $req->bindParam(':plaque', $this->PlaqueVoiture);
+                    $req->bindParam(':idchauffeur', $personne['Id']);
+                    if(!$req->execute()){
+                        return array("error"=>"impossible faire lien");
+                    }
+                }
                 return array('succes' => '1');
             } else {
                 //var_dump($req->errorInfo());
@@ -77,9 +101,10 @@ public function GetTypeCarburant(){
 }
 
 public function GetInfo($plaque){
-    $req = $this->Bdd->prepare("SELECT vehicule.*, prix.PrixAuKilometre FROM vehicule
+    $req = $this->Bdd->prepare("SELECT vehicule.*, prix.PrixAuKilometre, IF(lienautonome.Id, 'Autonome', 'Non') as 'Autonome' FROM vehicule
          LEFT JOIN (SELECT t.PlaqueVehicule,  t.PrixAuKilometre FROM tarification t ORDER BY t.Id DESC LIMIT 1) prix 
         ON prix.PlaqueVehicule = vehicule.PlaqueVoiture
+        LEFT JOIN lienautonome on vehicule.PlaqueVoiture = lienautonome.PlaqueVehicule
          WHERE PlaqueVoiture = :plaque"); //peut simplifier recherche à limit 1 car ainsi prend le le plus élevé pour ce véhicule
     $req->bindParam(':plaque', $plaque);
     $req->execute();
@@ -93,7 +118,9 @@ public function GetInfo($plaque){
         vehicule.*, 
         typecarburant.Nom as 'NomCarburant',
         prixMax.PrixAuKilometre as 'PrixDernier',
-        MAX(IF(NOT probleme.Regle, 1, 0)) as 'problem'
+        MAX(IF(NOT probleme.Regle, 1, 0)) as 'problem',
+        IF(lienautonome.Id, 'Autonome', 'Non') as 'Autonome'
+    
     FROM vehicule
     INNER JOIN typecarburant on typecarburant.Id = vehicule.Carburant
     LEFT JOIN tarification prix on vehicule.PlaqueVoiture = prix.PlaqueVehicule 
@@ -102,6 +129,7 @@ public function GetInfo($plaque){
         on prixMax.PlaqueVehicule = vehicule.PlaqueVoiture
     LEFT JOIN course on prix.Id = course.IdTarification
     LEFT JOIN probleme on course.Id = probleme.IdCourse
+    LEFT JOIN lienautonome on vehicule.PlaqueVoiture = lienautonome.PlaqueVehicule
     
     GROUP BY vehicule.PlaqueVoiture
     ORDER BY problem DESC
@@ -136,7 +164,8 @@ public function GetInfo($plaque){
                     vehicule.*, 
                     typecarburant.Nom as 'NomCarburant',
                     prixMax.PrixAuKilometre as 'PrixDernier',
-                    MAX(IF(NOT probleme.Regle, 1, 0)) as 'problem'
+                    MAX(IF(NOT probleme.Regle, 1, 0)) as 'problem',
+                    IF(lienautonome.Id, 'Autonome', 'Non') as 'Autonome'
                 FROM vehicule
                 INNER JOIN typecarburant on typecarburant.Id = vehicule.Carburant
                 LEFT JOIN tarification prix on vehicule.PlaqueVoiture = prix.PlaqueVehicule 
@@ -145,6 +174,7 @@ public function GetInfo($plaque){
                     on prixMax.PlaqueVehicule = vehicule.PlaqueVoiture
                 LEFT JOIN course on prix.Id = course.IdTarification
                 LEFT JOIN probleme on course.Id = probleme.IdCourse
+                LEFT JOIN lienautonome on vehicule.PlaqueVoiture = lienautonome.PlaqueVehicule
     
                 WHERE typecarburant.Nom LIKE :rq 
                 OR PlaqueVoiture LIKE :rq 
@@ -152,7 +182,7 @@ public function GetInfo($plaque){
                 OR Modele LIKE :rq
                 OR PMR LIKE :rq
                 OR Annee LIKE :rq
-                OR Autonome LIKE :rq
+                
                 
                 GROUP BY vehicule.PlaqueVoiture
                 ORDER BY problem DESC");
@@ -184,8 +214,7 @@ public function GetInfo($plaque){
                                                         Carburant=:Carburant, 
                                                         Kilometrage =:Kilometrage, 
                                                         PlaceDisponible=:PlaceDisponible, 
-                                                        PMR =:PMR,
-                                                        Autonome= :Autonome
+                                                        PMR =:PMR
                                                         WHERE PlaqueVoiture =:PlaqueVoiture");
                 $req->bindParam(':PlaqueVoiture', $this->PlaqueVoiture);
                 $req->bindParam(':Marque', $this->Marque);
@@ -262,6 +291,15 @@ public function GetInfo($plaque){
         }
     }
     public function Delete($plaque){
+    $info = $this->GetInfo($plaque); //va regarder s'il était autonome
+    if($info['Autonome'] == 'Autonome'){
+        $pers = new chauffeur();
+        $personne = $pers->GetIdChauffeurAutonome($plaque);
+
+        $req = $this->Bdd->prepare('UPDATE personne SET Prenom="supprimer" WHERE Id=:Id'); //peux pas supprimer complètement car besoin du chauffeur pour garder l'intégrité des course qu'il a fait
+        $req->bindParam(':Id', $personne['Id']);
+        $req->execute();
+    }
 
     $req = $this->Bdd->prepare("DELETE FROM vehicule WHERE PlaqueVoiture = :plaque");
     $req->bindParam(':plaque', $plaque);

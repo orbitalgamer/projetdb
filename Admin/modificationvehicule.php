@@ -252,10 +252,10 @@ if(!empty($_POST)){
 
             if ($info['Autonome'] == 'Autonome') { //sauvgerarde en texte ainsi peut juster noté autonome dans bar de recherche
                 $stirng .= '<option selected="selected" value="Autonome"> Oui</option>
-                <option value="Non">non</option>';
+                ';
             } else {
                 $stirng .= '<option selected="selected" value="Non"> Non</option>
-                <option value="Autonome">Oui</option>';
+                ';
             }
 
 

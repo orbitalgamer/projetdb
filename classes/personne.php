@@ -169,7 +169,7 @@ class Personne  {
                             INNER JOIN typepersonne on personne.IdStatus = typepersonne.Id
                             WHERE typepersonne.NomTitre = 'Client' AND(Nom LIKE :rq OR 
                            Prenom LIKE :rq OR 
-                           Email LIKe :rq OR
+                           Email LIKE :rq OR
                            NumeroDeTelephone LIKE :rq)");
        $requete = '%'.$requete.'%';
        $req->bindParam(':rq', $requete);

@@ -3,6 +3,7 @@
 require_once 'Bdd.php';
 
 
+
 /**
  * création classe chauffeur 
  */
@@ -27,10 +28,25 @@ public function __construct(){
         $req = $this->Bdd->query("
     SELECT DISTINCT personne.*   
     FROM  personne
-    WHERE IdStatus = 2
+     WHERE IdStatus = (SELECT Id FROM typepersonne WHERE NomTitre='Chauffeur')
     ");
     $resultats = $req->fetchAll(PDO::FETCH_ASSOC);
     return $resultats;
+    }
+
+    /*
+     * @return tout les chauffeur autonome + le Dernier Id tarrification de la voiture en question
+     */
+    public function GetAllAutonome(){
+        $req = $this->Bdd->query("
+    SELECT DISTINCT personne.*,  prixMax.Id as 'IdTarification'
+    FROM  personne
+    INNER JOIN lienautonome on personne.Id = lienautonome.IdChauffeur
+    INNER JOIN (SELECT MAX(Id) as 'Id', PlaqueVehicule FROM tarification GROUP BY PlaqueVehicule) prixMax on prixmax.PlaqueVehicule = lienautonome.PlaqueVehicule
+     WHERE IdStatus = (SELECT Id FROM typepersonne WHERE NomTitre='Autonome')
+    ");
+        $resultats = $req->fetchAll(PDO::FETCH_ASSOC);
+        return $resultats;
     }
 
     
@@ -366,6 +382,18 @@ public function GetnewCourse(){
         }
         return $retour;
     }
+
+    public function GetIdChauffeurAutonome($requete){
+        $req = $this->Bdd->prepare("SELECT personne.Id FROM personne 
+            INNER JOIN typepersonne on personne.IdStatus = typepersonne.Id
+            WHERE typepersonne.NomTitre ='Autonome' AND personne.Prenom LIKE :rq");
+        $requete = '%'.$requete.'%';
+        $req->bindParam(':rq', $requete);
+        $req->execute();
+        return $req->fetch();
+    }
+
+
 
     public function Ajout($Id){
         $req = $this->Bdd->prepare("UPDATE personne SET IdStatus = (SELECT  Id FROM typepersonne WHERE NomTitre ='Chauffeur') WHERE Id = :Id");
