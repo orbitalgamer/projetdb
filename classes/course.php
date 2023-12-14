@@ -529,7 +529,7 @@ public function AbandonChauffeur($Id){
     * 
     * à faire condition 3
     */
-   $query = "SELECT DISTINCT duree,DateReservation,idAdresseFin,idAdresseDepart FROM $this->NomTable WHERE idChauffeur = 5 AND duree !=0";
+   $query = "SELECT DISTINCT duree,DateReservation,idAdresseFin,idAdresseDepart FROM $this->NomTable WHERE idChauffeur = '$this->IdChaufeur' AND duree !=0";
    $rq = $this->Bdd->prepare($query);
    $rq->execute();
    $array_duration_course =  $rq->fetchAll(PDO::FETCH_ASSOC);
