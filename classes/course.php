@@ -95,19 +95,15 @@ class Course {
 
   public function creationlien(){
     $query = "INSERT INTO $this->NomTableLien (
-      Id,
-      Date,
+      
       IdCourse,
       IdEtat)
       VALUES 
-      (NULL,
-      :Date,
-      :IdCourse,
+      (:IdCourse,
       :IdEtat
       )";
      $rq = $this->Bdd->prepare($query);
 
-     $rq->bindParam(':Date', $this->Date);
      $rq->bindParam(':IdCourse', $this->IdCourse);
      $rq->bindParam(':IdEtat', $this->IdEtat);
 

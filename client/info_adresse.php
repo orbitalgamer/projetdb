@@ -8,7 +8,8 @@ require_once '../classes/bdd.php';
  *
  */
 
-
+$Bdd = new Bdd();
+$base = $Bdd->getBdd();
 
 
 function InfosAdresse($adresse,$base) {

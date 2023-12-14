@@ -185,20 +185,12 @@ WHERE
 public function GetAllprobleme($Idchauffeur){
         
 
-    $req = $this->Bdd->prepare("
-    SELECT DISTINCT
-course.Id AS Idcourse,
-course.DateReservation,
-personne.Nom,
-personne.Prenom,
-photocourse.Id,
-photocourse.CheminDacces
-FROM
-course
-JOIN personne ON personne.Id = course.IdClient
-JOIN photocourse ON photocourse.IdCourse = course.Id
-WHERE
-course.IdChauffeur = :Id");
+    $req = $this->Bdd->prepare("SELECT Regle, Rouler, typeprobleme.Nom as 'NomProblem', tarification.PlaqueVehicule as 'Plaque' FROM probleme 
+    INNER JOIN typeprobleme on probleme.IdTypeProbleme = typeprobleme.Id
+    INNER JOIN course on probleme.IdCourse = course.Id
+    INNER JOIN tarification on course.IdTarification = tarification.Id
+    WHERE course.IdChauffeur = :Id
+    ");
 $req->bindParam(':Id', $Idchauffeur);
 $req->execute();
 $resultats = $req->fetchAll(PDO::FETCH_ASSOC);

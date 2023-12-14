@@ -36,6 +36,7 @@ class localite {
         $rq->execute();
         $rep=$rq->fetch(PDO::FETCH_ASSOC);
         echo json_encode($rep);
+        return $rep;
     }
 }
 

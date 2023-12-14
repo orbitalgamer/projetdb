@@ -13,6 +13,8 @@ class adresse{
     public $Numero;
     public $Rue;
     public $Ville;
+    public $CP;
+
     public $NomAdresse;
     public $latitude;
     public $longitude; 
@@ -21,7 +23,7 @@ class adresse{
     
  
 
-    public function __construct($db){  
+    public function __construct(){
 
         $db = new Bdd();
         $this->Bdd = $db->getBdd();
@@ -32,28 +34,40 @@ class adresse{
 
 
     public function creation(){
-        $query = "SELECT * FROM $this->NomTable WHERE latitude BETWEEN $this->latitude - 0.00000001 AND $this->latitude + 0.00000001 AND longitude BETWEEN $this->longitude - 0.00000001 AND $this->longitude + 0.00000001";
+        $query = "SELECT * FROM $this->NomTable WHERE Rue=:Rue AND Numero=:Numero AND Vile=:Ville";
         $rq = $this->Bdd->prepare($query);
+        $rq->bindParam(':Rue', $this->Rue);
+        $rq->bindParam(':Numero', $this->Numero);
+        $rq->bindParam(':Ville', $this->Ville);
         $rq->execute(); 
         $rep=$rq->fetch(PDO::FETCH_ASSOC);
-        print_r($rep);
+
+        if(!empty($rep)){
+            return array("error"=>1);
+        }
         /**Le principe est de verifier que les latitudes et longitudes rentrés n'existe pas dans le bdd pour économiser des réquetes APIs */
-    
-        if($rep==null) {
+
+        $loc = new localite($this->Bdd);
+        $loc->Ville = $this->Ville;
+        if(empty($loc->selection())){
+            $loc->CodePostal=$this->CP;
+            $loc->creation();
+        }
+
+
+        if(empty($rep)) {
             $query = "INSERT INTO $this->NomTable (
-                Id,
+                
                 Numero,
                 Rue,
-                Ville,
-                NomAdresse,
+                Vile,
                 latitude,
                 longitude)
                 VALUES
-                (NULL,
+                (
                 :Numero,
                 :Rue,
                 :Ville,
-                :NomAdresse,
                 :latitude,
                 :longitude)";
                 
@@ -61,21 +75,21 @@ class adresse{
             $rq->bindParam(':Numero',$this->Numero);
             $rq->bindParam(':Rue',$this->Rue);
             $rq->bindParam(':Ville',$this->Ville);
-            $rq->bindParam(':NomAdresse',$this->NomAdresse);
             $rq->bindParam(':latitude',$this->latitude);
             $rq->bindParam(':longitude',$this->longitude);
             
         try{
-    
+
             $rq->execute();
             $rep = $rq->fetch(PDO::FETCH_ASSOC);
-            
+
         }
         catch(PDOException $e){
             $e = explode(" ",$e);
             if($e[1]== "SQLSTATE[23000]:"){
                 $newLocalite = new localite($this->Bdd);
                 $newLocalite->Ville = $this->Ville;
+                $newLocalite->CodePostal = $this->CP;
                 $newLocalite->creation();
                 $rq->execute();
                 $rep = $rq->fetch(PDO::FETCH_ASSOC);
@@ -113,6 +127,15 @@ public function selection(){
     
     }
 
+    public function GetAdresse(){
+        $req = $this->Bdd->prepare("SELECT Id FROM adresse WHERE Rue=:Rue AND Numero=:Numero AND Vile =:Vile");
+        $req->bindParam(':Rue', $this->Rue);
+        $req->bindParam(':Numero', $this->Numero);
+        $req->bindParam(':Vile', $this->Ville);
+        $req->execute();
+
+        return $req->fetch();
+    }
    
 }
 
