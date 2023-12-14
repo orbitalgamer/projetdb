@@ -466,7 +466,7 @@ public function AbandonChauffeur($Id){
                                 
                                 INNER JOIN (SELECT * FROM liencourseetat WHERE Id IN (SELECT MAX(Id) as "Id" FROM liencourseetat GROUP BY IdCourse)) lienmax on course.Id = lienmax.IdCourse
                                 INNER JOIN personne chauffeur on course.IdChauffeur = chauffeur.Id
-                                INNER JOIN personne client on course.IdChauffeur = client.Id
+                                INNER JOIN personne client on course.IdClient = client.Id
                                 INNER JOIN tarification on course.IdTarification = tarification.Id
                                 INNER JOIN etat on lienmax.IdEtat = etat.Id
                                 WHERE lienmax.IdEtat BETWEEN (SELECT Id FROM etat WHERE Nom ="Chauffeur en route") AND (SELECT Id FROM etat WHERE Nom ="En cours")
@@ -488,7 +488,7 @@ public function AbandonChauffeur($Id){
                                 
                                 
                                 INNER JOIN personne chauffeur on course.IdChauffeur = chauffeur.Id
-                                INNER JOIN personne client on course.IdChauffeur = client.Id
+                                INNER JOIN personne client on course.IdClient = client.Id
                                 INNER JOIN tarification on course.IdTarification = tarification.Id
                                 
                                 WHERE DateReservation > CURRENT_TIMESTAMP
