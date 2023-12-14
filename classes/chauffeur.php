@@ -250,6 +250,7 @@ public function Rechercher($Idchauffeur, $query){
         LEFT JOIN adresse AS adresse_depart ON adresse_depart.Id = course.IdAdresseDepart
         LEFT JOIN adresse AS adresse_fin ON adresse_fin.Id = course.IdAdresseFin
         LEFT JOIN avis ON avis.IdCourse = course.Id
+        JOIN liencourseetat ON course.Id = liencourseetat.IdCourse
         WHERE
         (
             course.Id LIKE :query
@@ -262,6 +263,12 @@ public function Rechercher($Idchauffeur, $query){
             OR avis.description LIKE :query
         )
         AND course.IdChauffeur = :Id
+        AND (
+            SELECT MAX(liencourseetat.Date)
+            FROM liencourseetat
+            WHERE IdCourse = course.Id
+        ) = liencourseetat.Date
+        AND liencourseetat.IdEtat = 7;
     ORDER BY course.DateReservation DESC
     ");
     $query = "%".$query.'%';
@@ -296,6 +303,7 @@ public function Rechercherfutur($Idchauffeur, $query){
         LEFT JOIN adresse AS adresse_depart ON adresse_depart.Id = course.IdAdresseDepart
         LEFT JOIN adresse AS adresse_fin ON adresse_fin.Id = course.IdAdresseFin
         LEFT JOIN avis ON avis.IdCourse = course.Id
+        JOIN liencourseetat ON course.Id = liencourseetat.IdCourse
         WHERE
         (
             course.Id LIKE :query
@@ -308,7 +316,14 @@ public function Rechercherfutur($Idchauffeur, $query){
             OR avis.description LIKE :query
         )
         AND course.IdChauffeur = :Id
-        AND course.DateReservation > CURRENT_DATE
+        AND (
+            SELECT MAX(liencourseetat.Date)
+            FROM liencourseetat
+            WHERE IdCourse = course.Id
+        ) = liencourseetat.Date
+        AND liencourseetat.IdEtat = 2;
+        
+        
     ORDER BY course.DateReservation DESC
     ");
     $query = "%".$query.'%';
