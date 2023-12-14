@@ -7,7 +7,8 @@
  * En effet, ces méthodes sont en interaction avec une api "gratuit" de géocoding 
  */
 
-include_once 'bdd.php';
+include_once 'Bdd.php';
+include_once 'adresse.php';
 
 
 
@@ -505,7 +506,7 @@ public function AbandonChauffeur($Id){
    $Current_Course_IdAdresseDepart = $Current_Course->IdAdresseDepart;//$Current_Course["IdAdresseDepart"] ;
    $Current_Course_IdAdresseFin = $Current_Course->IdAdresseFin;//$Current_Course["IdAdresseFin"];
  
-   $Current_Course_TimeParcoure =  $Current_Course->duree;//$Current_Course["duree"];
+   $Current_Course_TimeParcoure =  $Current_Course->duree;
    $Current_Course_DateTime  = new DateTime($Current_Course_DateTime);
    $Current_Course_DateTime_Without_ExtraTime = $Current_Course_DateTime->getTimestamp(); //On garde l'horaire sans le temps de parcour pour verifier avec course previous
    $Current_extraTime_heure = $Current_Course_TimeParcoure/3600;
@@ -529,11 +530,13 @@ public function AbandonChauffeur($Id){
     * 
     * à faire condition 3
     */
-   $query = "SELECT DISTINCT duree,DateReservation,idAdresseFin,idAdresseDepart FROM $this->NomTable WHERE idChauffeur = '$this->IdChaufeur' AND duree !=0";
+   $query = "SELECT DISTINCT duree,DateReservation,idAdresseFin,idAdresseDepart FROM $this->NomTable WHERE idChauffeur = '$this->IdChauffeur' AND duree !=0"; #IdChaufeur
    $rq = $this->Bdd->prepare($query);
+  
    $rq->execute();
    $array_duration_course =  $rq->fetchAll(PDO::FETCH_ASSOC);
    print_r($array_duration_course);
+  
    $Diff_Time_array_Previous = array();
    $Diff_Time_array_Next = array();
    for($i=0; $i < count($array_duration_course);$i++)
@@ -579,23 +582,25 @@ public function AbandonChauffeur($Id){
  print_r($Diff_Time_array_Next);
  echo "<br>";
  
+
  
- if(!empty($Diff_Time_array_Previous))
+ if(!empty($Diff_Time_array_Previous))  
  {
    $min_Diff_Time_Previous = min($Diff_Time_array_Previous);
- 
+  echo("Bjrprevious");
  }
  
  if(!empty($Diff_Time_array_Next))
  {
     
    $min_Diff_Time_Next =  max($Diff_Time_array_Next);
-  
+   echo("Bjrnext");
       
  }
  
  
- 
+ $min_Diff_Time_Next = NULL;
+ $min_Diff_Time_Previous = NULL;
  
  
  
@@ -603,7 +608,7 @@ public function AbandonChauffeur($Id){
    // print_r($Diff_Time_array_Previous);
    // echo "<br>";  
    // print_r($Diff_Time_array_Next);
-   if($min_Diff_Time_Previous > 0)
+   if($min_Diff_Time_Previous > 0 OR !isset($min_Diff_Time_Previous))
    {
      /*** ID_Current_Adresse_Fin -> id_AdresseDebut */
      // echo $extraTime;
@@ -620,9 +625,10 @@ public function AbandonChauffeur($Id){
      $next_course_adresse->Id = $IdAdresseDepart;
      $previous_course_adresse_array = $previous_course_adresse->selection();
      $next_course_adresse_array = $next_course_adresse->selection();
-        
-     $previous_course_adresse_string = $previous_course_adresse_array["Numero"] . " " . $previous_course_adresse_array["Rue"] . " " . $previous_course_adresse_array["Ville"];
-     $next_course_adresse_string = $next_course_adresse_array["Numero"] . " " . $next_course_adresse_array["Rue"] . " " . $next_course_adresse_array["Ville"];
+    var_dump($previous_course_adresse_array);
+    var_dump($min_Diff_Time_Previous);
+     $previous_course_adresse_string = $previous_course_adresse_array["Numero"] . " " . $previous_course_adresse_array["Rue"] . " " . $previous_course_adresse_array["Vile"];
+     $next_course_adresse_string = $next_course_adresse_array["Numero"] . " " . $next_course_adresse_array["Rue"] . " " . $next_course_adresse_array["Vile"];
          
      // $Next_Course_Array = $this->itineraire($previous_course_adresse_string,$next_course_adresse_string);
      $Next_Course_Array = [
@@ -631,21 +637,23 @@ public function AbandonChauffeur($Id){
     
      $time_btw_course_previous = $Next_Course_Array["time"];
     
-     if($min_Diff_Time_Previous  > $time_btw_course_previous){
-       echo "Pas possible par rapport à la course precedent";
-       echo "<br>";
-       $reponse_boolean_Previous = FALSE; 
+     if($min_Diff_Time_Previous  < $time_btw_course_previous OR !isset($min_Diff_Time_Previous)){
+      $reponse_boolean_Previous = TRUE;
+      echo "<br>";
+      echo "Possible par rapport à la course precedent";
        
      }
      else
      {
-       $reponse_boolean_Previous = TRUE;
+      
+
+       echo "Pas possible par rapport à la course precedent";
        echo "<br>";
-       echo "Possible par rapport à la course precedent";
+       $reponse_boolean_Previous = FALSE; 
      }
  
    }
-   if($min_Diff_Time_Next < 0 )
+   if($min_Diff_Time_Next < 0 OR !isset($min_Diff_Time_Next))
    {
      /** Dans c'est le contraire de la condition du dessus , je regarde si le temps de parcourue 
       * entre la fin de ma prochaine course et de la course d'après correspond 
@@ -662,9 +670,9 @@ public function AbandonChauffeur($Id){
      $previous_course_adresse_array = $previous_course_adresse->selection();
      $next_course_adresse_array = $next_course_adresse->selection();
   
-     
-     $previous_course_adresse_string = $previous_course_adresse_array["Numero"] . " " . $previous_course_adresse_array["Rue"] . " " . $previous_course_adresse_array["Ville"];
-     $next_course_adresse_string = $next_course_adresse_array["Numero"] . " " . $next_course_adresse_array["Rue"] . " " . $next_course_adresse_array["Ville"];
+   
+     $previous_course_adresse_string = $previous_course_adresse_array["Numero"] . " " . $previous_course_adresse_array["Rue"] . " " . $previous_course_adresse_array["Vile"];
+     $next_course_adresse_string = $next_course_adresse_array["Numero"] . " " . $next_course_adresse_array["Rue"] . " " . $next_course_adresse_array["Vile"];
       
      
      // $Next_Course_Array = $this->itineraire($previous_course_adresse_string,$next_course_adresse_string);
@@ -674,8 +682,9 @@ public function AbandonChauffeur($Id){
      // print_r($Next_Course_Array);
      
      $time_btw_course_next = $Next_Course_Array["time"];
-     
-     if(abs($min_Diff_Time_Next) > $time_btw_course_next){
+     var_dump($min_Diff_Time_Next);
+
+     if(abs($min_Diff_Time_Next) > $time_btw_course_next OR !isset($min_Diff_Time_Next)){
         echo "COurse suivant possible";
         echo "<br>";
        $reponse_boolean_Next = TRUE; 
@@ -702,5 +711,31 @@ public function AbandonChauffeur($Id){
 
 }
 
+public function loadcourse($Idcourse){
+    $req = $this->Bdd->prepare("SELECT * FROM course WHERE Id = :Id");
+    $req->bindParam(':Id', $Idcourse);
+    $req ->execute();
+    $rep = $req->fetch();
+    if(!empty($req)){
+      
+      $this->DateReservation = $rep['DateReservation'];
+      $this -> Id = $rep['Id'];
+      $this -> DistanceParcourue = $rep['DistanceParcourue'];
+      $this -> IdClient = $rep['IdClient'];
+      $this -> IdChauffeur = $rep['IdChauffeur'];
+      $this -> IdAdresseDepart = $rep['IdAdresseDepart'];
+      $this -> IdAdresseFin = $rep['IdAdresseFin'];
+      $this -> IdTarification = $rep['IdTarification'];
+      $this -> IdMajoration = $rep['IdMajoration'];
+      $this -> Date = $rep['DateReservation'];
+      $this -> duree = $rep['duree'];
+    
+
+    
+    }
+    
+
+  
+}
 }
 ?>
