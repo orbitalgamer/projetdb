@@ -392,7 +392,7 @@ public function AbandonChauffeur($Id){
                                              client.Email as 'EmailClient',
                                              etat.Nom as 'NomEtat',
                                              
-                                             IF(paye.IdEtat = (SELECT Id FROM etat WHERE Nom='Paye') AND lien.IdEtat != (SELECT Id FROM etat WHERE Nom='Annule par chauffeur'), 1, 0) as 'Inpaye',
+                                             IF(paye.IdEtat > (SELECT Id FROM etat WHERE Nom='En cours') AND paye.IdEtat != (SELECT Id FROM etat WHERE Nom='Annule par chauffeur') , 0, 1) as 'Inpaye',
                                              depart.Numero as 'NumeroDepart',
                                              depart.Rue as 'RueDepart',
                                              depart.Vile as 'VileDepart',
@@ -404,7 +404,8 @@ public function AbandonChauffeur($Id){
                                              tarification.PlaqueVehicule as 'Plaque' ,
                                              (tarification.PrixAuKilometre * course.DistanceParcourue) as 'Prix',
                                              tarification.PrixAuKilometre as 'Tarif',
-                                             course.DistanceParcourue
+                                             course.DistanceParcourue,
+                                             paye.IdEtat as 'debug'
             
                                              
                                              
@@ -412,7 +413,7 @@ public function AbandonChauffeur($Id){
                                     INNER JOIN personne chuffeur on course.IdChauffeur = chuffeur.Id
                                     INNER JOIN personne client on course.IdClient = client.Id
                                     LEFT JOIN (SELECT * FROM liencourseetat WHERE IdEtat < (SELECT Id FROM etat WHERE Nom='Paye') ORDER BY IdEtat DESC) lien on course.Id = lien.IdCourse
-                                    LEFT JOIN (SELECT * FROM liencourseetat WHERE IdEtat = (SELECT Id FROM etat WHERE Nom='Paye')) paye on course.Id = paye.IdCourse
+                                    LEFT JOIN (SELECT MAX(IdEtat) as 'IdEtat', IdCourse FROM liencourseetat WHERE IdCourse =:Id) paye on course.Id = paye.IdCourse
                                     INNER JOIN etat on lien.IdEtat = etat.Id
                                         
                                     INNER JOIN adresse depart on depart.Id = course.IdAdresseDepart
@@ -465,7 +466,7 @@ public function AbandonChauffeur($Id){
                                 
                                 INNER JOIN (SELECT * FROM liencourseetat WHERE Id IN (SELECT MAX(Id) as "Id" FROM liencourseetat GROUP BY IdCourse)) lienmax on course.Id = lienmax.IdCourse
                                 INNER JOIN personne chauffeur on course.IdChauffeur = chauffeur.Id
-                                INNER JOIN personne client on course.IdChauffeur = client.Id
+                                INNER JOIN personne client on course.IdClient = client.Id
                                 INNER JOIN tarification on course.IdTarification = tarification.Id
                                 INNER JOIN etat on lienmax.IdEtat = etat.Id
                                 WHERE lienmax.IdEtat BETWEEN (SELECT Id FROM etat WHERE Nom ="Chauffeur en route") AND (SELECT Id FROM etat WHERE Nom ="En cours")
@@ -487,7 +488,7 @@ public function AbandonChauffeur($Id){
                                 
                                 
                                 INNER JOIN personne chauffeur on course.IdChauffeur = chauffeur.Id
-                                INNER JOIN personne client on course.IdChauffeur = client.Id
+                                INNER JOIN personne client on course.IdClient = client.Id
                                 INNER JOIN tarification on course.IdTarification = tarification.Id
                                 
                                 WHERE DateReservation > CURRENT_TIMESTAMP
@@ -535,7 +536,7 @@ public function AbandonChauffeur($Id){
   
    $rq->execute();
    $array_duration_course =  $rq->fetchAll(PDO::FETCH_ASSOC);
-   print_r($array_duration_course);
+   
   
    $Diff_Time_array_Previous = array();
    $Diff_Time_array_Next = array();
@@ -577,30 +578,30 @@ public function AbandonChauffeur($Id){
  
    echo "<br>";
  
- print_r($Diff_Time_array_Previous);
- echo "<br>";
- print_r($Diff_Time_array_Next);
- echo "<br>";
+ #print_r($Diff_Time_array_Previous);
+ #echo "<br>";
+ #print_r($Diff_Time_array_Next);
+ #echo "<br>";
  
 
+ $min_Diff_Time_Next = NULL;
+ $min_Diff_Time_Previous = NULL;
+ 
  
  if(!empty($Diff_Time_array_Previous))  
  {
    $min_Diff_Time_Previous = min($Diff_Time_array_Previous);
-  echo("Bjrprevious");
+  
  }
  
  if(!empty($Diff_Time_array_Next))
  {
     
    $min_Diff_Time_Next =  max($Diff_Time_array_Next);
-   echo("Bjrnext");
+   
       
  }
  
- 
- $min_Diff_Time_Next = NULL;
- $min_Diff_Time_Previous = NULL;
  
  
  
@@ -625,8 +626,6 @@ public function AbandonChauffeur($Id){
      $next_course_adresse->Id = $IdAdresseDepart;
      $previous_course_adresse_array = $previous_course_adresse->selection();
      $next_course_adresse_array = $next_course_adresse->selection();
-    var_dump($previous_course_adresse_array);
-    var_dump($min_Diff_Time_Previous);
      $previous_course_adresse_string = $previous_course_adresse_array["Numero"] . " " . $previous_course_adresse_array["Rue"] . " " . $previous_course_adresse_array["Vile"];
      $next_course_adresse_string = $next_course_adresse_array["Numero"] . " " . $next_course_adresse_array["Rue"] . " " . $next_course_adresse_array["Vile"];
          
@@ -637,16 +636,17 @@ public function AbandonChauffeur($Id){
     
      $time_btw_course_previous = $Next_Course_Array["time"];
     
-     if($min_Diff_Time_Previous  < $time_btw_course_previous OR !isset($min_Diff_Time_Previous)){
+     if($min_Diff_Time_Previous  > $time_btw_course_previous OR !isset($min_Diff_Time_Previous)){
       $reponse_boolean_Previous = TRUE;
       echo "<br>";
       echo "Possible par rapport à la course precedent";
+      echo "<br>";
        
      }
      else
      {
       
-
+      echo "<br>";
        echo "Pas possible par rapport à la course precedent";
        echo "<br>";
        $reponse_boolean_Previous = FALSE; 
@@ -682,10 +682,11 @@ public function AbandonChauffeur($Id){
      // print_r($Next_Course_Array);
      
      $time_btw_course_next = $Next_Course_Array["time"];
-     var_dump($min_Diff_Time_Next);
+    
 
      if(abs($min_Diff_Time_Next) > $time_btw_course_next OR !isset($min_Diff_Time_Next)){
-        echo "COurse suivant possible";
+        echo "<br>";
+        echo "Course suivante possible";
         echo "<br>";
        $reponse_boolean_Next = TRUE; 
  
@@ -694,7 +695,8 @@ public function AbandonChauffeur($Id){
      {
        $reponse_boolean_Next = FALSE;  
        echo "<br>";
-       echo "Course suivant impossible";
+       echo "Course suivante impossible";
+       echo "<br>";
      }
  
  

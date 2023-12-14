@@ -96,11 +96,12 @@ class adresse{
 
 }
 public function selection(){
-    $query = "SELECT Id,Numero,Rue,Ville,NomAdresse,latitude,longitude FROM $this->NomTable WHERE Rue='$this->Rue'"; 
+    $query = "SELECT Id,Numero,Rue,Vile,NomAdresse,latitude,longitude FROM $this->NomTable WHERE Rue='$this->Rue' OR Id='$this->Id'";
     $rq = $this->Bdd->prepare($query);
+    
     if($rq->execute()){
       $rep=$rq->fetch(PDO::FETCH_ASSOC);
-      echo "la";
+     
       
       return $rep;
    

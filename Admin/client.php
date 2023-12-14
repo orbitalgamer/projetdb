@@ -69,7 +69,7 @@ else{
             <td>' . $elem["NumeroDeTelephone"] . '</td>
             <td>' . $elem["Inpaye"] . '</td>
             <td><button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`voiravis.php?IdPersonne=' . $elem["Id"] . '`">voir avis</button></td>
-            <td><button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`client.php?Id=' . $elem["Id"] . '`">Bannir</button></td>
+            <td><button type="button" class="btn btn-outline-danger" onclick="window.location.href=`client.php?Id=' . $elem["Id"] . '`">Bannir</button></td>
      </tr>';
             echo $ligne;
             $compteur += 1;
@@ -122,7 +122,7 @@ else{
             <td>' . $elem["NumeroDeTelephone"] . '</td>
             <td>' . $elem["Inpaye"] . '</td>
             <td><button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`voiravis.php?IdPersonne=' . $elem["Id"] . '`">voir avis</button></td>
-            <td><button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`client.php?IdBanni=' . $elem["Id"] . '`">Débannir</button></td>
+            <td><button type="button" class="btn btn-outline-danger" onclick="window.location.href=`client.php?IdBanni=' . $elem["Id"] . '`">Débannir</button></td>
      </tr>';
             echo $ligne;
             $compteur += 1;
