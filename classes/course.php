@@ -501,11 +501,11 @@ public function AbandonChauffeur($Id){
     {
     
    //Requete pour afficher toutes les courses non prises par un chauffeur où on considère que idChauffeur = 0  est une course non-prise
-   $Current_Course_DateTime =  $Current_Course["DateReservation"];
-   $Current_Course_IdAdresseDepart = $Current_Course["IdAdresseDepart"];
-   $Current_Course_IdAdresseFin = $Current_Course["IdAdresseFin"];
+   $Current_Course_DateTime = $Current_Course->DateReservation;// $Current_Course["DateReservation"];
+   $Current_Course_IdAdresseDepart = $Current_Course->IdAdresseDepart;//$Current_Course["IdAdresseDepart"] ;
+   $Current_Course_IdAdresseFin = $Current_Course->IdAdresseFin;//$Current_Course["IdAdresseFin"];
  
-   $Current_Course_TimeParcoure =  $Current_Course["duree"];
+   $Current_Course_TimeParcoure =  $Current_Course->duree;//$Current_Course["duree"];
    $Current_Course_DateTime  = new DateTime($Current_Course_DateTime);
    $Current_Course_DateTime_Without_ExtraTime = $Current_Course_DateTime->getTimestamp(); //On garde l'horaire sans le temps de parcour pour verifier avec course previous
    $Current_extraTime_heure = $Current_Course_TimeParcoure/3600;
