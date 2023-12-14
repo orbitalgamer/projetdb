@@ -577,30 +577,30 @@ public function AbandonChauffeur($Id){
  
    echo "<br>";
  
- print_r($Diff_Time_array_Previous);
- echo "<br>";
- print_r($Diff_Time_array_Next);
- echo "<br>";
+ #print_r($Diff_Time_array_Previous);
+ #echo "<br>";
+ #print_r($Diff_Time_array_Next);
+ #echo "<br>";
  
 
+ $min_Diff_Time_Next = NULL;
+ $min_Diff_Time_Previous = NULL;
+ 
  
  if(!empty($Diff_Time_array_Previous))  
  {
    $min_Diff_Time_Previous = min($Diff_Time_array_Previous);
-  echo("Bjrprevious");
+  
  }
  
  if(!empty($Diff_Time_array_Next))
  {
     
    $min_Diff_Time_Next =  max($Diff_Time_array_Next);
-   echo("Bjrnext");
+   
       
  }
  
- 
- $min_Diff_Time_Next = NULL;
- $min_Diff_Time_Previous = NULL;
  
  
  
@@ -625,8 +625,6 @@ public function AbandonChauffeur($Id){
      $next_course_adresse->Id = $IdAdresseDepart;
      $previous_course_adresse_array = $previous_course_adresse->selection();
      $next_course_adresse_array = $next_course_adresse->selection();
-    var_dump($previous_course_adresse_array);
-    var_dump($min_Diff_Time_Previous);
      $previous_course_adresse_string = $previous_course_adresse_array["Numero"] . " " . $previous_course_adresse_array["Rue"] . " " . $previous_course_adresse_array["Vile"];
      $next_course_adresse_string = $next_course_adresse_array["Numero"] . " " . $next_course_adresse_array["Rue"] . " " . $next_course_adresse_array["Vile"];
          
@@ -637,7 +635,7 @@ public function AbandonChauffeur($Id){
     
      $time_btw_course_previous = $Next_Course_Array["time"];
     
-     if($min_Diff_Time_Previous  < $time_btw_course_previous OR !isset($min_Diff_Time_Previous)){
+     if($min_Diff_Time_Previous  > $time_btw_course_previous OR !isset($min_Diff_Time_Previous)){
       $reponse_boolean_Previous = TRUE;
       echo "<br>";
       echo "Possible par rapport à la course precedent";
@@ -682,7 +680,7 @@ public function AbandonChauffeur($Id){
      // print_r($Next_Course_Array);
      
      $time_btw_course_next = $Next_Course_Array["time"];
-     var_dump($min_Diff_Time_Next);
+    
 
      if(abs($min_Diff_Time_Next) > $time_btw_course_next OR !isset($min_Diff_Time_Next)){
         echo "COurse suivant possible";
