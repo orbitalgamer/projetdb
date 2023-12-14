@@ -194,14 +194,14 @@
       $AdresseInitial->longitude = $array_distance_time_latitude_longitude["Longitude_Adresse_Initial"];
       $AdresseFinal->longitude = $array_distance_time_latitude_longitude["Longitude_Adresse_Final"] ;
    
-      $AdresseInitial->creation();
-      $AdresseFinal->creation();
+   $AdresseInitial->creation();
+   $AdresseFinal->creation();
   
-      $array_data_initial = array();
-      $array_data_initial = $AdresseInitial->selection();
-      $array_data_final = array();
-      $array_data_final = $AdresseFinal->selection();
-      print_r($array_data_initial);
+   $array_data_initial = array();
+   $array_data_initial = $AdresseInitial->selection();
+   $array_data_final = array();
+   $array_data_final = $AdresseFinal->selection();
+   print_r($array_data_initial);
  
    // Initialisation de toutes ces caractéristiques
    $Date_Heure_actuelle = $_POST["dateReservation"];
@@ -216,7 +216,7 @@
    $CourseToReturn->IdMajoration = 2;
 
    if($Course->Verification_disponibilite($CourseToReturn)){
-        $CourseToReturn->creation();
+               $CourseToReturn->creation();
     }
               //Fonction qui fait la requete SQL (INSERT INTO ...) permettant de créer l'objet $CourseToReturn;
       
