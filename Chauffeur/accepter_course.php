@@ -15,24 +15,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
        
         $course->IdChauffeur = $chauffeurId;
-        $result = $course->UpdateChauffeur($courseId);
-        // Retournez une réponse si nécessaire
-        //var_dump($result);
-        if (isset($result['succes']) && $result['succes'] == '1'){
-            echo 'Course acceptée avec succès!';
-            $linkCourseEtat = new course(); 
-            $linkCourseEtat->Date = date("Y-m-d H:i:s"); // Date d'aujourd'hui
-            $linkCourseEtat->IdCourse = $courseId;
-            $linkCourseEtat->IdEtat = 2;
-
-            $linkCourseEtat->creationlien(); // Appel de la fonction pour insérer dans la table liencourseetat
-            header("location:dashboard.php");
-            //echo $_POST['Id'];
-            //echo $_SESSION['Id'];
-        } else {
-            echo 'Erreur lors de la mise à jour de la course.';
+        $loadedcourse = new Course();
+        $loadedcourse->loadcourse($courseId); 
+        
+        if($course ->  Verification_disponibilite($loadedcourse)){
+            $result = $course->UpdateChauffeur($courseId);
+            // Retournez une réponse si nécessaire
+            //var_dump($result);
+            if (isset($result['succes']) && $result['succes'] == '1'){
+                echo 'Course acceptée avec succès!';
+                $linkCourseEtat = new course(); 
+                $linkCourseEtat->Date = date("Y-m-d H:i:s"); // Date d'aujourd'hui
+                $linkCourseEtat->IdCourse = $courseId;
+                $linkCourseEtat->IdEtat = 2;
+    
+                $linkCourseEtat->creationlien(); // Appel de la fonction pour insérer dans la table liencourseetat
+                
+                header("location:dashboard.php");
+                //echo $_POST['Id'];
+                //echo $_SESSION['Id'];
+            } else {
+                echo 'Erreur lors de la mise à jour de la course.';
+            }
+            return array();
+            
         }
-        return array();
+        else{
+            echo 'Vous avez déjà une course pour cette periode la.';
+        }
+
         
 
     } else {
