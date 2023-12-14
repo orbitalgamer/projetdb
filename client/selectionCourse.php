@@ -188,7 +188,6 @@ if(isset($adresseInitial_Input) && isset($adresseFinal_Input)){
    $CourseToReturn->IdAdresseFin= $array_data_final["Id"];
    $CourseToReturn->DistanceParcourue = $array_distance_time_latitude_longitude["total_distance"];
    $CourseToReturn->IdClient = 5; //L'information provient de l'objet client se trouvant en parametre qui est le user qui commande la course;
-  
    $CourseToReturn->IdTarification =7;
    $CourseToReturn->IdMajoration = 2;
 
@@ -205,6 +204,11 @@ if(isset($adresseInitial_Input) && isset($adresseFinal_Input)){
 //    $DateReservation = $DateReservation["date"];
 //    $DateReservation = $DateReservation->getTimestamp();
   
+
+
+
+
+
    $query = "INSERT INTO liencourseetat (Id,Date,IdCourse,idEtat) VALUES (NULL,'$DateReservation','$id','$idEtat')";
    $rq = $base->prepare($query);
    $rq->execute();
