@@ -26,9 +26,11 @@ public function __construct(){
 
     public function GetAll(){
         $req = $this->Bdd->query("
-    SELECT DISTINCT personne.*   
+    SELECT personne.*, COUNT(course.IdChauffeur) as 'CourseFaite'   
     FROM  personne
+    LEFT JOIN course on course.IdChauffeur = personne.Id 
      WHERE IdStatus = (SELECT Id FROM typepersonne WHERE NomTitre='Chauffeur')
+    GROUP BY personne.Id
     ");
     $resultats = $req->fetchAll(PDO::FETCH_ASSOC);
     return $resultats;
@@ -364,14 +366,18 @@ public function GetnewCourse(){
         }
     }
 
+
+
     public function Recherche($requete){
-        $req = $this->Bdd->prepare("SELECT * FROM personne 
+        $req = $this->Bdd->prepare("SELECT personne.*, COUNT(course.IdChauffeur) as 'CourseFaite' FROM personne 
             INNER JOIN typepersonne on personne.IdStatus = typepersonne.Id
+            LEFT JOIN course on course.IdChauffeur = personne.Id
             WHERE typepersonne.NomTitre ='Chauffeur' AND
                   (personne.Nom LIKE :rq OR
                    personne.Prenom LIKE :rq OR 
                    personne.Email LIKE :rq OR 
-                   personne.NumeroDeTelephone LIKE :rq) ");
+                   personne.NumeroDeTelephone LIKE :rq)
+            GROUP BY personne.Id");
         $requete = '%'.$requete.'%';
         $req->bindParam(':rq', $requete);
 
