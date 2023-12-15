@@ -64,7 +64,8 @@ function AfficherEncours($liste){
             <input type="number" step="any" name="Distance" placeholder="Distance parcourue" class="form-control" required>
         </form>
         </th>
-        <th></th>
+       
+        <td><button type="button" class="btn btn-outline-danger" onclick="window.location.href=`client_absent.php?IdClient=' . $auto["Id"] . '`">Client absent</button></td>
      </tr>';
         echo $ligne;
         $compteur +=1;
@@ -96,6 +97,7 @@ function AfficherEncours($liste){
             <th scope="col h3">Nom</th>
             <th scope="col h3">Adresse Depart</th>
             <th scope="col h3">Adresse Fin</th>
+            <th scope="col-md-1 h3"></th>
             <th scope="col-md-1 h3"></th>
 
         </tr>
