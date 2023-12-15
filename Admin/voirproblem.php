@@ -90,8 +90,9 @@ if(!empty($_POST)){
         <a class="h4 pb-2">Description du chauffeur</a> <br>
         <a class="h5 container"> <?php echo $prob['Description']; ?></a>
     </div>
-
-    <div class="form-group">
+    <?php
+    if(!empty($image)){
+        $string = ' <div class="form-group">
         <a class="h4 pb-2">Photo du problème</a> <br>
         <div class="row justify-content-center">
   <span class="col-lg-8 col-sm-12 py-3">
@@ -100,24 +101,28 @@ if(!empty($_POST)){
 
 
       <div class="container-fluid  border bg-light mb-3 rounded">
-        <div class="row ">
-          <?php
-          foreach($image as $img){
-              $url = '../image/'.$img['CheminDAcces'];
-              echo '       
+        <div class="row ">';
+        foreach($image as $img){
+            $url = '../image/'.$img['CheminDAcces'];
+            $string.= '       
                 <div class="item col-sm-6 col-md-6 align-items-center">
                   <a href="'.$url.'" class="fancybox" data-fancybox="gallery1">
                     <img class="img img-fluid pt-3 pb-3" src="'.$url.'">
                   </a>
                 </div>';
-          }
-          ?>
-        </div>
+        }
+        $string .= '</div>
       </div>
   </span>
         </div>
 
-    </div>
+    </div>';
+        echo $string;
+    }
+    ?>
+
+
+
 
     <div class="form-group">
         <a class="h4 pb-2">Maintenance prévu</a>

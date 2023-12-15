@@ -430,8 +430,7 @@ public function AbandonChauffeur($Id){
     public function GetEtat($Id){
       $req = $this->Bdd->prepare("SELECT liencourseetat.*, etat.Nom FROM liencourseetat
          INNER JOIN etat on liencourseetat.IdEtat = etat.Id
-         WHERE IdCourse = :Id
-         ORDER BY IdEtat ASC");
+         WHERE IdCourse = :Id");
       $req->bindParam(':Id', $Id);
       $req->execute();
       $retour = array();

@@ -68,7 +68,7 @@ else{
             <td>' . $elem["Email"] . '</td>
             <td>' . $elem["NumeroDeTelephone"] . '</td>
             <td>' . $elem["Inpaye"] . '</td>
-            <td><button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`voiravis.php?IdPersonne=' . $elem["Id"] . '`">voir avis</button></td>
+            <td><button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`avis.php?IdPersonne=' . $elem["Id"] . '`">voir avis</button></td>
             <td><button type="button" class="btn btn-outline-danger" onclick="window.location.href=`client.php?Id=' . $elem["Id"] . '`">Bannir</button></td>
      </tr>';
             echo $ligne;
