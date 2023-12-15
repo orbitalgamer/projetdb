@@ -30,7 +30,13 @@ else{
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" href="newcourse.php">Ajouter des Courses</a>
+                <a class="nav-link" href="newcourse.php">Accepter des Courses</a>
+
+            </li>
+
+            <li class="nav-item">
+
+                <a class="nav-link" href="affichetout.php">Vos courses</a>
 
             </li>
            

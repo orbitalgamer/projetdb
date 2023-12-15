@@ -101,8 +101,6 @@ if(!empty($_GET)){
         </div>
 
 
-
-
         <div class="d-flex row">
             <div class="col-sm-4 justify-content-center">
                 <input type="submit" value="ajouter un problème" class="form-control bg-dark text-light" name="ajout"/>

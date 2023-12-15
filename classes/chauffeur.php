@@ -185,7 +185,7 @@ WHERE
 public function GetAllprobleme($Idchauffeur){
         
 
-    $req = $this->Bdd->prepare("SELECT Regle, Rouler, typeprobleme.Nom as 'NomProblem', tarification.PlaqueVehicule as 'Plaque' FROM probleme 
+    $req = $this->Bdd->prepare("SELECT course.Id as 'Id', Regle, Rouler, typeprobleme.Nom as 'NomProblem', tarification.PlaqueVehicule as 'Plaque' FROM probleme 
     INNER JOIN typeprobleme on probleme.IdTypeProbleme = typeprobleme.Id
     INNER JOIN course on probleme.IdCourse = course.Id
     INNER JOIN tarification on course.IdTarification = tarification.Id
@@ -229,43 +229,17 @@ public function Rechercher($Idchauffeur, $query){
     $query = '%'.$query.'%';
 
     $req = $this->Bdd->prepare("
-        SELECT DISTINCT 
-            course.*,
-            personne.Nom,
-            personne.Prenom,
-            adresse_depart.vile AS adresse_depart,
-            adresse_fin.vile AS adresse_fin,
-            avis.note,
-            avis.description
-        FROM course
-        LEFT JOIN personne ON personne.Id = course.IdClient
-        LEFT JOIN adresse AS adresse_depart ON adresse_depart.Id = course.IdAdresseDepart
-        LEFT JOIN adresse AS adresse_fin ON adresse_fin.Id = course.IdAdresseFin
-        LEFT JOIN avis ON avis.IdCourse = course.Id
-        JOIN liencourseetat ON course.Id = liencourseetat.IdCourse
-        WHERE
-        (
-            course.Id LIKE :query
-            OR personne.Nom LIKE :query
-            OR personne.Prenom LIKE :query
-            OR adresse_depart.vile LIKE :query
-            OR adresse_fin.vile LIKE :query
-            OR course.DateReservation LIKE :query
-            OR avis.note LIKE :query
-            OR avis.description LIKE :query
-        )
-        AND course.IdChauffeur = :Id
-        AND (
-            SELECT MAX(liencourseetat.Date)
-            FROM liencourseetat
-            WHERE IdCourse = course.Id
-        ) = liencourseetat.Date
-        AND liencourseetat.IdEtat = 7;
-    ORDER BY course.DateReservation DESC
+       SELECT course.Id as 'Id', Regle, Rouler, typeprobleme.Nom as 'NomProblem', tarification.PlaqueVehicule as 'Plaque' FROM probleme 
+    INNER JOIN typeprobleme on probleme.IdTypeProbleme = typeprobleme.Id
+    INNER JOIN course on probleme.IdCourse = course.Id
+    INNER JOIN tarification on course.IdTarification = tarification.Id
+    WHERE course.IdChauffeur = :Id AND
+        (tarification.PlaqueVehicule LIKE :rq OR
+         typeprobleme.Nom LIKE :rq)
     ");
     $query = "%".$query.'%';
 
-    $req->bindParam(':query', $query);
+    $req->bindParam(':rq', $query);
     $req->bindParam(':Id', $Idchauffeur);
     
     $req->execute();
