@@ -48,6 +48,9 @@
     
    
         <?php 
+        
+ 
+        session_start();
         require_once "../classes/bdd.php";
         include_once "../classes/course.php";
         include_once "../classes/personne.php";
@@ -108,7 +111,7 @@
 
 
    
-if(isset($adresseInitial_Input) && isset($adresseFinal_Input)){
+if(!empty($adresseInitial_Input) && !empty($adresseFinal_Input)){
     //Creation de ma course
    $CourseToReturn = new Course($base); 
    $array_distance_time_latitude_longitude = array() ;
@@ -122,7 +125,7 @@ if(isset($adresseInitial_Input) && isset($adresseFinal_Input)){
     "Longitude_Adresse_Initial" => 3.890471,
     "Longitude_Adresse_Final" => 4.370667
 );
-   
+
 
    if(!empty($_POST["Autonome"])){
     $choix = $_POST["Autonome"];
@@ -137,7 +140,6 @@ if(isset($adresseInitial_Input) && isset($adresseFinal_Input)){
         
     $rq = $base->prepare($query);
     $rq->execute();
-    print_r($rq);
     $rep=$rq->fetchAll(PDO::FETCH_ASSOC);
     $CourseToReturn->IdChauffeur = $rep[0]["idChauffeur"];
     }
@@ -149,10 +151,10 @@ if(isset($adresseInitial_Input) && isset($adresseFinal_Input)){
      $rq = $base->prepare($query);
      $rq->execute();
      $rep = $rq->fetchAll(PDO::FETCH_ASSOC);
-    
      $CourseToReturn->IdChauffeur = $rep[0]["Id"];
    }
-  
+
+   
    $infosAdresse_array_initial = InfosAdresse($adresseInitial_Input,$base);
    $infosAdresse_array_final = InfosAdresse($adresseFinal_Input,$base);
     
@@ -207,8 +209,8 @@ if(isset($adresseInitial_Input) && isset($adresseFinal_Input)){
    $CourseToReturn->IdAdresseDepart = $array_data_initial["Id"];
    $CourseToReturn->IdAdresseFin= $array_data_final["Id"];
    $CourseToReturn->DistanceParcourue = $array_distance_time_latitude_longitude["total_distance"];
-   $CourseToReturn->IdClient = 5; //L'information provient de l'objet client se trouvant en parametre qui est le user qui commande la course;
-   $CourseToReturn->IdTarification =7;
+   $CourseToReturn->IdClient = $_SESSION["Id"]; //L'information provient de l'objet client se trouvant en parametre qui est le user qui commande la course;
+   $CourseToReturn->IdTarification = 7;
    $CourseToReturn->IdMajoration = 2;
    $CourseToReturn->duree = $array_distance_time_latitude_longitude["total_time"];
    
@@ -226,9 +228,7 @@ if(isset($adresseInitial_Input) && isset($adresseFinal_Input)){
    $rq->execute(); 
    $rep=$rq->fetchAll(PDO::FETCH_ASSOC);
    $number_free_chauffeur = 0;
-   echo "Chauffeurs_Array : ";
-   print_r($rep);
-   echo "<br>";
+
    for($i=0;$i < count($rep);$i++)
    {
     
@@ -249,7 +249,14 @@ if(isset($adresseInitial_Input) && isset($adresseFinal_Input)){
    $rq = $base->prepare($query);
    $rq->execute();
    $rep=$rq->fetch(PDO::FETCH_ASSOC);
-   print_r($rep);
+
+
+
+   header("Location:CourseCommande.php");
+   exit;
+ 
+
+
 }  
     ?>
    
