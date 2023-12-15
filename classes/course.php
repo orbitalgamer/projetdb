@@ -555,7 +555,7 @@ public function AbandonChauffeur($Id){
     
      }
     
-     //Cou$rse Suivante
+     //Cou$rse Suivante 45555
      $Diff_Time_Next =   $Current_time_date_second - $time_date_Without_ExtraTime;
   
      if($Diff_Time_Next > 0)
