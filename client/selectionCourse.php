@@ -95,7 +95,7 @@
         </label>
         <label for='autonome'>
         Non-Autonome <input type='radio' class=''
-         name='Autonome' value='Non-Autonome'>
+         name='Non-Autonome' value='Non-Autonome'>
         </label>
         </div>
     <input type='submit'
@@ -141,18 +141,18 @@ if(isset($adresseInitial_Input) && isset($adresseFinal_Input)){
     $rep=$rq->fetchAll(PDO::FETCH_ASSOC);
     $CourseToReturn->IdChauffeur = $rep[0]["idChauffeur"];
     }
-    else
-    {
-        $CourseToReturn->IdChauffeur =0;
-    }
-    
-    
-  
    }
-   else 
+   
+   if(!empty($_POST["Non-Autonome"]))
    {
-    $CourseToReturn->IdChauffeur =0;
+     $query = "SELECT personne.Id FROM personne JOIN typepersonne WHERE personne.Nom='Attente' AND typepersonne.NomTitre='Attente'";
+     $rq = $base->prepare($query);
+     $rq->execute();
+     $rep = $rq->fetchAll(PDO::FETCH_ASSOC);
+    
+     $CourseToReturn->IdChauffeur = $rep[0]["Id"];
    }
+  
    $infosAdresse_array_initial = InfosAdresse($adresseInitial_Input,$base);
    $infosAdresse_array_final = InfosAdresse($adresseFinal_Input,$base);
     
@@ -195,6 +195,9 @@ if(isset($adresseInitial_Input) && isset($adresseFinal_Input)){
      $Date_Heure_actuelle = new DateTime();
      $Date_Heure_actuelle->format("Y-m-d H:i:s");
     }
+
+
+    
     
    
 
@@ -223,6 +226,9 @@ if(isset($adresseInitial_Input) && isset($adresseFinal_Input)){
    $rq->execute(); 
    $rep=$rq->fetchAll(PDO::FETCH_ASSOC);
    $number_free_chauffeur = 0;
+   echo "Chauffeurs_Array : ";
+   print_r($rep);
+   echo "<br>";
    for($i=0;$i < count($rep);$i++)
    {
     

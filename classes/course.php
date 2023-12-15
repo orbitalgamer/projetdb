@@ -496,8 +496,9 @@ public function AbandonChauffeur($Id){
     }
     public function Verification_disponibilite($Current_Course,$IdChauffeur)
    {
-     
-
+    echo "<br>";
+    echo "Chauffeur : ";
+    echo $IdChauffeur;
    //Requete pour afficher toutes les courses non prises par un chauffeur où on considère que idChauffeur = 0  est une course non-prise
    $Current_Course_DateTime = $Current_Course->DateReservation;// $Current_Course["DateReservation"];
    $Current_Course_IdAdresseDepart = $Current_Course->IdAdresseDepart;//$Current_Course["IdAdresseDepart"] ;
@@ -524,7 +525,7 @@ public function AbandonChauffeur($Id){
    $rq->execute();
    $array_duration_course =  $rq->fetchAll(PDO::FETCH_ASSOC);
 
-  
+   print_r($array_duration_course);
    $Diff_Time_array_Previous = array();
    $Diff_Time_array_Next = array();
    for($i=0; $i < count($array_duration_course);$i++)
@@ -582,12 +583,17 @@ public function AbandonChauffeur($Id){
     
    $min_Diff_Time_Next =  min($Diff_Time_array_Next);
 
- }
+ }  
  
- 
- 
- 
- 
+   
+    print_r($Diff_Time_array_Previous);
+    echo "<br>";
+    echo '$Min_Diff_Time_Previous  : '. $min_Diff_Time_Previous ; 
+    echo "<br>";
+    print_r($Diff_Time_array_Next);
+    echo "<br>";
+    echo '$Min_Diff_Time_Next  : '. $min_Diff_Time_Next;
+    echo "<br>";
  
  
    // print_r($Diff_Time_array_Previous);
@@ -621,7 +627,7 @@ public function AbandonChauffeur($Id){
      $time_btw_course_previous = $Next_Course_Array["time"];
     
      
-     if((abs($min_Diff_Time_Previous) > $time_btw_course_previous )|| (!isset($min_Diff_Time_Previous))){
+     if(abs($min_Diff_Time_Previous) > $time_btw_course_previous ){
       $reponse_boolean_Previous = TRUE;
       
        
