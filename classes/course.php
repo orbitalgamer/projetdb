@@ -525,7 +525,7 @@ public function AbandonChauffeur($Id){
    $rq->execute();
    $array_duration_course =  $rq->fetchAll(PDO::FETCH_ASSOC);
 
-   print_r($array_duration_course);
+   
    $Diff_Time_array_Previous = array();
    $Diff_Time_array_Next = array();
    for($i=0; $i < count($array_duration_course);$i++)
