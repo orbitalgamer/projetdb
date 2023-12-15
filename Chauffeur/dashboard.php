@@ -78,6 +78,15 @@ function AfficherEncours($liste){
         <p class="display-4 pt-4 pb-2 bold">Course en cours</p>
     </div>
 
+    <?php
+        if(!empty($_GET['Error'])){
+            echo '<div class="text-center">
+        <p class="display-4 pt-4 alert alert-danger pb-2 bold">Impossible de prendre cette course</p>
+    </div>';
+        }
+
+    ?>
+
     <table class="table table-sortable table-striped table-responsive-md">
         <thead class="table-light">
         <tr>
