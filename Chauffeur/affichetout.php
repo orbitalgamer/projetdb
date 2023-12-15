@@ -25,12 +25,14 @@ function Afficher($liste){
         <td>' . $auto["adresse_depart"] . '</td>
         <td>' . $auto["adresse_fin"] . '</td>
  
-            <th>
-            <button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`avis.php?Id=' . $auto["Id"] . '`">Afficher avis</button>
-            </th>
+
             <th>
             <button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`ajouterprobleme.php?Id=' . $auto["Id"] . '`"> Ajouter probleme</button>
-            </th> </tr>';
+            </th>
+             <th>
+            <button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`ajoutphotocourse.php?Id=' . $auto["Id"] . '`"> Ajouter des photos</button>
+            </th>
+             </tr>';
         $compteur +=1;
         echo $ligne;
     }
@@ -60,6 +62,7 @@ function Afficher($liste){
             <th scope="col h3">Adresse Fin</th>
             <th scope="col-md-1 h3"></th>
             <th scope="col-md-1 h3"></th>
+
 
         </tr>
         </thead>
