@@ -181,7 +181,16 @@ if(isset($adresseInitial_Input) && isset($adresseFinal_Input)){
   
  
    // Initialisation de toutes ces caractéristiques
-   $Date_Heure_actuelle = $_POST["dateReservation"];
+   if(isset($_POST["dateReservation"])){
+    $Date_Heure_actuelle = $_POST["dateReservation"];
+    $Date_Heure_actuelle = new DateTime($Date_Heure_actuelle);   
+    }
+    else
+    {
+     $Date_Heure_actuelle = new DateTime();
+     $Date_Heure_actuelle->format("Y-m-d H:i:s");
+    }
+    
    
    $Date_Heure_actuelle = new DateTime($Date_Heure_actuelle);
    $CourseToReturn->DateReservation = $Date_Heure_actuelle->format("Y-m-d H:i:s");
