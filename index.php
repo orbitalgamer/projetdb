@@ -12,7 +12,7 @@
                 header('location:Chauffeur/dashboard.php'); //mettre lien vesr chauffeur
                 break;
             case 'Client':
-                header('location:client/selectionCourse.php'); //mettre lien vesr client
+                header('location:client/PageAcceuil.php'); //mettre lien vesr client
                 break;
             default:
                 echo 'deconnection';
