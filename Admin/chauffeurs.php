@@ -15,7 +15,7 @@ function Afficher($liste){
             <td>' . $elem["Email"] . '</td>
             <td>' . $elem["NumeroDeTelephone"] . '</td>
             <td>' . $elem["CourseFaite"] . '</td>
-            <td><button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`voiravis.php?IdChauffeur=' . $elem["Id"] . '`">voir avis</button></td>
+            <td><button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`avis.php?IdPersonne=' . $elem["Id"] . '`">voir avis</button></td>
             <td><button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`modificationchauffeur.php?Id=' . $elem["Id"] . '`">Supprimer</button></td>
      </tr>';
         echo $ligne;

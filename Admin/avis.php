@@ -12,9 +12,14 @@ elseif (!empty($_GET['Filtre'])){ //pour filtre
         $resultats = $avisObjet->RequetteNote($_GET['Min'], $_GET['Max']);
     }
     else {
-        header('location: avis.php');
+        //header('location: avis.php');
     }
 }
+elseif (!empty($_GET['IdPersonne'])){
+    $resultats = $avisObjet->GetIdPersonne($_GET['IdPersonne']);
+
+}
+
 else{
     $resultats = $avisObjet->GetAll();
 

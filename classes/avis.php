@@ -99,6 +99,30 @@ class avis
         return $retour;
     }
 
+    public function GetIdPersonne($Id){
+        $req = $this->Bdd->prepare("SELECT avis.*,
+                                                chauffeur.Nom as 'NomChauffeur',
+                                                chauffeur.Prenom as 'PrenomChauffeur',
+                                                client.Nom as 'NomClient',
+                                                client.Prenom as 'PrenomClient',
+                                                tarification.PlaqueVehicule as 'plaque'
+                        
+                                        FROM avis
+                                        INNER JOIN course on avis.IdCourse = course.Id
+                                        INNER JOIN personne client on course.IdClient = client.Id
+                                        INNER JOIN personne chauffeur on chauffeur.Id = course.IdChauffeur
+                                        INNER JOIN tarification on course.IdTarification = tarification.Id
+                                        WHERE client.Id=:Id OR chauffeur.Id =:Id");
+
+        $req->bindParam(':Id', $Id);
+        $req->execute();
+        $retour = array();
+        while($rep= $req->fetch()){
+            array_push($retour, $rep);
+        }
+        return $retour;
+    }
+
     public function RequetteChauffeur($requette, $Id){
         $req = $this->Bdd->prepare("SELECT avis.*,
                                                 course.DateReservation,

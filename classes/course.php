@@ -430,8 +430,7 @@ public function AbandonChauffeur($Id){
     public function GetEtat($Id){
       $req = $this->Bdd->prepare("SELECT liencourseetat.*, etat.Nom FROM liencourseetat
          INNER JOIN etat on liencourseetat.IdEtat = etat.Id
-         WHERE IdCourse = :Id
-         ORDER BY IdEtat ASC");
+         WHERE IdCourse = :Id");
       $req->bindParam(':Id', $Id);
       $req->execute();
       $retour = array();
@@ -729,6 +728,18 @@ public function loadcourse($Idcourse){
             }
             return array("error"=>1);
         }
+    }
+
+    public function DefinirDinstance($Id, $Distance, $IdChauffeur){
+          //définit la distance
+          $req = $this->Bdd->prepare("UPDATE course SET DistanceParcourue =:Dist WHERE Id=:Id AND IdChauffeur=:IdChauffeur");
+          $req->bindParam(':Dist', $Distance);
+        $req->bindParam(':Id', $Id);
+        $req->bindParam(':IdChauffeur', $IdChauffeur);
+        if($req->execute()){
+            return array("succes"=>1);
+        }
+        return array("error"=>1);
     }
 
 }
