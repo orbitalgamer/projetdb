@@ -183,7 +183,7 @@ class probleme
 
     public function Insert(){
         if(!empty($this->IdAdresse) && !empty($this->IdTypeProbleme) && !empty($this->Description) && !empty($this->IdCourse)){
-            echo 'here1';
+
             $req = $this->Bdd->prepare("SELECT Id FROM probleme WHERE 
                             Rouler=:Rouler AND 
                             IdTypeProbleme =:IdTypeProbleme AND 
@@ -200,7 +200,7 @@ class probleme
             $req->execute();
 
             if(empty($req->fetch())){
-                echo 'here';
+
                 $req = $this->Bdd->prepare("INSERT INTO probleme (Description, Regle, Rouler, IdCourse, IdAdresse, IdTypeProbleme) 
                                                                 VALUES (:Desc, 0, :Rouler,:IdCourse, :IdAdresse, :IdTypePrboleme)");
                 $req->bindParam(':Rouler', $this->Rouler);
@@ -210,7 +210,21 @@ class probleme
                 $req->bindParam(':Desc', $this->Description);
 
                 if($req->execute()){
-                    return array("succes"=>1);
+                    $req = $this->Bdd->prepare("SELECT Id FROM probleme WHERE 
+                            Rouler=:Rouler AND 
+                            IdTypeProbleme =:IdTypeProbleme AND 
+                            IdCourse =:IdCourse AND 
+                            IdAdresse =:IdAdresse AND
+                            Description =:Desc");
+                    $req->bindParam(':Rouler', $this->Rouler);
+                    $req->bindParam(':IdTypeProbleme', $this->IdTypeProbleme);
+                    $req->bindParam(':IdAdresse', $this->IdAdresse);
+                    $req->bindParam(':IdCourse', $this->IdCourse);
+                    $req->bindParam(':Desc', $this->Description);
+
+
+                    $req->execute();
+                    return $req->fetch()[0];
                 }
             }
 
@@ -220,7 +234,40 @@ class probleme
         }
     }
 
+    public function GetId($Id){
+        $req = $this->Bdd->prepare("SELECT 
+            probleme.*, 
+            vehicule.PlaqueVoiture as 'Plaque',
+            typeprobleme.Nom as 'NomProbleme',
+            IF(maintenance.Id is not null, 'Oui', 'Non') as 'MaitenancePrevu'
+             FROM probleme
+        INNER JOIN typeprobleme on probleme.IdTypeProbleme = typeprobleme.Id
+        INNER JOIN course on probleme.IdCourse = course.Id
+        INNER JOIN tarification on course.IdTarification = tarification.Id
+        INNER JOIN vehicule on tarification.PlaqueVehicule = vehicule.PlaqueVoiture
+        LEFT JOIN maintenance on probleme.Id = maintenance.IdProbleme
+        WHERE probleme.Id = :Id
+        "); //va prend tous les problèmes, va rechecher pour quel véhicule et repredn plaque, type, si peut roler si mainteance prévu pour ça regarde si occurence et si reglé
 
+        $req->bindParam(':Id', $Id);
+
+        $req->execute();
+
+        return $req->fetch();
+    }
+
+    public function InsertPhoto($url, $IdProblem){
+        if(!empty($this->GetId($IdProblem))){
+            $req = $this->Bdd->prepare("INSERT INTO photoprobleme (CheminDAcces, IdProbleme) VALUES (:url, :Id)");
+            $req->bindParam(':url', $url);
+            $req->bindParam(':Id', $IdProblem);
+
+            if($req->execute()){
+                return array("succes"=>1);
+            }
+            return array("error"=>1);
+        }
+    }
 
 
 }

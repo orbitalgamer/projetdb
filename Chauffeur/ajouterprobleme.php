@@ -41,8 +41,59 @@ if(!empty($_GET)){
         $probleme->IdAdresse = $IdAdresse;
         $probleme->IdCourse = $IdCourse;
 
-        if($probleme->Insert() == array("succes"=>1)){
-            header('location: affichetout.php');
+        $IdProbleme = $probleme->Insert();
+        if($IdProbleme != array("error"=>1)){
+
+            //va transferer les photo
+            function reArrayFiles($file_post){
+                $file_ary = array();
+                $file_count = count($file_post['name']);
+                $file_keys = array_keys($file_post);
+                for ($i=0; $i<$file_count; $i++){
+                    foreach($file_keys as $key){
+                        $file_ary[$i][$key] = $file_post[$key][$i];
+                    }
+                }
+                return $file_ary;
+            }
+
+            //mets photo dans ordre plus simple
+            $img=reArrayFiles($_FILES['images']);
+            $url="../image/probleme/".$IdProbleme;
+
+            mkdir($url); //crée dossier pour tous les mettres
+            //var_dump($img);
+            $_SESSION['add']= 5; // evite de repasser dans la boucle pour insert
+
+            $a=0;
+            foreach($img as $image){
+                if($image['error']){
+                    echo "<p class='alert alert-danger' role='alert'>".$image['name']." - ".$erreur[$image['error']]."<br>";
+                }
+                $b=explode('.', $image['name']);
+                $c=end($b);
+                $ext=strtolower($c);
+                $aut=array('bmp', 'tiff', 'jpeg', 'jpg', 'gif', 'png', 'svg', 'tif');
+                if(in_array($ext, $aut)){
+
+                    if(move_uploaded_file($image['tmp_name'], $url."/".$a.".".$ext)){
+                        //echo "<p class='alert alert-success' role='alert'>".$image['name']." - fichier transferé<br>";
+                        //echo $_SESSION['IdPa'] ." ".$ext." ".$a."<br>";
+                        $probleme->InsertPhoto("probleme/".$IdProbleme."/".$a.".".$ext, $IdProbleme); //ajoute dans la dB
+
+                    }
+                    else{
+                        echo "<p class='alert alert-danger' role='alert'>".$image['name']." - fichier non transféré<br>";
+                    }
+                }
+                else{
+                    echo "<p class='alert alert-danger' role='alert'>".$image['name']." - fichier invalide<br>";
+                }
+                $a++;
+            }
+
+
+            //header('location: affichetout.php');
         }
         else{
             echo 'erreur ajout';
