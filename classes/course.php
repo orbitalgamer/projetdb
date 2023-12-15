@@ -154,7 +154,7 @@ class Course {
       $rq->bindParam(':IdMajoration',$this->IdMajoration);
       if($rq->execute()){
         $rep=$rq->fetch(PDO::FETCH_ASSOC);
-        echo "Marché";
+     
         echo json_decode($rep);
       }
       else 
