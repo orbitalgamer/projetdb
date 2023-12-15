@@ -8,7 +8,7 @@ include_once '../classes/course.php';
 $course = new course();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['Id'])) {
+    if (!empty($_POST['Id'])) {
         $courseId = $_POST['Id'];
         $chauffeurId = $_SESSION['Id'];
         // Effectuez votre requête SQL ici avec $courseId
@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $linkCourseEtat = new course(); // Assurez-vous que vous avez une classe pour liencourseetat
             $linkCourseEtat->Date = date("Y-m-d H:i:s");// Date d'aujourd'hui
             $linkCourseEtat->IdCourse = $courseId;
-            $linkCourseEtat->IdEtat = 6; 
+            $linkCourseEtat->IdEtat = 1;
 
             $linkCourseEtat->creationlien();
             header("location:dashboard.php");
@@ -35,8 +35,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         return array();
         
 
-    } else {
-        echo 'ID de la course non spécifié.';
+    }
+    else {
+        header('location: dashboard.php');
     }
 } else {
     // Redirection ou gestion d'erreur si la requête n'est pas une requête POST

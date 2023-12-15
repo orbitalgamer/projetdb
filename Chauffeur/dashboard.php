@@ -64,7 +64,8 @@ function AfficherEncours($liste){
             <input type="number" step="any" name="Distance" placeholder="Distance parcourue" class="form-control" required>
         </form>
         </th>
-        <th></th>
+       
+        <td><button type="button" class="btn btn-outline-danger" onclick="window.location.href=`client_absent.php?IdClient=' . $auto["Id"] . '`">Client absent</button></td>
      </tr>';
         echo $ligne;
         $compteur +=1;
@@ -78,6 +79,15 @@ function AfficherEncours($liste){
         <p class="display-4 pt-4 pb-2 bold">Course en cours</p>
     </div>
 
+    <?php
+        if(!empty($_GET['Error'])){
+            echo '<div class="text-center">
+        <p class="display-4 pt-4 alert alert-danger pb-2 bold">Impossible de prendre cette course</p>
+    </div>';
+        }
+
+    ?>
+
     <table class="table table-sortable table-striped table-responsive-md">
         <thead class="table-light">
         <tr>
@@ -87,6 +97,7 @@ function AfficherEncours($liste){
             <th scope="col h3">Nom</th>
             <th scope="col h3">Adresse Depart</th>
             <th scope="col h3">Adresse Fin</th>
+            <th scope="col-md-1 h3"></th>
             <th scope="col-md-1 h3"></th>
 
         </tr>

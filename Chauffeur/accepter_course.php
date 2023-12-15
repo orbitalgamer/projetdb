@@ -17,13 +17,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $course->IdChauffeur = $chauffeurId;
         $loadedcourse = new Course();
         $loadedcourse->loadcourse($courseId); 
-        
-        if($course ->  Verification_disponibilite($loadedcourse)){
+
+        $a = $course ->  Verification_disponibilite($loadedcourse, $_SESSION['Id']);
+
+        if($a){
             $result = $course->UpdateChauffeur($courseId);
             // Retournez une réponse si nécessaire
             //var_dump($result);
             if (isset($result['succes']) && $result['succes'] == '1'){
-                echo 'Course acceptée avec succès!';
+                echo '<div class="container"><a class="display 4">Course acceptée avec succès! </a></div>';
                 $linkCourseEtat = new course(); 
                 $linkCourseEtat->Date = date("Y-m-d H:i:s"); // Date d'aujourd'hui
                 $linkCourseEtat->IdCourse = $courseId;
@@ -35,13 +37,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 //echo $_POST['Id'];
                 //echo $_SESSION['Id'];
             } else {
-                echo 'Erreur lors de la mise à jour de la course.';
+                echo '<div class="container"><a class="display 4 alert alert-danger">Erreur lors de la mise à jour de la course.</a></div>';
             }
             return array();
             
         }
         else{
-            echo 'Vous avez déjà une course pour cette periode la.';
+            header("location:dashboard.php?Error=1");
+            echo '<div class="container"><a class="display-4 alert alert-danger"> Vous avez déjà une course pour cette periode la. </a></div>';
         }
 
         
