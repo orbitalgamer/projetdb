@@ -53,6 +53,8 @@
         include_once "../classes/personne.php";
         require_once "../classes/adresse.php";
         include_once "info_adresse.php";
+        $base = new Bdd();
+        $base = $base->getBdd();
     /**
      * Documentation :  
     * - commanderCourse($Client,$db):
@@ -144,14 +146,14 @@ if(isset($adresseInitial_Input) && isset($adresseFinal_Input)){
     }
     
     
-    echo $choix;
+  
    }
    $infosAdresse_array_initial = InfosAdresse($adresseInitial_Input,$base);
    $infosAdresse_array_final = InfosAdresse($adresseFinal_Input,$base);
     
 
-   $AdresseInitial = new adresse($base);
-   $AdresseFinal = new adresse($base);
+   $AdresseInitial = new adresse();
+   $AdresseFinal = new adresse();
    
    
    $AdresseInitial->Rue =  $infosAdresse_array_initial['Rue'];
@@ -190,7 +192,7 @@ if(isset($adresseInitial_Input) && isset($adresseFinal_Input)){
    $CourseToReturn->IdClient = 5; //L'information provient de l'objet client se trouvant en parametre qui est le user qui commande la course;
    $CourseToReturn->IdTarification =7;
    $CourseToReturn->IdMajoration = 2;
-
+   $CourseToReturn->duree = $array_distance_time_latitude_longitude["total_time"];
    
    $CourseToReturn->creation();//Fonction qui fait la requete SQL (INSERT INTO ...) permettant de créer l'objet $CourseToReturn;
    $Info_array_course = array();
@@ -201,9 +203,22 @@ if(isset($adresseInitial_Input) && isset($adresseFinal_Input)){
    $DateReservation = $Info_array_course['DateReservation'];
    $DateReservation = new DateTime($DateReservation);
    $DateReservation = $DateReservation->format("Y-m-d H:i:s");
-//    $DateReservation = $DateReservation["date"];
-//    $DateReservation = $DateReservation->getTimestamp();
-  
+   $query = "SELECT DISTINCT id FROM personne WHERE idStatus = '2'";
+   $rq = $base->prepare($query);
+   $rq->execute(); 
+   $rep=$rq->fetchAll(PDO::FETCH_ASSOC);
+   $number_free_chauffeur = 0;
+   for($i=0;$i < count($rep);$i++)
+   {
+    
+    $IdChauffeur = $rep[$i]["id"];
+   
+    $value = $CourseToReturn->Verification_disponibilite($CourseToReturn,$IdChauffeur);
+    if($value){
+        $number_free_chauffeur++;
+        
+    }
+}
 
 
 
