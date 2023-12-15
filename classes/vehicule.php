@@ -310,6 +310,25 @@ public function GetInfo($plaque){
     }
     }
 
+    public function UpdateKilometrage($IdCourse, $Distance){
+        $req = $this->Bdd->prepare("SELECT vehicule.Kilometrage, vehicule.PlaqueVoiture FROM course
+                                            INNER JOIN tarification on course.IdTarification = tarification.Id
+                                            INNER JOIN vehicule on tarification.PlaqueVehicule = vehicule.PlaqueVoiture
+                                            WHERE  course.Id=:IdCourse");
+        $req->bindParam('IdCourse', $IdCourse);
+        $req->execute();
+        $auto = $req->fetch();
+        if(!empty($auto)) {
+            $auto['Kilometrage'] += $Distance;
+            $req = $this->Bdd->prepare("UPDATE vehicule SET Kilometrage =:Kilometrage WHERE PlaqueVoiture =:Plaque");
+            $req->bindParam(':Kilometrage', $auto['Kilometrage']);
+            $req->bindParam(':Plaque', $auto['PlaqueVoiture']);
+            if($req->execute()){
+                return array("succes"=>1);
+            }
+            return array("error"=>1);
+            }
+    }
 }
 
 ?>

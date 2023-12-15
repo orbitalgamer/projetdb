@@ -4,11 +4,13 @@ include_once 'navbar.php';
 
 include_once '../classes/chauffeur.php';
 include_once '../classes/course.php';
+include_once '../classes/vehicule.php';
 
 $course = new course();
+$vehicule = new Vehicule();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['Id'])) {
+    if (!empty($_POST['Id']) && !empty($_POST['Distance'])) {
         $courseId = $_POST['Id'];
         $chauffeurId = $_SESSION['Id'];
         // Effectuez votre requête SQL ici avec $courseId
@@ -26,6 +28,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $linkCourseEtat->IdEtat = 7; 
 
             $linkCourseEtat->creationlien();
+
+            //mets la distance parcourue dans la course
+
+            $course->DefinirDinstance($_POST['Id'], $_POST['Distance'], $_SESSION['Id']); //définit
+
+            $vehicule->UpdateKilometrage($_POST['Id'], $_POST['Distance']);
+
             header("location:dashboard.php");
             //echo $_POST['Id'];
             //echo $_SESSION['Id'];

@@ -730,5 +730,17 @@ public function loadcourse($Idcourse){
         }
     }
 
+    public function DefinirDinstance($Id, $Distance, $IdChauffeur){
+          //définit la distance
+          $req = $this->Bdd->prepare("UPDATE course SET DistanceParcourue =:Dist WHERE Id=:Id AND IdChauffeur=:IdChauffeur");
+          $req->bindParam(':Dist', $Distance);
+        $req->bindParam(':Id', $Id);
+        $req->bindParam(':IdChauffeur', $IdChauffeur);
+        if($req->execute()){
+            return array("succes"=>1);
+        }
+        return array("error"=>1);
+    }
+
 }
 ?>

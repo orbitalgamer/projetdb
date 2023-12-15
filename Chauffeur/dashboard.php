@@ -61,7 +61,7 @@ function AfficherEncours($liste){
             <th>
             <form action="terminer_course.php" method="post">
             <input type="hidden" name="Id" value="' . $auto["Id"] . '">
-            <button type="submit" class="btn btn-outline-secondary">Course terminée</button>
+            <input type="number" step="any" name="Distance" placeholder="Distance parcourue" class="form-control" required>
         </form>
         </th>
         <th></th>
