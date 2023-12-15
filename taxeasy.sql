@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : jeu. 14 déc. 2023 à 15:15
+-- Généré le : ven. 15 déc. 2023 à 14:41
 -- Version du serveur : 5.7.36
 -- Version de PHP : 7.4.26
 
@@ -40,16 +40,23 @@ CREATE TABLE IF NOT EXISTS `adresse` (
   `longitude` float NOT NULL,
   PRIMARY KEY (`Id`),
   KEY `FK_Ville` (`Vile`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=81 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `adresse`
 --
 
 INSERT INTO `adresse` (`Id`, `Numero`, `Rue`, `NomAdresse`, `Vile`, `latitude`, `longitude`) VALUES
-(1, 40, 'debut', NULL, 'mons', 0, 0),
-(2, 60, 'fin', NULL, 'chaleroi', 0, 0),
-(3, 20, 'accident', NULL, 'mont de l\'enlcus', 0, 0);
+(1, 40, 'debut', NULL, 'mons', 42, 69),
+(2, 60, 'fin', NULL, 'chaleroi', 21, 35),
+(3, 20, 'accident', NULL, 'mont de l\'enlcus', 0, 0),
+(4, 10, 'rue des garages', NULL, 'mons', 1, 1),
+(5, 26, 'rivage', NULL, 'harichies', 1, 1),
+(6, 40, 'test', NULL, 'perdu', 1, 1),
+(7, 666, 'enfer', NULL, '???', 1, 1),
+(8, 666, 'enfer', NULL, 'mons', 1, 1),
+(9, 20, 'accident', NULL, 'charleroi', 1, 1),
+(15, 9, 'rue de houdain  ', NULL, 'mons', 50.8257, 4.37067);
 
 -- --------------------------------------------------------
 
@@ -100,18 +107,21 @@ CREATE TABLE IF NOT EXISTS `course` (
   KEY `FK_IdTarification` (`IdTarification`),
   KEY `FK_IdChauffeur` (`IdChauffeur`),
   KEY `FK_IdClient` (`IdClient`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `course`
 --
 
 INSERT INTO `course` (`Id`, `DateReservation`, `DistanceParcourue`, `IdClient`, `IdChauffeur`, `IdAdresseDepart`, `IdAdresseFin`, `IdTarification`, `IdMajoration`, `duree`) VALUES
-(1, '2023-11-26 23:26:04', 40, 7, 6, 1, 2, 7, 1, NULL),
-(2, '2023-11-26 23:42:02', 60, 8, 6, 2, 3, 8, 1, NULL),
-(3, '2023-11-26 23:43:56', 90, 7, 6, 1, 2, 3, 1, NULL),
-(4, '2023-12-11 19:35:55', 69, 9, 7, 1, 2, 24, 1, NULL),
-(5, '2033-12-21 20:21:54', 69, 9, 8, 1, 2, 18, 1, NULL);
+(1, '2023-11-26 23:26:04', 40, 7, 10, 1, 2, 7, 1, 1000),
+(2, '2023-11-26 23:42:02', 60, 8, 6, 2, 3, 8, 1, 1000),
+(3, '2023-11-26 23:43:56', 90, 7, 10, 1, 2, 3, 1, 1000),
+(4, '2023-12-11 19:35:55', 501, 9, 10, 1, 2, 24, 1, 1000),
+(5, '2033-12-21 20:21:54', 69, 9, 6, 1, 2, 18, 1, 1000),
+(6, '2031-12-17 22:51:58', 42, 6, 22, 1, 2, 31, 2, 50),
+(7, '2025-12-12 08:44:59', 0, 9, 13, 4, 5, 17, 2, 3000),
+(8, '2025-12-12 08:47:07', 0, 23, 10, 6, 7, 10, 1, 1000000);
 
 -- --------------------------------------------------------
 
@@ -179,7 +189,7 @@ CREATE TABLE IF NOT EXISTS `liencourseetat` (
   PRIMARY KEY (`Id`),
   KEY `FK_IdEtat` (`IdEtat`),
   KEY `FK_IdCourse` (`IdCourse`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=85 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `liencourseetat`
@@ -196,7 +206,72 @@ INSERT INTO `liencourseetat` (`Id`, `Date`, `IdCourse`, `IdEtat`) VALUES
 (12, '2023-12-11 18:36:12', 4, 1),
 (13, '2023-12-11 18:36:31', 4, 2),
 (14, '2023-12-11 18:36:31', 4, 3),
-(15, '2023-12-11 19:22:57', 5, 1);
+(15, '2023-12-11 19:22:57', 5, 1),
+(17, '2023-12-14 21:55:47', 6, 1),
+(18, '2023-12-14 21:56:28', 6, 2),
+(20, '2023-12-14 22:02:22', 6, 2),
+(21, '2023-12-14 22:02:31', 6, 1),
+(22, '2023-12-14 22:02:35', 6, 2),
+(23, '2023-12-14 22:02:58', 6, 1),
+(24, '2023-12-14 23:58:44', 4, 4),
+(25, '2023-12-14 23:59:26', 6, 2),
+(27, '2023-12-15 08:43:48', 8, 2),
+(28, '2023-12-15 08:44:11', 8, 6),
+(29, '2023-12-15 08:44:15', 8, 2),
+(30, '2023-12-15 08:44:35', 7, 2),
+(31, '2023-12-15 08:44:43', 7, 6),
+(32, '2023-12-15 08:45:16', 8, 6),
+(33, '2023-12-15 08:45:33', 8, 2),
+(34, '2023-12-15 08:45:37', 7, 2),
+(35, '2023-12-15 08:45:42', 8, 6),
+(36, '2023-12-15 08:47:26', 8, 2),
+(37, '2023-12-15 08:47:28', 8, 6),
+(38, '2023-12-15 09:08:15', 8, 2),
+(39, '2023-12-15 09:08:42', 8, 6),
+(40, '2023-12-15 09:13:45', 8, 2),
+(41, '2023-12-15 09:14:09', 8, 6),
+(42, '2023-12-15 09:15:19', 8, 2),
+(43, '2023-12-15 09:15:26', 8, 6),
+(44, '2023-12-15 09:23:56', 7, 6),
+(45, '2023-12-15 09:24:02', 8, 2),
+(46, '2023-12-15 09:25:08', 7, 2),
+(47, '2023-12-15 09:27:50', 7, 2),
+(48, '2023-12-15 09:31:15', 7, 6),
+(49, '2023-12-15 09:31:19', 7, 2),
+(50, '2023-12-15 09:34:23', 7, 6),
+(51, '2023-12-15 09:41:06', 8, 6),
+(52, '2023-12-15 09:41:13', 7, 2),
+(53, '2023-12-15 09:41:15', 8, 2),
+(54, '2023-12-15 09:45:50', 8, 6),
+(55, '2023-12-15 09:45:53', 8, 2),
+(56, '2023-12-15 09:45:59', 8, 6),
+(57, '2023-12-15 09:47:11', 8, 2),
+(58, '2023-12-15 09:47:13', 7, 6),
+(59, '2023-12-15 09:49:18', 8, 6),
+(60, '2023-12-15 09:49:22', 7, 2),
+(61, '2023-12-15 09:49:26', 8, 2),
+(62, '2023-12-15 09:49:28', 8, 6),
+(63, '2023-12-15 09:50:17', 8, 2),
+(64, '2023-12-15 09:50:40', 8, 2),
+(65, '2023-12-15 09:51:07', 8, 2),
+(66, '2023-12-15 09:52:23', 8, 2),
+(67, '2023-12-15 09:53:41', 8, 2),
+(68, '2023-12-15 09:55:11', 8, 2),
+(69, '2023-12-15 09:56:06', 8, 2),
+(70, '2023-12-15 09:57:49', 8, 2),
+(71, '2023-12-15 10:05:06', 8, 2),
+(72, '2023-12-15 10:06:41', 8, 2),
+(73, '2023-12-15 10:06:55', 8, 6),
+(74, '2023-12-15 10:06:57', 8, 2),
+(75, '2023-12-15 10:08:39', 8, 2),
+(76, '2023-12-15 10:09:35', 8, 2),
+(77, '2023-12-15 10:10:22', 8, 6),
+(78, '2023-12-15 10:10:25', 8, 2),
+(79, '2023-12-15 10:12:41', 8, 6),
+(81, '2023-12-15 13:35:55', 7, 1),
+(82, '2023-12-15 13:48:59', 8, 2),
+(83, '2023-12-15 13:49:10', 4, 7),
+(84, '2023-12-15 13:49:13', 8, 4);
 
 -- --------------------------------------------------------
 
@@ -216,9 +291,13 @@ CREATE TABLE IF NOT EXISTS `localite` (
 --
 
 INSERT INTO `localite` (`Ville`, `CodePostal`) VALUES
+('???', 666),
 ('chaleroi', 6000),
+('charleroi', 9000),
+('harichies', 7810),
 ('mons', 7000),
-('mont de l\'enlcus', 7750);
+('mont de l\'enlcus', 7750),
+('perdu', 9999);
 
 -- --------------------------------------------------------
 
@@ -235,7 +314,7 @@ CREATE TABLE IF NOT EXISTS `maintenance` (
   `IdProbleme` int(11) NOT NULL,
   PRIMARY KEY (`Id`),
   KEY `FK_IdProblem` (`IdProbleme`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `maintenance`
@@ -244,7 +323,8 @@ CREATE TABLE IF NOT EXISTS `maintenance` (
 INSERT INTO `maintenance` (`Id`, `Description`, `DateDebut`, `DateFin`, `IdProbleme`) VALUES
 (1, 'reparation', '2023-11-15', '2023-11-30', 1),
 (2, 'essaie d\'ajout d\'une nouvelle maintenance', '2023-12-02', '2023-12-23', 2),
-(3, 'test', '2023-12-31', '2024-01-06', 2);
+(3, 'test', '2023-12-31', '2024-01-06', 2),
+(4, 'entretien', '2023-12-17', '2023-12-24', 4);
 
 -- --------------------------------------------------------
 
@@ -263,7 +343,7 @@ CREATE TABLE IF NOT EXISTS `personne` (
   `IdStatus` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`Id`),
   KEY `FK_IdStatus` (`IdStatus`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `personne`
@@ -275,9 +355,13 @@ INSERT INTO `personne` (`Id`, `Nom`, `Prenom`, `Email`, `Mdp`, `NumeroDeTelephon
 (8, 'admin', 'admin2', 'admin@admin.be', '$2y$10$UqCLTVPPRuhWdxBvoKiCAeEcCpM/Cw3Ir81eaQnFyi.94DNhzMFjq', 0, 3),
 (9, 'Client', 'test', 'client@test.be', 'ptdr il pourra jamais se conncter', 6942000, 1),
 (10, 'demo', 'chauffeur', 'demo@chauffeur.be', '$2y$10$lM.FtatJw5DpNnbqf8UCJO6dieYlK91lkz.ERAHg5jZGMr4DC9eNW', 123456789, 2),
+(13, 'Attente', 'Attente', 'Attente@Attente.be', 'PTDR', 6500000, 5),
 (20, 'Autonome', 'supprimer', 'taxeasy', 'autonome', 65000000, 6),
 (21, 'Autonome', 'T-AUT-001', 'taxeasy', 'autonome', 65000000, 6),
-(22, 'Autonome', 'T-AUT-002', 'taxeasy', 'autonome', 65000000, 6);
+(22, 'Autonome', 'T-AUT-002', 'taxeasy', 'autonome', 65000000, 6),
+(23, 'client2', 'demo', 'client2@demo.be', '$2y$10$8VhUnYFZyuQ5Xp2NQz/iIewcvbXiK7MR6ojhXPwKK246V8VTARvzK', 479000000, 1),
+(25, 'client', 'abanir', 'client@abanir.be', '$2y$10$6Ilp5qH7pjFidkRaZedy7.wUC4WcmSysrG1nE.CJmYz6aepVV4lTW', 78965443, 4),
+(26, 'demo2', 'client', 'demo2@client.be', '$2y$10$3nDKNGIJ4sTzveHFTppq3.XSVS4N8zZsxmXabUNX.Nf5ulEq8tZIC', 456, 1);
 
 -- --------------------------------------------------------
 
@@ -292,15 +376,19 @@ CREATE TABLE IF NOT EXISTS `photocourse` (
   `IdCourse` int(11) NOT NULL,
   PRIMARY KEY (`Id`),
   KEY `Fk_IdCoursePhoto` (`IdCourse`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `photocourse`
 --
 
 INSERT INTO `photocourse` (`Id`, `CheminDAcces`, `IdCourse`) VALUES
-(1, 'course/2/image1.png', 2),
-(2, 'course/2/image2.png', 2);
+(3, 'course/3/0.jpg', 3),
+(4, 'course/3/1.jpg', 1),
+(5, 'course/3/2.jpg', 1),
+(6, 'course/3/0.jpg', 3),
+(7, 'course/3/1.jpg', 3),
+(8, 'course/3/2.jpg', 3);
 
 -- --------------------------------------------------------
 
@@ -315,7 +403,7 @@ CREATE TABLE IF NOT EXISTS `photoprobleme` (
   `IdProbleme` int(11) NOT NULL,
   PRIMARY KEY (`Id`),
   KEY `FK_IdPhotoProblem` (`IdProbleme`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `photoprobleme`
@@ -324,7 +412,16 @@ CREATE TABLE IF NOT EXISTS `photoprobleme` (
 INSERT INTO `photoprobleme` (`Id`, `CheminDAcces`, `IdProbleme`) VALUES
 (1, 'probleme/2/image1.jpg', 2),
 (2, 'probleme/2/image2.jpg', 2),
-(3, 'probleme/2/image3.jpg', 2);
+(3, 'probleme/2/image3.jpg', 2),
+(8, 'probleme/4/0.jpg', 4),
+(9, 'probleme/4/0.jpg', 4),
+(10, 'probleme/4/1.jpg', 4),
+(11, 'probleme/4/2.jpg', 4),
+(12, 'probleme/4/3.jpg', 4),
+(13, 'probleme/4/4.jpg', 4),
+(14, 'probleme/4/5.jpg', 4),
+(15, 'probleme/1/0.jpg', 1),
+(16, 'probleme/1/1.jpg', 1);
 
 -- --------------------------------------------------------
 
@@ -345,16 +442,17 @@ CREATE TABLE IF NOT EXISTS `probleme` (
   KEY `FK_IdCourseProbleme` (`IdCourse`),
   KEY `FK_IdTypeProbleme` (`IdTypeProbleme`),
   KEY `FK_IdAdresseProblem` (`IdAdresse`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `probleme`
 --
 
 INSERT INTO `probleme` (`Id`, `Description`, `Regle`, `Rouler`, `IdCourse`, `IdAdresse`, `IdTypeProbleme`) VALUES
-(1, 'crash avec camion', 1, 0, 1, 3, 5),
+(1, 'crash avec camion et une camionette', 1, 0, 1, 9, 5),
 (2, 'autre accident', 1, 1, 1, 3, 4),
-(3, 'accident', 0, 1, 2, 3, 4);
+(3, 'accident', 0, 1, 2, 3, 4),
+(4, ' Entretient périodique  ', 1, 0, 3, 4, 1);
 
 -- --------------------------------------------------------
 
@@ -370,7 +468,7 @@ CREATE TABLE IF NOT EXISTS `tarification` (
   `PlaqueVehicule` varchar(12) DEFAULT NULL,
   PRIMARY KEY (`Id`),
   KEY `FK_Vehicule` (`PlaqueVehicule`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `tarification`
@@ -403,7 +501,8 @@ INSERT INTO `tarification` (`Id`, `PrixAuKilometre`, `Date`, `PlaqueVehicule`) V
 (28, 666, '2023-12-14 15:59:24', 'T-AUT-001'),
 (29, 667, '2023-12-14 15:59:28', 'T-AUT-001'),
 (30, 668, '2023-12-14 15:59:33', 'T-AUT-001'),
-(31, 300, '2023-12-14 16:10:08', 'T-AUT-002');
+(31, 300, '2023-12-14 16:10:08', 'T-AUT-002'),
+(32, 5, '2023-12-15 14:42:26', '2avh069');
 
 -- --------------------------------------------------------
 
@@ -449,8 +548,7 @@ CREATE TABLE IF NOT EXISTS `typemajoration` (
 
 INSERT INTO `typemajoration` (`Id`, `Nom`, `Coefficient`) VALUES
 (1, 'normal', 1),
-(2, 'Jour Ferrié', 1.7),
-(5, 'weekend', 2.2);
+(2, 'weekend', 1.7);
 
 -- --------------------------------------------------------
 
@@ -530,7 +628,7 @@ INSERT INTO `vehicule` (`PlaqueVoiture`, `Marque`, `Modele`, `Couleur`, `Annee`,
 ('1ahe302', 'skoda', 'fabia', 'beige', 2011, 1, 200000, 4, '0'),
 ('1csx987', 'volkwagen', 'polo 6', 'grise', 2012, 1, 130000, 4, 'Non'),
 ('1yme000', 'volkwagen', 'golf', 'noir', 2019, 1, 30000, 4, 'Non'),
-('2avh069', 'peugeot', '208', 'rouge', 2017, 5, 113000, 4, 'PMR'),
+('2avh069', 'peugeot', '208', 'rouge', 2017, 5, 113501, 4, 'PMR'),
 ('Aacb998', 'memee', 'mee', '?', 99, 1, 66550, 50, 'Non'),
 ('T-AUT-001', 'Tesla du futur', 'MAGIQUE', 'peu importe', 546, 5, 153, 100, 'PMR'),
 ('T-AUT-002', 'Tesla du futur', 'MAGIQUE2', 'gris', 4564665, 5, 48456465, 5, 'PMR');
