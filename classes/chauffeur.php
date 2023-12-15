@@ -45,7 +45,7 @@ public function __construct(){
     FROM  personne
     INNER JOIN lienautonome on personne.Id = lienautonome.IdChauffeur
     INNER JOIN (SELECT MAX(Id) as 'Id', PlaqueVehicule FROM tarification GROUP BY PlaqueVehicule) prixMax on prixmax.PlaqueVehicule = lienautonome.PlaqueVehicule
-     WHERE IdStatus = (SELECT Id FROM typepersonne WHERE NomTitre='Autonome')
+     WHERE IdStatus = (SELECT Id FROM typepersonne WHERE NomTitre='Autonome') AND personne.Prenom!='Supprimer'
     ");
         $resultats = $req->fetchAll(PDO::FETCH_ASSOC);
         return $resultats;
@@ -91,6 +91,7 @@ public function Getcoursefutur($Id){
             course.*,
             personne.Nom,
             personne.Prenom,
+            tarification.PlaqueVehicule,
             CONCAT(adresse_depart.vile, ', ', adresse_depart.rue, ' ', adresse_depart.Numero) AS adresse_depart,
             CONCAT(adresse_fin.vile, ', ', adresse_fin.rue, ' ', adresse_fin.Numero) AS adresse_fin
         FROM
@@ -98,6 +99,7 @@ public function Getcoursefutur($Id){
         JOIN personne ON personne.Id = course.IdClient
         JOIN adresse AS adresse_depart ON adresse_depart.Id = course.IdAdresseDepart
         JOIN adresse AS adresse_fin ON adresse_fin.Id = course.IdAdresseFin
+        JOIN tarification on course.IdTarification = tarification.Id
         JOIN liencourseetat ON course.Id = liencourseetat.IdCourse
         WHERE
             course.IdChauffeur = :Id
@@ -125,12 +127,14 @@ public function Getcourseencours($Id){
             course.*,
             personne.Nom,
             personne.Prenom,
+            tarification.PlaqueVehicule,
             CONCAT(adresse_depart.vile, ', ', adresse_depart.rue, ' ', adresse_depart.Numero) AS adresse_depart,
             CONCAT(adresse_fin.vile, ', ', adresse_fin.rue, ' ', adresse_fin.Numero) AS adresse_fin
         FROM
             course
         JOIN personne ON personne.Id = course.IdClient
         JOIN adresse AS adresse_depart ON adresse_depart.Id = course.IdAdresseDepart
+        JOIN tarification on course.IdTarification = tarification.Id
         JOIN adresse AS adresse_fin ON adresse_fin.Id = course.IdAdresseFin
         JOIN liencourseetat ON course.Id = liencourseetat.IdCourse
         
@@ -252,6 +256,41 @@ public function Rechercher($Idchauffeur, $query){
 
     return $resultats;
 }
+
+    public function RechercherAcceptation($query){
+
+        $query = '%'.$query.'%';
+
+        $req = $this->Bdd->prepare("
+SELECT course.Id as 'Id', tarification.PlaqueVehicule, course.DateReservation,
+       personne.Prenom, personne.Nom,
+       CONCAT(adresse_depart.vile, ', ', adresse_depart.rue, ' ', adresse_depart.Numero) AS adresse_depart,
+         CONCAT(adresse_fin.vile, ', ', adresse_fin.rue, ' ', adresse_fin.Numero) AS adresse_fin
+       FROM course 
+    INNER JOIN personne on course.IdClient = personne.Id
+    INNER JOIN tarification on course.IdTarification = tarification.Id
+    INNER JOIN adresse AS adresse_depart ON adresse_depart.Id = course.IdAdresseDepart
+    INNER JOIN adresse AS adresse_fin ON adresse_fin.Id = course.IdAdresseFin
+    WHERE 
+        (tarification.PlaqueVehicule LIKE :rq OR
+         personne.Nom LIKE :rq OR 
+         personne.Prenom LIKE :rq) AND IdChauffeur =(SELECT personne.Id FROM personne JOIN typepersonne WHERE personne.Nom='Attente' AND typepersonne.NomTitre='Attente')
+    ");
+        $query = "%".$query.'%';
+
+        $req->bindParam(':rq', $query);
+
+        $req->execute();
+
+        $resultats = array();
+        while ($rep = $req->fetch(PDO::FETCH_ASSOC)) {
+            $resultats[] = $rep;
+        }
+
+
+        return $resultats;
+    }
+
 public function Rechercherfutur($Idchauffeur, $query){
     
     $query = '%'.$query.'%';
@@ -261,6 +300,7 @@ public function Rechercherfutur($Idchauffeur, $query){
         course.*,
         personne.Nom,
         personne.Prenom,
+        tarification.PlaqueVehicule,
         CONCAT(adresse_depart.vile, ', ', adresse_depart.rue, ' ', adresse_depart.Numero) AS adresse_depart,
         CONCAT(adresse_fin.vile, ', ', adresse_fin.rue, ' ', adresse_fin.Numero) AS adresse_fin
             
@@ -269,6 +309,7 @@ public function Rechercherfutur($Idchauffeur, $query){
         LEFT JOIN adresse AS adresse_depart ON adresse_depart.Id = course.IdAdresseDepart
         LEFT JOIN adresse AS adresse_fin ON adresse_fin.Id = course.IdAdresseFin
         LEFT JOIN avis ON avis.IdCourse = course.Id
+        join tarification on course.IdTarification = tarification.Id
         JOIN liencourseetat ON course.Id = liencourseetat.IdCourse
         WHERE
         (
@@ -314,15 +355,17 @@ public function GetnewCourse(){
             course.*,
             personne.Nom,
             personne.Prenom,
+            tarification.PlaqueVehicule,
             CONCAT(adresse_depart.vile, ', ', adresse_depart.rue, ' ', adresse_depart.Numero) AS adresse_depart,
             CONCAT(adresse_fin.vile, ', ', adresse_fin.rue, ' ', adresse_fin.Numero) AS adresse_fin
         FROM
             course
         JOIN personne ON personne.Id = course.IdClient
+        JOIN tarification on course.IdTarification = tarification.Id
         JOIN adresse AS adresse_depart ON adresse_depart.Id = course.IdAdresseDepart
         JOIN adresse AS adresse_fin ON adresse_fin.Id = course.IdAdresseFin
         WHERE
-            course.IdChauffeur = 13
+            course.IdChauffeur = (SELECT personne.Id FROM personne JOIN typepersonne WHERE personne.Nom='Attente' AND typepersonne.NomTitre='Attente')
             AND course.DateReservation > CURRENT_DATE
             ORDER BY course.DateReservation DESC
     ");

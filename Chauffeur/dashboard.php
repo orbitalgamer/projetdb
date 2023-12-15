@@ -20,8 +20,8 @@ function Afficher($liste){
         }
         $ligne .= ' <td>' . $compteur . '</td>
             <td>' . $auto["DateReservation"] . '</td>
-            <td>' . $auto["Nom"] . '</td>
-            <td>' . $auto["Prenom"] . '</td>
+            <td>' . $auto["PlaqueVehicule"] . '</td>
+            <td>' .$auto["Nom"]." ". $auto["Prenom"] . '</td>
             <td>' . $auto["adresse_depart"] . '</td>
             <td>' . $auto["adresse_fin"] . '</td>
             
@@ -54,8 +54,8 @@ function AfficherEncours($liste){
         }
         $ligne .= ' <th>' . $compteur . '</th>
             <td>' . $auto["DateReservation"] . '</td>
-            <td>' . $auto["Nom"] . '</td>
-            <td>' . $auto["Prenom"] . '</td>
+            <td>' . $auto["PlaqueVehicule"] . '</td>
+            <td>' . $auto["Nom"]." ".$auto["Prenom"] . '</td>
             <td>' . $auto["adresse_depart"] . '</td>
             <td>' . $auto["adresse_fin"] . '</td>
             <th>
@@ -83,8 +83,8 @@ function AfficherEncours($liste){
         <tr>
             <th scope="col h3">#</th>
             <th scope="col h3">DateReservation</th>
+            <th scope="col h3">Plaque</th>
             <th scope="col h3">Nom</th>
-            <th scope="col h3">Prenom</th>
             <th scope="col h3">Adresse Depart</th>
             <th scope="col h3">Adresse Fin</th>
             <th scope="col-md-1 h3"></th>
@@ -121,8 +121,8 @@ function AfficherEncours($liste){
         <tr>
             <th scope="col h3">#</th>
             <th scope="col h3">DateReservation</th>
+            <th scope="col h3">Plaque</th>
             <th scope="col h3">Nom</th>
-            <th scope="col h3">Prenom</th>
             <th scope="col h3">Adresse Depart</th>
             <th scope="col h3">Adresse Fin</th>
             <th scope="col-md-1 h3"></th>
