@@ -137,6 +137,7 @@ if(isset($adresseInitial_Input) && isset($adresseFinal_Input)){
         
     $rq = $base->prepare($query);
     $rq->execute();
+    print_r($rq);
     $rep=$rq->fetchAll(PDO::FETCH_ASSOC);
     $CourseToReturn->IdChauffeur = $rep[0]["idChauffeur"];
     }
@@ -147,6 +148,10 @@ if(isset($adresseInitial_Input) && isset($adresseFinal_Input)){
     
     
   
+   }
+   else 
+   {
+    $CourseToReturn->IdChauffeur =0;
    }
    $infosAdresse_array_initial = InfosAdresse($adresseInitial_Input,$base);
    $infosAdresse_array_final = InfosAdresse($adresseFinal_Input,$base);
@@ -181,9 +186,19 @@ if(isset($adresseInitial_Input) && isset($adresseFinal_Input)){
   
  
    // Initialisation de toutes ces caractéristiques
-   $Date_Heure_actuelle = $_POST["dateReservation"];
+   if(isset($_POST["dateReservation"])){
+    $Date_Heure_actuelle = $_POST["dateReservation"];
+    $Date_Heure_actuelle = new DateTime($Date_Heure_actuelle);   
+    }
+    else
+    {
+     $Date_Heure_actuelle = new DateTime();
+     $Date_Heure_actuelle->format("Y-m-d H:i:s");
+    }
+    
    
-   $Date_Heure_actuelle = new DateTime($Date_Heure_actuelle);
+
+
    $CourseToReturn->DateReservation = $Date_Heure_actuelle->format("Y-m-d H:i:s");
    // $CourseToReturn->Payee = 0;
    $CourseToReturn->IdAdresseDepart = $array_data_initial["Id"];
@@ -197,7 +212,7 @@ if(isset($adresseInitial_Input) && isset($adresseFinal_Input)){
    $CourseToReturn->creation();//Fonction qui fait la requete SQL (INSERT INTO ...) permettant de créer l'objet $CourseToReturn;
    $Info_array_course = array();
    $Info_array_course = $CourseToReturn->selection();
-   print_r($Info_array_course);
+   
    $idEtat = 1;
    $id=$Info_array_course["Id"];
    $DateReservation = $Info_array_course['DateReservation'];
