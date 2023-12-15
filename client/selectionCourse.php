@@ -197,7 +197,7 @@ if(isset($adresseInitial_Input) && isset($adresseFinal_Input)){
    $CourseToReturn->creation();//Fonction qui fait la requete SQL (INSERT INTO ...) permettant de créer l'objet $CourseToReturn;
    $Info_array_course = array();
    $Info_array_course = $CourseToReturn->selection();
-   print_r($Info_array_course);
+   
    $idEtat = 1;
    $id=$Info_array_course["Id"];
    $DateReservation = $Info_array_course['DateReservation'];
