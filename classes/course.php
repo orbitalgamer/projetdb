@@ -735,5 +735,18 @@ public function loadcourse($Idcourse){
 
   
 }
+    public function InsertPhoto($url, $IdCourse){
+        if(!empty($this->Get($IdCourse))){
+            $req = $this->Bdd->prepare("INSERT INTO photocourse (CheminDAcces, IdCourse) VALUES (:url, :Id)");
+            $req->bindParam(':url', $url);
+            $req->bindParam(':Id', $IdCourse);
+
+            if($req->execute()){
+                return array("succes"=>1);
+            }
+            return array("error"=>1);
+        }
+    }
+
 }
 ?>
