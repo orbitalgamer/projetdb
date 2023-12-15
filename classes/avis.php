@@ -48,6 +48,26 @@ class avis
         }
         return $retour;
     }
+    public function GetAllChauffeur($Id){
+        $req = $this->Bdd->prepare("SELECT avis.*,
+                                                course.DateReservation,
+                                                client.Nom as 'NomClient',
+                                                client.Prenom as 'PrenomClient',
+                                                tarification.PlaqueVehicule as 'plaque'
+                        
+                                        FROM avis
+                                        INNER JOIN course on avis.IdCourse = course.Id
+                                        INNER JOIN personne client on course.IdClient = client.Id
+                                        INNER JOIN tarification on course.IdTarification = tarification.Id
+                                        WHERE course.IdChauffeur = :Id");
+        $req->bindParam(':Id', $Id);
+        $req->execute();
+        $retour = array();
+        while($rep= $req->fetch()){
+            array_push($retour, $rep);
+        }
+        return $retour;
+    }
 
     public function Requette($requette){
         $req = $this->Bdd->prepare("SELECT avis.*,
@@ -79,6 +99,32 @@ class avis
         return $retour;
     }
 
+    public function RequetteChauffeur($requette, $Id){
+        $req = $this->Bdd->prepare("SELECT avis.*,
+                                                course.DateReservation,
+                                                client.Nom as 'NomClient',
+                                                client.Prenom as 'PrenomClient',
+                                                tarification.PlaqueVehicule as 'plaque'
+                        
+                                        FROM avis
+                                        INNER JOIN course on avis.IdCourse = course.Id
+                                        INNER JOIN personne client on course.IdClient = client.Id
+                                        INNER JOIN tarification on course.IdTarification = tarification.Id
+                                        WHERE (client.Nom LIKE :rq OR 
+                                              client.Prenom LIKE :rq OR
+                                              tarification.PlaqueVehicule LIKE :rq OR
+                                              avis.Note LIKE :rq) AND course.IdChauffeur =:Id");
+        $requette = '%'.$requette.'%';
+        $req->bindParam(':rq', $requette);
+        $req->bindParam('Id', $Id);
+        $req->execute();
+        $retour = array();
+        while($rep= $req->fetch()){
+            array_push($retour, $rep);
+        }
+        return $retour;
+    }
+
     public function RequetteNote($min, $max){
         $req = $this->Bdd->prepare("SELECT avis.*,
                                                 chauffeur.Nom as 'NomChauffeur',
@@ -97,6 +143,31 @@ class avis
 
         $req->bindParam(':min', $min);
         $req->bindParam(':max', $max);
+        $req->execute();
+        $retour = array();
+        while($rep= $req->fetch()){
+            array_push($retour, $rep);
+        }
+        return $retour;
+    }
+
+    public function RequetteNoteChauffeur($min, $max, $Id){
+        $req = $this->Bdd->prepare("SELECT avis.*,
+                                                course.DateReservation,
+                                                client.Nom as 'NomClient',
+                                                client.Prenom as 'PrenomClient',
+                                                tarification.PlaqueVehicule as 'plaque'
+                        
+                                        FROM avis
+                                        INNER JOIN course on avis.IdCourse = course.Id
+                                        INNER JOIN personne client on course.IdClient = client.Id
+                                        
+                                        INNER JOIN tarification on course.IdTarification = tarification.Id
+                                        WHERE (avis.Note between :min AND :max) AND IdChauffeur =:Id");
+
+        $req->bindParam(':min', $min);
+        $req->bindParam(':max', $max);
+        $req->bindParam(':Id', $Id);
         $req->execute();
         $retour = array();
         while($rep= $req->fetch()){

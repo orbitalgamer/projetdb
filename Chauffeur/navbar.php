@@ -45,6 +45,11 @@ else{
                 <a class="nav-link" href="Allprobleme.php">Vos Problèmes</a>
 
             </li>
+            <li class="nav-item">
+
+                <a class="nav-link" href="avis.php">Vos avis</a>
+
+            </li>
             
             
             
