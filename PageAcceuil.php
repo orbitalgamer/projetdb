@@ -68,7 +68,7 @@
         <div class="">
             <div id="imgContainer" class="relative top-20">
                 <img class="mx-auto max-w-96 max-h-[46rem] shadow-lg"
-                    src="images/lousvette-munoz-au6ERMLAr0o-unsplash.jpg">
+                    src="lousvette-munoz-au6ERMLAr0o-unsplash.jpg">
             </div>
         </div>
 </body>
