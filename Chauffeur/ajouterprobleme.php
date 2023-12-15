@@ -93,7 +93,7 @@ if(!empty($_GET)){
             }
 
 
-            //header('location: affichetout.php');
+            header('location: affichetout.php');
         }
         else{
             echo 'erreur ajout';

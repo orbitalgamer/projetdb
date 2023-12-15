@@ -38,6 +38,7 @@ function Afficher($liste){
 ?>
 
 <html>
+
 <div class="container">
     <div class="text-center">
         <p class="display-4 pt-4 pb-2 bold">Liste de vos problemes recencé</p>

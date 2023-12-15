@@ -269,6 +269,26 @@ class probleme
         }
     }
 
+    public function Update($Id){
+        if(!empty($this->IdAdresse) && !empty($this->IdTypeProbleme) && !empty($this->Description) && !empty($this->IdCourse)){
+
+                $req = $this->Bdd->prepare("UPDATE probleme SET Description=:Desc, Rouler =:Rouler, IdAdresse=:IdAdresse, IdTypeProbleme=:IdTypePrboleme WHERE Id=:Id");
+                $req->bindParam(':Rouler', $this->Rouler);
+                $req->bindParam(':IdTypePrboleme', $this->IdTypeProbleme);
+                $req->bindParam(':IdAdresse', $this->IdAdresse);
+                $req->bindParam(':Desc', $this->Description);
+                $req->bindParam(':Id', $Id);
+
+                if($req->execute()){
+                   return array("succes"=>1);
+                }
+
+
+        }
+        else{
+            return array("error"=>1);
+        }
+    }
 
 }
 

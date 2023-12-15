@@ -185,7 +185,7 @@ WHERE
 public function GetAllprobleme($Idchauffeur){
         
 
-    $req = $this->Bdd->prepare("SELECT course.Id as 'Id', Regle, Rouler, typeprobleme.Nom as 'NomProblem', tarification.PlaqueVehicule as 'Plaque' FROM probleme 
+    $req = $this->Bdd->prepare("SELECT probleme.Id as 'Id', Regle, Rouler, typeprobleme.Nom as 'NomProblem', tarification.PlaqueVehicule as 'Plaque' FROM probleme 
     INNER JOIN typeprobleme on probleme.IdTypeProbleme = typeprobleme.Id
     INNER JOIN course on probleme.IdCourse = course.Id
     INNER JOIN tarification on course.IdTarification = tarification.Id

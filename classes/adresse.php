@@ -136,6 +136,14 @@ public function selection(){
 
         return $req->fetch();
     }
+
+    public function GetInfo($Id){
+        $req = $this->Bdd->prepare("SELECT adresse.*, localite.CodePostal FROM adresse INNER JOIN localite on adresse.Vile = localite.Ville WHERE adresse.Id = :Id");
+        $req->bindParam(':Id', $Id);
+        $req->execute();
+        return $req->fetch();
+
+    }
    
 }
 
