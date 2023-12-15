@@ -170,7 +170,7 @@ class Course {
   }
   
   public function selection(){
-    $query = "SELECT DateReservation,DistanceParcourue,IdClient,IdChauffeur,IdAdresseDepart,IdAdresseFin,IdTarification,IdMajoration FROM $this->NomTable WHERE Id='$this->Id' OR IdClient='$this->IdClient'"; 
+    $query = "SELECT Id,DateReservation,DistanceParcourue,IdClient,IdChauffeur,IdAdresseDepart,IdAdresseFin,IdTarification,IdMajoration FROM $this->NomTable WHERE Id='$this->Id' OR IdClient='$this->IdClient'"; 
     $rq = $this->Bdd->prepare($query);
     $rq->execute();
     $rep=$rq->fetch(PDO::FETCH_ASSOC);
