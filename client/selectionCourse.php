@@ -192,7 +192,8 @@ if(isset($adresseInitial_Input) && isset($adresseFinal_Input)){
     }
     
    
-   $Date_Heure_actuelle = new DateTime($Date_Heure_actuelle);
+
+    
    $CourseToReturn->DateReservation = $Date_Heure_actuelle->format("Y-m-d H:i:s");
    // $CourseToReturn->Payee = 0;
    $CourseToReturn->IdAdresseDepart = $array_data_initial["Id"];
