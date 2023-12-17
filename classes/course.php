@@ -430,7 +430,8 @@ public function AbandonChauffeur($Id){
     public function GetEtat($Id){
       $req = $this->Bdd->prepare("SELECT liencourseetat.*, etat.Nom FROM liencourseetat
          INNER JOIN etat on liencourseetat.IdEtat = etat.Id
-         WHERE IdCourse = :Id");
+         WHERE IdCourse = :Id
+         ORDER BY Date asc");
       $req->bindParam(':Id', $Id);
       $req->execute();
       $retour = array();
@@ -525,7 +526,7 @@ public function AbandonChauffeur($Id){
    $rq->execute();
    $array_duration_course =  $rq->fetchAll(PDO::FETCH_ASSOC);
 
-   
+   print_r($array_duration_course);
    $Diff_Time_array_Previous = array();
    $Diff_Time_array_Next = array();
    for($i=0; $i < count($array_duration_course);$i++)
@@ -630,8 +631,8 @@ public function AbandonChauffeur($Id){
      $next_course_adresse->Id = $IdAdresseDepart;
      $previous_course_adresse_array = $previous_course_adresse->selection();
      $next_course_adresse_array = $next_course_adresse->selection();
-     $previous_course_adresse_string = $previous_course_adresse_array["Numero"] . " " . $previous_course_adresse_array["Rue"] . " " . $previous_course_adresse_array["Vile"];
-     $next_course_adresse_string = $next_course_adresse_array["Numero"] . " " . $next_course_adresse_array["Rue"] . " " . $next_course_adresse_array["Vile"];
+     //$previous_course_adresse_string = $previous_course_adresse_array["Numero"] . " " . $previous_course_adresse_array["Rue"] . " " . $previous_course_adresse_array["Vile"];
+     //$next_course_adresse_string = $next_course_adresse_array["Numero"] . " " . $next_course_adresse_array["Rue"] . " " . $next_course_adresse_array["Vile"];
 
 
      // $Next_Course_Array = $this->itineraire($previous_course_adresse_string,$next_course_adresse_string);
@@ -678,8 +679,8 @@ public function AbandonChauffeur($Id){
      $next_course_adresse_array = $next_course_adresse->selection();
   
    
-     $previous_course_adresse_string = $previous_course_adresse_array["Numero"] . " " . $previous_course_adresse_array["Rue"] . " " . $previous_course_adresse_array["Vile"];
-     $next_course_adresse_string = $next_course_adresse_array["Numero"] . " " . $next_course_adresse_array["Rue"] . " " . $next_course_adresse_array["Vile"];
+     //$previous_course_adresse_string = $previous_course_adresse_array["Numero"] . " " . $previous_course_adresse_array["Rue"] . " " . $previous_course_adresse_array["Vile"];
+     //$next_course_adresse_string = $next_course_adresse_array["Numero"] . " " . $next_course_adresse_array["Rue"] . " " . $next_course_adresse_array["Vile"];
       
      
      // $Next_Course_Array = $this->itineraire($previous_course_adresse_string,$next_course_adresse_string);
