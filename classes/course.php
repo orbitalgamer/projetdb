@@ -496,9 +496,9 @@ public function AbandonChauffeur($Id){
     }
     public function Verification_disponibilite($Current_Course,$IdChauffeur)
    {
-    echo "<br>";
-    echo "Chauffeur : ";
-    echo $IdChauffeur;
+    // echo "<br>";
+    // echo "Chauffeur : ";
+    // echo $IdChauffeur;
    //Requete pour afficher toutes les courses non prises par un chauffeur où on considère que idChauffeur = 0  est une course non-prise
    $Current_Course_DateTime = $Current_Course->DateReservation;// $Current_Course["DateReservation"];
    $Current_Course_IdAdresseDepart = $Current_Course->IdAdresseDepart;//$Current_Course["IdAdresseDepart"] ;
@@ -599,14 +599,14 @@ public function AbandonChauffeur($Id){
  }  
  
    
-    print_r($Diff_Time_array_Previous);
-    echo "<br>";
-    echo '$Min_Diff_Time_Previous  : '. $min_Diff_Time_Previous ; 
-    echo "<br>";
-    print_r($Diff_Time_array_Next);
-    echo "<br>";
-    echo '$Min_Diff_Time_Next  : '. $min_Diff_Time_Next;
-    echo "<br>";
+    // print_r($Diff_Time_array_Previous);
+    // echo "<br>";
+    // echo '$Min_Diff_Time_Previous  : '. $min_Diff_Time_Previous ; 
+    // echo "<br>";
+    // print_r($Diff_Time_array_Next);
+    // echo "<br>";
+    // echo '$Min_Diff_Time_Next  : '. $min_Diff_Time_Next;
+    // echo "<br>";
  
  
    // print_r($Diff_Time_array_Previous);
@@ -704,6 +704,15 @@ public function AbandonChauffeur($Id){
  
  
    }
+
+    if(!isset($reponse_boolean_Previous)){
+      $reponse_boolean_Previous = TRUE;
+    }
+    if(!isset($reponse_boolean_Next))
+    {
+      $reponse_boolean_Next = TRUE;
+    }
+
    if($reponse_boolean_Previous == TRUE && $reponse_boolean_Next == TRUE)
    {
      return TRUE;
@@ -965,7 +974,7 @@ public function loadcourse($Idcourse){
             else
             {
                 $reponse_boolean_Next = FALSE;
-               /* echo "<br>";
+               /* echo "<br>"
                 echo "Course suivant impossible";
                 echo "Course suivante impossible";
                 echo "<br>"; */

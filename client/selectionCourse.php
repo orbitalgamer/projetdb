@@ -127,23 +127,7 @@ if(!empty($adresseInitial_Input) && !empty($adresseFinal_Input)){
 );
 
 
-   if(!empty($_POST["Autonome"])){
-    $choix = $_POST["Autonome"];
-    if($choix == "Autonome"){
-   $query= "SELECT course.idChauffeur as 'idChauffeur' 
-        FROM course 
-        JOIN personne 
-        ON course.idChauffeur = personne.Id
-        JOIN typepersonne 
-        ON personne.idStatus = typepersonne.id
-        WHERE typepersonne.NomTitre = 'Autonome'";
-        
-    $rq = $base->prepare($query);
-    $rq->execute();
-    $rep=$rq->fetchAll(PDO::FETCH_ASSOC);
-    $CourseToReturn->IdChauffeur = $rep[0]["idChauffeur"];
-    }
-   }
+  
    
    if(!empty($_POST["Non-Autonome"]))
    {
@@ -176,7 +160,7 @@ if(!empty($adresseInitial_Input) && !empty($adresseFinal_Input)){
    $AdresseInitial->latitude = $array_distance_time_latitude_longitude["Latitude_Adresse_Initial"];
    $AdresseFinal->latitude = $array_distance_time_latitude_longitude["Latitude_Adresse_Final"];
    $AdresseInitial->longitude = $array_distance_time_latitude_longitude["Longitude_Adresse_Initial"];
-   $AdresseFinal->longitude = $array_distance_time_latitude_longitude["Longitude_Adresse_Final"] ;
+   $AdresseFinal->longitude     = $array_distance_time_latitude_longitude["Longitude_Adresse_Final"] ;
    
    $AdresseInitial->creation();
    $AdresseFinal->creation();
@@ -213,11 +197,43 @@ if(!empty($adresseInitial_Input) && !empty($adresseFinal_Input)){
    $CourseToReturn->IdTarification = 7;
    $CourseToReturn->IdMajoration = 2;
    $CourseToReturn->duree = $array_distance_time_latitude_longitude["total_time"];
-   
-   $CourseToReturn->creation();//Fonction qui fait la requete SQL (INSERT INTO ...) permettant de créer l'objet $CourseToReturn;
    $Info_array_course = array();
-   $Info_array_course = $CourseToReturn->selection();
+$Info_array_course = $CourseToReturn->selection();
    
+   
+   
+   if(!empty($_POST["Autonome"])){
+    $number_free_chauffeur_autonome = 0;
+    $choix = $_POST["Autonome"];
+    if($choix == "Autonome"){
+   $query= "SELECT personne.Id FROM personne 
+        JOIN typepersonne 
+        ON personne.idStatus = typepersonne.id
+        WHERE typepersonne.NomTitre = 'Autonome'";
+        
+    $rq = $base->prepare($query);
+    $rq->execute();
+    $rep=$rq->fetchAll(PDO::FETCH_ASSOC);
+    print_r($rep);
+   
+    for($i=0;$i < count($rep);$i++)
+    {
+     
+     $IdChauffeur = $rep[$i]["Id"];
+    
+     $value = $CourseToReturn->Verification_disponibilite($CourseToReturn,$IdChauffeur);
+     if($value){
+         $number_free_chauffeur_autonome++;
+         
+     }
+     echo $value;
+ }
+    }
+   }
+
+
+
+
    $idEtat = 1;
    $id=$Info_array_course["Id"];
    $DateReservation = $Info_array_course['DateReservation'];
@@ -229,6 +245,10 @@ if(!empty($adresseInitial_Input) && !empty($adresseFinal_Input)){
    $rep=$rq->fetchAll(PDO::FETCH_ASSOC);
    $number_free_chauffeur = 0;
 
+
+
+
+
    for($i=0;$i < count($rep);$i++)
    {
     
@@ -239,7 +259,11 @@ if(!empty($adresseInitial_Input) && !empty($adresseFinal_Input)){
         $number_free_chauffeur++;
         
     }
+    $CourseToReturn->IdChauffeur = $rep[0]["id"];
 }
+
+$CourseToReturn->creation();//Fonction qui fait la requete SQL (INSERT INTO ...) permettant de créer l'objet $CourseToReturn;
+
 
 
 
