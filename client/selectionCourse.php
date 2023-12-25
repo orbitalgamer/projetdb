@@ -55,7 +55,7 @@
         include_once "../classes/course.php";
         include_once "../classes/personne.php";
         require_once "../classes/adresse.php";
-        include_once "info_adresse.php";
+        require_once "info_adresse.php";
         $base = new Bdd();
         $base = $base->getBdd();
     /**
@@ -139,8 +139,8 @@ if(!empty($adresseInitial_Input) && !empty($adresseFinal_Input)){
    }
 
    
-   $infosAdresse_array_initial = InfosAdresse($adresseInitial_Input,$base);
-   $infosAdresse_array_final = InfosAdresse($adresseFinal_Input,$base);
+   $infosAdresse_array_initial = InfoAdresse2($adresseInitial_Input,$base);
+   $infosAdresse_array_final = InfoAdresse2($adresseFinal_Input,$base);
     
 
    $AdresseInitial = new adresse();
@@ -155,17 +155,26 @@ if(!empty($adresseInitial_Input) && !empty($adresseFinal_Input)){
 
    $AdresseInitial->Ville =   $infosAdresse_array_initial['Ville'];
    $AdresseFinal->Ville =  $infosAdresse_array_final['Ville'];
+
+   $AdresseInitial->CP =  $infosAdresse_array_initial['codePostal'];
+   $AdresseFinal->CP = $infosAdresse_array_final['codePostal'];
+
+   //var_dump($infosAdresse_array_initial);
   
 
    $AdresseInitial->latitude = $array_distance_time_latitude_longitude["Latitude_Adresse_Initial"];
    $AdresseFinal->latitude = $array_distance_time_latitude_longitude["Latitude_Adresse_Final"];
    $AdresseInitial->longitude = $array_distance_time_latitude_longitude["Longitude_Adresse_Initial"];
    $AdresseFinal->longitude     = $array_distance_time_latitude_longitude["Longitude_Adresse_Final"] ;
-   
+
+   $AdresseInitial->Id=0;
+    $AdresseFinal->Id=0;
+
    $AdresseInitial->creation();
    $AdresseFinal->creation();
   
    $array_data_initial = array();
+
    $array_data_initial = $AdresseInitial->selection();
    $array_data_final = array();
    $array_data_final = $AdresseFinal->selection();
@@ -190,6 +199,7 @@ if(!empty($adresseInitial_Input) && !empty($adresseFinal_Input)){
 
    $CourseToReturn->DateReservation = $Date_Heure_actuelle->format("Y-m-d H:i:s");
    // $CourseToReturn->Payee = 0;
+    //var_dump($array_data_initial);
    $CourseToReturn->IdAdresseDepart = $array_data_initial["Id"];
    $CourseToReturn->IdAdresseFin= $array_data_final["Id"];
    $CourseToReturn->DistanceParcourue = $array_distance_time_latitude_longitude["total_distance"];
@@ -214,7 +224,7 @@ $Info_array_course = $CourseToReturn->selection();
     $rq = $base->prepare($query);
     $rq->execute();
     $rep=$rq->fetchAll(PDO::FETCH_ASSOC);
-    print_r($rep);
+    //print_r($rep);
    
     for($i=0;$i < count($rep);$i++)
     {
@@ -226,14 +236,14 @@ $Info_array_course = $CourseToReturn->selection();
          $number_free_chauffeur_autonome++;
          
      }
-     echo $value;
+     //echo $value;
  }
     }
    }
 
 
 
-
+   // var_dump($Info_array_course);
    $idEtat = 1;
    $id=$Info_array_course["Id"];
    $DateReservation = $Info_array_course['DateReservation'];
@@ -274,6 +284,7 @@ $CourseToReturn->creation();//Fonction qui fait la requete SQL (INSERT INTO ...)
    $rq->execute();
    $rep=$rq->fetch(PDO::FETCH_ASSOC);
 
+    $CourseToReturn->NotifyCourseCreer();
 
 
    header("Location:CourseCommande.php");

@@ -88,6 +88,38 @@ function InfosAdresse($adresse,$base) {
     ];
 }
 
+function InfoAdresse2($adresse){
+
+
+    $adresse_belge_regex = '/(?P<numero>\d+[^\w\n]*?)?'    // Numéro de rue (peut être suivi de caractères non alphanumériques)
+        . '(?P<rue>[^\d\n,]+?)'          // Nom de la rue (ne contient pas de chiffres)
+        . '[^\w\n]*?'                    // Séparateur entre rue et numéro
+        . '(?P<ville>[^\d\n,]+?)'        // Nom de la ville (ne contient pas de chiffres)
+        . '[^\w\n]*?'                    // Séparateur entre ville et code postal
+        . '(?P<code_postal>\d{4})/';     // Code postal (exactement 4 chiffres)
+
+// Exemple d'utilisation
+//    $adresse = "123 Rue de l'Exemple, 1000 Bruxelles";
+
+    if (preg_match($adresse_belge_regex, $adresse, $match)) {
+        $numero = $match['numero'];
+        $rue = $match['rue'];
+        $ville = $match['ville'];
+        $code_postal = $match['code_postal'];
+
+        return [
+            'Numero' => $numero,
+            'Rue' => $rue,
+            'codePostal'=>$code_postal,
+            'Ville'=>$ville
+        ];
+    } else {
+        echo "Adresse belge non valide.\n";
+    }
+
+
+}
+
 // Exemple d'utilisation
 // $adresseEntree = "Rue du Docq 10 5140 Sombreffe";
 // $infosAdresse = InfosAdresse($adresseEntree,$base);
