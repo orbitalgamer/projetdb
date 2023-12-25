@@ -9,6 +9,8 @@
 
 include_once 'bdd.php';
 include_once 'adresse.php';
+include_once 'mail.php';
+include_once 'personne.php';
 
 
 
@@ -993,6 +995,50 @@ public function loadcourse($Idcourse){
         }
 
 
+    }
+
+    /**
+     * sert à notifier client que course bien prise
+     * @return void
+     */
+    public function NotifyCourseAccepte($IdCourse){
+        $mail = new mail();
+        $info = $this->Get($IdCourse);
+
+        //notifier client
+        $Dest = $info['EmailClient'];
+        $Titre = utf8_decode("[info] taxeasy course du ").date('d-m-y',DateDebut);
+        $Message = utf8_decode("Nous vous confirmons qu'un chauffeur pourra bien être présent pour votre course du ").date('d-m-y',DateDebut);
+        $mail->SendMail($Dest, $Titre, $Message);
+
+        //notifier gestionnaire
+        $pers = new Personne();
+        $admin = $pers->GetAdmin();
+        foreach($admin as $elem){
+            $Dest = $elem['Email'];
+            $Titre = utf8_decode("[info reservation] course # ").$IdCourse.utf8_decode("sera effectué par ").$info['NomChauffeur'];
+            $mail->SendMail($Dest, $Titre, $Titre);
+        }
+    }
+
+    public function NotifyCourseDecline($IdCourse){
+        $mail = new mail();
+        $info = $this->Get($IdCourse);
+
+        //notifier client
+        $Dest = $info['EmailClient'];
+        $Titre = utf8_decode("[info] taxeasy course du ").date('d-m-y',DateDebut);
+        $Message = utf8_decode("Nous avons la malheure de vous annoncer que la course que vous avez comandé pour le ").date('d-m-y',DateDebut).utf8_decode(" sera remplie. Nous mettons tous en oeuvre pour trouver une solutions");
+        $mail->SendMail($Dest, $Titre, $Message);
+
+        //notifier gestionnaire
+        $pers = new Personne();
+        $admin = $pers->GetAdmin();
+        foreach($admin as $elem){
+            $Dest = $elem['Email'];
+            $Titre = utf8_decode("[info reservation] course # ").$IdCourse.utf8_decode(" abandonner par ").$info['NomChauffeur'];
+            $mail->SendMail($Dest, $Titre, $Titre);
+        }
     }
 }
 ?>

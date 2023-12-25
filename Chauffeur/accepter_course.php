@@ -32,6 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $linkCourseEtat->IdEtat = 2;
     
                 $linkCourseEtat->creationlien(); // Appel de la fonction pour insérer dans la table liencourseetat
+                $linkCourseEtat->NotifyCourseAccepte($courseId); //envoie mail que se fait
                 
                 header("location:dashboard.php");
                 //echo $_POST['Id'];

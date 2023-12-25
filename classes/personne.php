@@ -310,6 +310,14 @@ class Personne  {
         return $retour;
     }
 
+    public function GetAdmin(){
+       $req = $this->Bdd->query("SELECT * FROM personne INNER JOIN typepersonne on personne.IdStatus = typepersonne.Id WHERE typepersonne.NomTitre='Admin'");
+       $retour = array();
+       while($rep = $req->fetch){
+           array_push($retour, $rep);
+       }
+    }
+
 }
 
 
