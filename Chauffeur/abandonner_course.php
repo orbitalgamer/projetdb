@@ -26,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $linkCourseEtat->IdEtat = 1;
 
             $linkCourseEtat->creationlien();
+            $linkCourseEtat->NotifyCourseDecline($courseId); //envoye mail que ne se fait pas
             header("location:dashboard.php");
             //echo $_POST['Id'];
             //echo $_SESSION['Id'];

@@ -4,6 +4,7 @@
 <?php
 
 require_once 'bdd.php';
+require_once 'mail.php';
 
 
 
@@ -236,10 +237,37 @@ class Personne  {
        return $retour;
    }
 
+    public function Get($Id){
+        $req = $this->Bdd->prepare("SELECT personne.*, prix.Inpaye as 'Inpaye' FROM personne 
+                                    INNER JOIN typepersonne ON personne.IdStatus = typepersonne.Id
+                                    LEFT JOIN course ON personne.Id = course.IdClient
+                                    LEFT JOIN (SELECT course.Id, 
+                                                      course.IdClient, 
+                                                      count(tarification.PrixAuKilometre * course.DistanceParcourue) as 'Inpaye' 
+                                                FROM course
+                                                LEFT JOIN  liencourseetat on course.Id = liencourseetat.IdCourse
+                                                LEFT JOIN tarification on course.IdTarification = tarification.Id
+                                                INNER JOIN etat on liencourseetat.IdEtat = etat.Id
+                                                WHERE etat.Nom = 'Termine'
+                                                GROUP BY course.IdClient) prix ON personne.Id = course.IdClient
+                                    LEFT JOIN liencourseetat ON course.Id = liencourseetat.IdCourse
+                                    WHERE typepersonne.NomTitre = 'Client' AND personne.Id = :Id");
+
+        $req->bindParam(':Id', $Id);
+        $req->execute();
+        return $req->fetch();
+    }
+
    public function Bannir($Id){
        $req = $this->Bdd->prepare("UPDATE personne SET IdStatus = 4 WHERE Id =:Id AND IdStatus = 1");
+       $persone = $this->Get($Id);
        $req->bindParam(':Id', $Id);
        if($req->execute()){
+           $mail = new mail();
+           $Dest = $persone['Email'];
+           $Sujet = "[taxeasy] bannissement";
+           $Message = "Suite à des plus grande vérificaiton, nous avons décider de suspendre indifiniment. Une raison principal est votre solde impayé s'élevant à".$persone['Inpaye'].utf8_decode('euros. ');
+           $mail->SendMail($Dest, $Sujet, $Message);
            return array("succes"=>1);
        }
        else{
@@ -248,8 +276,14 @@ class Personne  {
    }
     public function DeBannir($Id){
         $req = $this->Bdd->prepare("UPDATE personne SET IdStatus = 1 WHERE Id =:Id AND IdStatus = 4");
+        $persone = $this->Get($Id);
         $req->bindParam(':Id', $Id);
         if($req->execute()){
+            $mail = new mail();
+            $Dest = $persone['Email'];
+            $Sujet = "[taxeasy] debannissement";
+            $Message = "Suite a une rélfexion, nous avons décidé de lever votre interdiction d'utiliser notre services.";
+            $mail->SendMail($Dest, $Sujet, $Message);
             return array("succes"=>1);
         }
         else{
@@ -308,6 +342,14 @@ class Personne  {
             array_push($retour, $rep);
         }
         return $retour;
+    }
+
+    public function GetAdmin(){
+       $req = $this->Bdd->query("SELECT * FROM personne INNER JOIN typepersonne on personne.IdStatus = typepersonne.Id WHERE typepersonne.NomTitre='Admin'");
+       $retour = array();
+       while($rep = $req->fetch){
+           array_push($retour, $rep);
+       }
     }
 
 }

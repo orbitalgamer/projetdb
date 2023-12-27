@@ -9,6 +9,8 @@
 
 include_once 'bdd.php';
 include_once 'adresse.php';
+include_once 'mail.php';
+include_once 'personne.php';
 
 
 
@@ -533,6 +535,7 @@ public function AbandonChauffeur($Id){
    $rq->execute();
    $array_duration_course =  $rq->fetchAll(PDO::FETCH_ASSOC);
 
+
    $Diff_Time_array_Previous = array();
    $Diff_Time_array_Next = array();
    for($i=0; $i < count($array_duration_course);$i++)
@@ -654,7 +657,7 @@ public function AbandonChauffeur($Id){
       $reponse_boolean_Previous = TRUE;
     //  echo 'assez loin de la précédente';
 
-      echo abs($min_Diff_Time_Previous).'>'.$time_btw_course_previous;
+//      echo abs($min_Diff_Time_Previous).'>'.$time_btw_course_previous;
       
        
      }
@@ -999,6 +1002,73 @@ public function loadcourse($Idcourse){
         }
 
 
+    }
+
+    /**
+     * sert à notifier client que course bien prise
+     * @return void
+     */
+    public function NotifyCourseAccepte($IdCourse){
+        $mail = new mail();
+        $info = $this->Get($IdCourse);
+
+        //notifier client
+        $Dest = $info['EmailClient'];
+        $Titre = utf8_decode("[info] taxeasy course du ").date('d-m-y',DateDebut);
+        $Message = utf8_decode("Nous vous confirmons qu'un chauffeur pourra bien être présent pour votre course du ").date('d-m-y',DateDebut);
+        $mail->SendMail($Dest, $Titre, $Message);
+
+        //notifier gestionnaire
+        $pers = new Personne();
+        $admin = $pers->GetAdmin();
+        foreach($admin as $elem){
+            $Dest = $elem['Email'];
+            $Titre = utf8_decode("[info reservation] course # ").$IdCourse.utf8_decode("sera effectué par ").$info['NomChauffeur'];
+            $mail->SendMail($Dest, $Titre, $Titre);
+        }
+    }
+
+    public function NotifyCourseCreer(){
+        $mail = new mail();
+
+        $pers = new Personne();
+
+        $client = $pers->Get($this->IdClient);
+
+        //notifier client
+        $Dest = $client['Email'];
+        $Titre = utf8_decode("[Nouvelle] taxeasy course du ").date('d-m-y',DateDebut);
+        $Message = utf8_decode("Nous vous remercions d'avoir choisir nos service pour votre course du ").date('d-m-y',DateDebut);
+        $mail->SendMail($Dest, $Titre, $Message);
+
+        //notifier gestionnaire
+        $pers = new Personne();
+        $admin = $pers->GetAdmin();
+        foreach($admin as $elem){
+            $Dest = $elem['Email'];
+            $Titre = utf8_decode("[new reservation] course du ").date('d-m-y',DateDebut);
+            $mail->SendMail($Dest, $Titre, $Titre);
+        }
+    }
+
+    public function NotifyCourseDecline($IdCourse){
+        $mail = new mail();
+        $info = $this->Get($IdCourse);
+
+        //notifier client
+        $Dest = $info['EmailClient'];
+        $Titre = utf8_decode("[info] taxeasy course du ").date('d-m-y',DateDebut);
+        $Message = utf8_decode("Nous avons la malheure de vous annoncer que la course que vous avez comandé pour le ").date('d-m-y',DateDebut).utf8_decode(" sera remplie. Nous mettons tous en oeuvre pour trouver une solutions");
+        $mail->SendMail($Dest, $Titre, $Message);
+
+        //notifier gestionnaire
+        $pers = new Personne();
+        $admin = $pers->GetAdmin();
+        foreach($admin as $elem){
+            $Dest = $elem['Email'];
+            $Titre = utf8_decode("[info reservation] course # ").$IdCourse.utf8_decode(" abandonner par ").$info['NomChauffeur'];
+            $mail->SendMail($Dest, $Titre, $Titre);
+        }
     }
 }
 ?>

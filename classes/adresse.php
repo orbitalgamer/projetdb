@@ -43,6 +43,7 @@ class adresse{
         $rep=$rq->fetch(PDO::FETCH_ASSOC);
 
         if(!empty($rep)){
+
             return array("error"=>1);
         }
         /**Le principe est de verifier que les latitudes et longitudes rentrés n'existe pas dans le bdd pour économiser des réquetes APIs */
@@ -51,7 +52,9 @@ class adresse{
         $loc->Ville = $this->Ville;
         if(empty($loc->selection())){
             $loc->CodePostal=$this->CP;
+            //var_dump($this);
             $loc->creation();
+            //echo 'erreur 1';
         }
 
 
@@ -93,6 +96,7 @@ class adresse{
                 $newLocalite->creation();
                 $rq->execute();
                 $rep = $rq->fetch(PDO::FETCH_ASSOC);
+
                 echo json_decode($rep);
             }
             else
@@ -112,7 +116,7 @@ class adresse{
 public function selection(){
     $query = "SELECT Id,Numero,Rue,Vile,NomAdresse,latitude,longitude FROM $this->NomTable WHERE Rue='$this->Rue' OR Id='$this->Id'";
     $rq = $this->Bdd->prepare($query);
-    
+
     if($rq->execute()){
       $rep=$rq->fetch(PDO::FETCH_ASSOC);
      
