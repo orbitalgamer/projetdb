@@ -198,7 +198,7 @@ if(!empty($adresseInitial_Input) && !empty($adresseFinal_Input)){
    $CourseToReturn->IdMajoration = 2;
    $CourseToReturn->duree = $array_distance_time_latitude_longitude["total_time"];
    $Info_array_course = array();
-$Info_array_course = $CourseToReturn->selection();
+   $Info_array_course = $CourseToReturn->selectionLastCourse();
    
    
    
@@ -214,7 +214,7 @@ $Info_array_course = $CourseToReturn->selection();
     $rq = $base->prepare($query);
     $rq->execute();
     $rep=$rq->fetchAll(PDO::FETCH_ASSOC);
-    print_r($rep);
+    // print_r($rep);
    
     for($i=0;$i < count($rep);$i++)
     {
@@ -234,15 +234,20 @@ $Info_array_course = $CourseToReturn->selection();
 
 
 
+  // ARANGER LE PROBLème que selection renvoi la 1er course du client qu'il a faite;
    $idEtat = 1;
    $id=$Info_array_course["Id"];
+   $_SESSION["IdCourse"] = $id;
+   echo "IDCOURSE  : ";
+   echo $id;
    $DateReservation = $Info_array_course['DateReservation'];
    $DateReservation = new DateTime($DateReservation);
    $DateReservation = $DateReservation->format("Y-m-d H:i:s");
-   $query = "SELECT DISTINCT id FROM personne WHERE idStatus = '2'";
+   $query = "SELECT id FROM personne WHERE idStatus = '2'";
    $rq = $base->prepare($query);
    $rq->execute(); 
    $rep=$rq->fetchAll(PDO::FETCH_ASSOC);
+   
    $number_free_chauffeur = 0;
 
 
