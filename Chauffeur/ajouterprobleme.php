@@ -3,7 +3,8 @@
 include_once 'navbar.php';
 include_once '../classes/probleme.php';
 include_once '../classes/adresse.php';
-include_once '../client/info_adresse.php';
+include_once '../classes/course.php';
+
 
 //pour faire fonctionner sélection adresse
 $Bdd = new Bdd();
@@ -11,6 +12,7 @@ $base = $Bdd->getBdd();
 
 $probleme = new probleme();
 $adresse = new adresse();
+$course = new course();
 
 if(!empty($_GET)){
     if(!empty($_GET['Id'])){
@@ -57,46 +59,48 @@ if(!empty($_GET)){
                 return $file_ary;
             }
 
-            //mets photo dans ordre plus simple
-            $img=reArrayFiles($_FILES['images']);
-            $url="../image/probleme/".$IdProbleme;
 
-            mkdir($url); //crée dossier pour tous les mettres
-            //var_dump($img);
-            $_SESSION['add']= 5; // evite de repasser dans la boucle pour insert
+            if(!empty($_FILES['images']['Name'])) {
+                //mets photo dans ordre plus simple
+                $img = reArrayFiles($_FILES['images']);
+                $url = "../image/probleme/" . $IdProbleme;
 
-            $a=0;
-            foreach($img as $image){
-                if($image['error']){
-                    echo "<p class='alert alert-danger' role='alert'>".$image['name']." - ".$erreur[$image['error']]."<br>";
-                }
-                $b=explode('.', $image['name']);
-                $c=end($b);
-                $ext=strtolower($c);
-                $aut=array('bmp', 'tiff', 'jpeg', 'jpg', 'gif', 'png', 'svg', 'tif');
-                if(in_array($ext, $aut)){
+                mkdir($url); //crée dossier pour tous les mettres
+                //var_dump($img);
+                $_SESSION['add'] = 5; // evite de repasser dans la boucle pour insert
 
-                    if(move_uploaded_file($image['tmp_name'], $url."/".$a.".".$ext)){
-                        //echo "<p class='alert alert-success' role='alert'>".$image['name']." - fichier transferé<br>";
-                        //echo $_SESSION['IdPa'] ." ".$ext." ".$a."<br>";
-                        $probleme->InsertPhoto("probleme/".$IdProbleme."/".$a.".".$ext, $IdProbleme); //ajoute dans la dB
-
+                $a = 0;
+                foreach ($img as $image) {
+                    if ($image['error']) {
+                        echo "<p class='alert alert-danger' role='alert'>" . $image['name'] . " - " . $erreur[$image['error']] . "<br>";
                     }
-                    else{
-                        echo "<p class='alert alert-danger' role='alert'>".$image['name']." - fichier non transféré<br>";
+                    $b = explode('.', $image['name']);
+                    $c = end($b);
+                    $ext = strtolower($c);
+                    $aut = array('bmp', 'tiff', 'jpeg', 'jpg', 'gif', 'png', 'svg', 'tif');
+                    if (in_array($ext, $aut)) {
+
+                        if (move_uploaded_file($image['tmp_name'], $url . "/" . $a . "." . $ext)) {
+                            //echo "<p class='alert alert-success' role='alert'>".$image['name']." - fichier transferé<br>";
+                            //echo $_SESSION['IdPa'] ." ".$ext." ".$a."<br>";
+                            $probleme->InsertPhoto("probleme/" . $IdProbleme . "/" . $a . "." . $ext, $IdProbleme); //ajoute dans la dB
+
+                        } else {
+                            echo "<p class='alert alert-danger' role='alert'>" . $image['name'] . " - fichier non transféré<br>";
+                        }
+                    } else {
+                        echo "<p class='alert alert-danger' role='alert'>" . $image['name'] . " - fichier invalide<br>";
                     }
+                    $a++;
                 }
-                else{
-                    echo "<p class='alert alert-danger' role='alert'>".$image['name']." - fichier invalide<br>";
-                }
-                $a++;
             }
-
-
+            var_dump($IdProbleme);
+            $cour = $course->Get($IdCourse);
+            $probleme->Notify($_SESSION['Id'], $cour['Plaque'],  $IdProbleme ); //notifier les personnes
             header('location: affichetout.php');
         }
         else{
-            echo 'erreur ajout';
+            echo "<p class='alert alert-danger' role='alert'> Erreur d'ajout<br>";
         }
     }
 }

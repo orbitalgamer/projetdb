@@ -1,6 +1,9 @@
 <?php
 
 require_once 'Bdd.php';
+require_once 'mail.php';
+require_once 'chauffeur.php';
+require_once 'personne.php';
 
 
 /**
@@ -184,12 +187,14 @@ class probleme
     public function Insert(){
         if(!empty($this->IdAdresse) && !empty($this->IdTypeProbleme) && !empty($this->Description) && !empty($this->IdCourse)){
 
-            $req = $this->Bdd->prepare("SELECT Id FROM probleme WHERE 
+            $req = $this->Bdd->prepare("SELECT Id FROM probleme
+                            INNER JOIN course on probleme.IdCourse = course.Id
+                            WHERE 
                             Rouler=:Rouler AND 
                             IdTypeProbleme =:IdTypeProbleme AND 
                             IdCourse =:IdCourse AND 
                             IdAdresse =:IdAdresse AND
-                            Description =:Desc");
+                            Description =:Desc AND DATE(course.DateReservation) = CURRENT_DATE");
             $req->bindParam(':Rouler', $this->Rouler);
             $req->bindParam(':IdTypeProbleme', $this->IdTypeProbleme);
             $req->bindParam(':IdAdresse', $this->IdAdresse);
@@ -224,8 +229,16 @@ class probleme
 
 
                     $req->execute();
-                    return $req->fetch()[0];
+
+
+                    return $req->fetch()['Id'];
                 }
+                else{
+                    return array("error"=>1);
+                }
+            }
+            else{
+                return array("error"=>1);
             }
 
         }
@@ -287,6 +300,41 @@ class probleme
         }
         else{
             return array("error"=>1);
+        }
+    }
+
+    /**
+     * encore notifier mail gestionnaire et c'est ok
+     * @param $IdChauffeur
+     * @return void
+     */
+    public function Notify($IdChauffeur, $plaque, $IdProbleme){
+        $mail = new mail();
+        $probleme = $this->GetId($IdProbleme); //pour récuperer type de prolbème
+        $chauffeurObjet = new chauffeur();
+        $chauffeur = $chauffeurObjet->GetId($IdChauffeur);
+
+
+
+        $Dest = $chauffeur['Email'];
+        $Sujet = utf8_decode("[taxeasy] Nouveau problème sur le vehicule ").$plaque;
+        $Message = utf8_decode("Vous venez d'ajouter un nouveau problème sur la voiture immatriculé ").$plaque;
+        $Message .= utf8_decode("Ce problème est de type ").$probleme['NomProbleme'].utf8_decode(' avec comme description : ').$probleme['Description'];
+
+        $mail->SendMail($Dest, $Sujet, $Message);
+
+        //envoie au admin
+
+        $personneObjet = new Personne();
+        $admin = $personneObjet->GetAdmin();
+//        var_dump($admin);
+
+        $Sujet = utf8_decode("[taxeasy] Nouveau problème sur le vehicule ").$plaque;
+        $Message = utf8_decode("Le chuaffeur ").$chauffeur['Nom']." ".$chauffeur['Prenom'].utf8_decode("a signaler un nouveau problème sur la voiture immatriculé ").$plaque;
+        $Message .= utf8_decode("Ce problème est de type ").$probleme['NomProbleme'].utf8_decode(' avec comme description : ').$probleme['Description'];
+
+        foreach($admin as $elem){
+            $mail->SendMail($elem['Email'], $Sujet, $Message);
         }
     }
 

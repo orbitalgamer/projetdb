@@ -436,6 +436,15 @@ public function GetnewCourse(){
         }
     }
 
+    public function GetId($Id){
+        $req = $this->Bdd->prepare("SELECT * FROM personne 
+                                            INNER JOIN typepersonne on personne.IdStatus = typepersonne.Id
+                                            WHERE typepersonne.NomTitre='Chauffeur' AND personne.Id =:Id");
+        $req->bindParam(':Id', $Id);
+        if($req->execute()){
+            return $req->fetch();
+        }
+    }
 
 }
 
