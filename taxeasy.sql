@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : ven. 15 déc. 2023 à 14:41
+-- Généré le : ven. 29 déc. 2023 à 19:22
 -- Version du serveur : 5.7.36
 -- Version de PHP : 7.4.26
 
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `adresse` (
   `longitude` float NOT NULL,
   PRIMARY KEY (`Id`),
   KEY `FK_Ville` (`Vile`)
-) ENGINE=InnoDB AUTO_INCREMENT=81 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=166 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `adresse`
@@ -56,7 +56,14 @@ INSERT INTO `adresse` (`Id`, `Numero`, `Rue`, `NomAdresse`, `Vile`, `latitude`, 
 (7, 666, 'enfer', NULL, '???', 1, 1),
 (8, 666, 'enfer', NULL, 'mons', 1, 1),
 (9, 20, 'accident', NULL, 'charleroi', 1, 1),
-(15, 9, 'rue de houdain  ', NULL, 'mons', 50.8257, 4.37067);
+(15, 9, 'rue de houdain  ', NULL, 'mons', 50.8257, 4.37067),
+(139, 10, 'rue agneaux  ', NULL, 'chaleroi', 50.4025, 3.89047),
+(140, 40, 'rue des marais  ', NULL, 'mons', 50.8257, 4.37067),
+(161, 10, ' Rue dagneau', NULL, ' frameries', 50.4025, 3.89047),
+(162, 10, ' Rue des Marais', NULL, ' Amougies', 50.8257, 4.37067),
+(163, 11, ' Rue de la balance', NULL, ' Arc-wattripont', 50.4025, 3.89047),
+(164, 11, ' ', NULL, 'Rue de la balance Arc-wattripont', 50.4025, 3.89047),
+(165, 10, ' ', NULL, 'Harchies', 50.8257, 4.37067);
 
 -- --------------------------------------------------------
 
@@ -107,7 +114,7 @@ CREATE TABLE IF NOT EXISTS `course` (
   KEY `FK_IdTarification` (`IdTarification`),
   KEY `FK_IdChauffeur` (`IdChauffeur`),
   KEY `FK_IdClient` (`IdClient`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `course`
@@ -121,7 +128,12 @@ INSERT INTO `course` (`Id`, `DateReservation`, `DistanceParcourue`, `IdClient`, 
 (5, '2033-12-21 20:21:54', 69, 9, 6, 1, 2, 18, 1, 1000),
 (6, '2031-12-17 22:51:58', 42, 6, 22, 1, 2, 31, 2, 50),
 (7, '2025-12-12 08:44:59', 0, 9, 13, 4, 5, 17, 2, 3000),
-(8, '2025-12-12 08:47:07', 0, 23, 10, 6, 7, 10, 1, 1000000);
+(8, '2025-12-12 08:47:07', 0, 23, 10, 6, 7, 10, 1, 1000000),
+(9, '2023-12-25 20:45:45', 75883.1, 26, 6, 139, 140, 7, 2, NULL),
+(10, '2023-12-25 20:45:45', 75883.1, 26, 6, 139, 140, 7, 2, NULL),
+(11, '2023-12-25 21:03:59', 75883.1, 26, 6, 161, 162, 7, 2, NULL),
+(12, '2023-12-25 21:16:35', 75883.1, 26, 6, 163, 162, 7, 2, NULL),
+(13, '2023-12-25 21:16:35', 75883.1, 26, 6, 163, 162, 7, 2, NULL);
 
 -- --------------------------------------------------------
 
@@ -189,7 +201,7 @@ CREATE TABLE IF NOT EXISTS `liencourseetat` (
   PRIMARY KEY (`Id`),
   KEY `FK_IdEtat` (`IdEtat`),
   KEY `FK_IdCourse` (`IdCourse`)
-) ENGINE=InnoDB AUTO_INCREMENT=85 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=102 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `liencourseetat`
@@ -271,7 +283,24 @@ INSERT INTO `liencourseetat` (`Id`, `Date`, `IdCourse`, `IdEtat`) VALUES
 (81, '2023-12-15 13:35:55', 7, 1),
 (82, '2023-12-15 13:48:59', 8, 2),
 (83, '2023-12-15 13:49:10', 4, 7),
-(84, '2023-12-15 13:49:13', 8, 4);
+(84, '2023-12-15 13:49:13', 8, 4),
+(85, '2023-12-25 19:45:45', 9, 1),
+(86, '2023-12-25 19:45:45', 9, 1),
+(87, '2023-12-25 19:45:45', 9, 1),
+(88, '2023-12-25 19:45:45', 9, 1),
+(89, '2023-12-25 19:45:45', 9, 1),
+(90, '2023-12-25 19:45:45', 9, 1),
+(91, '2023-12-25 19:45:45', 9, 1),
+(92, '2023-12-25 19:45:45', 9, 1),
+(93, '2023-12-25 19:45:45', 9, 1),
+(94, '2023-12-25 19:45:45', 9, 1),
+(95, '2023-12-25 19:45:45', 9, 1),
+(96, '2023-12-25 19:45:45', 9, 1),
+(97, '2023-12-25 19:45:45', 9, 1),
+(98, '2023-12-25 19:45:45', 9, 1),
+(99, '2023-12-25 19:45:45', 9, 1),
+(100, '2023-12-25 19:45:45', 9, 1),
+(101, '2023-12-25 19:45:45', 9, 1);
 
 -- --------------------------------------------------------
 
@@ -291,13 +320,19 @@ CREATE TABLE IF NOT EXISTS `localite` (
 --
 
 INSERT INTO `localite` (`Ville`, `CodePostal`) VALUES
+(' Amougies', 7750),
+(' Arc-wattripont', 7910),
+(' frameries', 7080),
 ('???', 666),
 ('chaleroi', 6000),
 ('charleroi', 9000),
+('Harchies', 7310),
 ('harichies', 7810),
 ('mons', 7000),
 ('mont de l\'enlcus', 7750),
-('perdu', 9999);
+('perdu', 9999),
+('rc-wattripont', 7910),
+('Rue de la balance Arc-wattripont', 7910);
 
 -- --------------------------------------------------------
 
@@ -442,7 +477,7 @@ CREATE TABLE IF NOT EXISTS `probleme` (
   KEY `FK_IdCourseProbleme` (`IdCourse`),
   KEY `FK_IdTypeProbleme` (`IdTypeProbleme`),
   KEY `FK_IdAdresseProblem` (`IdAdresse`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `probleme`
@@ -540,7 +575,7 @@ CREATE TABLE IF NOT EXISTS `typemajoration` (
   `Nom` varchar(20) NOT NULL,
   `Coefficient` float NOT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `typemajoration`
