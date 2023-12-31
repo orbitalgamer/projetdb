@@ -33,11 +33,20 @@
 
 <body>
 
-    <nav class="bg-black">
+    <nav class="bg-black h-12">
         <div class="mx-auto max-w-7xl max-h-7xl px-2 sm:px-6 lg:px-8">
-            <div class="flex space-x-4">
+            <div class="flex flex-row space-x-24 items-center">
 
-                <span class="text-gray-300 text-2xl font-weight">TAXEASY</span>
+                <a href="../index.php" class="text-gray-300 text-2xl font-weight">TAXEASY</a>
+
+
+                <a href="../index.php" class="text-white font-medium shadow-2xl hover:text-slate-300">à propos</a>
+                <a href="paiement.php" class="text-white font-medium shadow-2xl  hover:text-slate-300">Vos historiques de courses</a>
+                <!-- <a href="../index.php" class="text-white font-medium shadow-2xl">à propos</a> -->
+
+                <form action="../deconnection.php">
+                    <input type="submit" class="text-white font-medium shadow-2xl  hover:text-slate-300" name="Deconnexion" value="Deconnexion">Deconnexion</button>
+                </form>
             </div>
 
         </div>
