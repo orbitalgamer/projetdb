@@ -124,7 +124,6 @@ function Afficher($liste,$base){
             <th scope="col h3">Adresse de départ </th>
             <th scope="col h3">Adresse d'arrivé</th>
             <th scope="col h3">Payé</th>
-            <th scope="col h3">Chauffeur</th>
             <th scope="col h3">Facture</th>
       
 
@@ -155,7 +154,7 @@ function Afficher($liste,$base){
       LEFT JOIN (SELECT * FROM liencourseetat WHERE IdEtat < (SELECT Id FROM etat WHERE Nom='Paye') ORDER BY IdEtat DESC) lien on course.Id = lien.IdCourse
       LEFT JOIN (SELECT * FROM liencourseetat WHERE IdEtat = (SELECT Id FROM etat WHERE Nom='Paye')) paye on course.Id = paye.IdCourse
       INNER JOIN etat on lien.IdEtat = etat.Id
-      WHERE (lien.IdEtat > (SELECT Id FROM etat WHERE Nom='En cours')) AND course.IdClient= :IdClient
+      WHERE  course.IdClient= :IdClient
       GROUP BY course.Id
       ORDER BY Inpaye ASC";
           $rq = $base->prepare($query);

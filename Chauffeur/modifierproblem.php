@@ -113,7 +113,7 @@ if(!empty($_GET)){
 
     <form class="" method="POST" enctype="multipart/form-data">
         <div class="form-group">
-            <label for="probleme" class="h5">Type accident</label>
+            <label for="probleme" class="h5">Type de problème</label>
             <select class="form-control h5" id="probleme" name="TypeProbleme">
                 <?php
 
@@ -162,7 +162,7 @@ if(!empty($_GET)){
         </div>
 
         <div class="form-group h5">
-            <a class="">Photo du problème<a>
+            <a class="">Photos du problème<a>
                 <span class="col-lg-8 col-sm-12 py-3">
                     <div class="d-flex flex-column px-3">
                         <div class="container-fluid  border bg-light mb-3 rounded">
@@ -191,7 +191,7 @@ if(!empty($_GET)){
 
         <div class="d-flex row">
             <div class="col-sm-4 justify-content-center">
-                <input type="submit" value="modifier le problème" class="form-control bg-dark text-light" name="ajout"/>
+                <input type="submit" value="Modifier le problème" class="form-control bg-dark text-light" name="ajout"/>
             </div>
         </div>
 

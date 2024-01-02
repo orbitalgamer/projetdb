@@ -31,10 +31,10 @@ else{
                 <a class="nav-link" href="course.php">Courses</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="vehicule.php">Véhicule</a>
+                <a class="nav-link" href="vehicule.php">Véhicules</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="probleme.php">Problème</a>
+                <a class="nav-link" href="probleme.php">Problèmes</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="Chauffeurs.php">Chauffeurs</a>
@@ -46,7 +46,7 @@ else{
                 <a class="nav-link" href="avis.php">Avis</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="majoration.php">Majoration</a>
+                <a class="nav-link" href="majoration.php">Majorations</a>
             </li>
         </ul>
     </div>
@@ -55,7 +55,7 @@ else{
             <a class="nav-link">Bonjour, <?php echo $_SESSION['Prenom']; ?></a>
         </div>
         <div class="navbar-item col-md-4 navbar-text pl-0 pr-0">
-            <a class="nav-link" href="../deconnection.php">Déconnection</a>
+            <a class="nav-link" href="../deconnection.php">Déconnexion</a>
         </div>
         </div>
     </div>

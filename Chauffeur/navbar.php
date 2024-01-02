@@ -42,7 +42,7 @@ else{
            
             <li class="nav-item">
 
-                <a class="nav-link" href="Allprobleme.php">Vos Problèmes</a>
+                <a class="nav-link" href="Allprobleme.php">Vos problèmes</a>
 
             </li>
             <li class="nav-item">
@@ -60,7 +60,7 @@ else{
             <a class="nav-link">Bonjour, <?php echo $_SESSION['Prenom']; ?></a>
         </div>
         <div class="navbar-item col-md-4 navbar-text pl-0 pr-0">
-            <a class="nav-link" href="../deconnection.php">Déconnection</a>
+            <a class="nav-link" href="../deconnection.php">Déconnexion</a>
         </div>
         </div>
     </div>

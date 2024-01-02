@@ -52,8 +52,8 @@ else{
         <thead class="table-light">
         <tr>
             <th scope="col h3">#</th>
-            <th scope="col h3">Client</th>
-            <th scope="col h3">Chauffeur</th>
+            <th scope="col h3">Nom Client</th>
+            <th scope="col h3">Nom Chauffeur</th>
             <th scope="col h3">Plaque</th>
             <th scope="col h3">Note</th>
             <th scope="col h3">Description</th>

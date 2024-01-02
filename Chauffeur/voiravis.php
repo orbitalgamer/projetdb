@@ -26,15 +26,15 @@ else{
 
     <div class="form-group row">
         <div class="col-md-6">
-            <a class="h5">course commandé par </a> <a class="h4"> <?php echo $resultat['NomClient'].' '.$resultat['PrenomClient'];  ?></a>
+            <a class="h5">Course commandée par </a> <a class="h4"> <?php echo $resultat['NomClient'].' '.$resultat['PrenomClient'];  ?></a>
         </div>
 
     </div>
     <div class="form-group">
-        <a class="h5">Le client vous a laisser une note de </a> <a class="h4"> <?php echo $avis['Note'];?></a <a class="h5">/5</a>
+        <a class="h5">Le client vous a laissé une note de </a> <a class="h4"> <?php echo $avis['Note'];?></a <a class="h5">/5</a>
     </div>
     <div class="form-group">
-        <a class="h4">Il a l'aissé comme description : </a> <br> <a class="h5 p-4"> <?php echo $avis['Description'];?></a>
+        <a class="h4">Il a mis comme description : </a> <br> <a class="h5 p-4"> <?php echo $avis['Description'];?></a>
     </div>
 
 

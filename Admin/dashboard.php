@@ -13,7 +13,7 @@ $Suivant = $course->GetSuivante();
 <html>
 <div class="container">
     <div class="text-center">
-        <p class="display-4 pt-4 pb-2 bold">Course en cours</p>
+        <p class="display-4 pt-4 pb-2 bold">Courses en cours</p>
     </div>
     <table class="table table-sortable table-striped table-responsive-md">
         <thead class="table-light">
@@ -21,8 +21,8 @@ $Suivant = $course->GetSuivante();
             <th scope="col h3">#</th>
             <th scope="col h3">Nom Chauffeur</th>
             <th scope="col h3">Nom Client</th>
-            <th scope="col h3">Status</th>
-            <th scope="col h3">Date debut</th>
+            <th scope="col h3">Statut</th>
+            <th scope="col h3">Date Début</th>
             <th scope="col h3"></th>
 
         </tr>
@@ -49,7 +49,7 @@ $Suivant = $course->GetSuivante();
         </tbody>
 </table>
     <div class="text-center">
-        <p class="display-4 pt-4 pb-2 bold">Course suivantes</p>
+        <p class="display-4 pt-4 pb-2 bold">Courses suivantes</p>
     </div>
     <table class="table table-sortable table-striped table-responsive-md">
         <thead class="table-light">
@@ -57,7 +57,7 @@ $Suivant = $course->GetSuivante();
             <th scope="col h3">#</th>
             <th scope="col h3">Nom Chauffeur</th>
             <th scope="col h3">Nom Client</th>
-            <th scope="col h3">Date debut</th>
+            <th scope="col h3">Date Début</th>
             <th scope="col h3"></th>
 
         </tr>

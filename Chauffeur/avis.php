@@ -25,7 +25,7 @@ else{
 <html>
 <div class="container">
     <div class="text-center">
-        <p class="display-4 pt-4 pb-2 bold">Liste des vos avis</p>
+        <p class="display-4 pt-4 pb-2 bold">Liste de vos avis</p>
     </div>
     <div class="row align-items-center">
 

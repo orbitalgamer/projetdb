@@ -66,7 +66,8 @@ $resultat = $majo->Get();
         $ligne = ' <form method="POST" action=""> <input type="hidden" name="Id" value="New"> <tr><th>' . $compteur . '</th>
             <td> <input type="text" class="form-control" name="Nom" placeholder="Nouveau ?" required/></td>
             <td><input type="number" class="form-control" step="any" name="Coef" placeholder="?x" required/></td>
-            <td><input type="submit" value="ajouter" class="form-control bg-dark text-light" name="ajouter"/></td>
+            <td><input type="submit" value="Ajouter" class="form-control bg-dark text-light" name="ajouter"/></td>
+            <td></td>
      </tr> </form>';
         echo $ligne;
 
@@ -75,7 +76,7 @@ $resultat = $majo->Get();
         </tbody>
     </table>
     <div class="text-center">
-        <p class="pt-4 pb-2 bold h6">Attention il est impossible de supprimer un type de majoration si des courses ont été réalisées avec. Le bouton supprimer n'est que là pour les erreurs du gestionnaire</p>
+        <p class="pt-4 pb-4 bold h6 alert alert-danger">Attention, il est impossible de supprimer un type de majoration si des courses ont été réalisées avec.<br> Le bouton supprimer n'est que là pour les erreurs du gestionnaire</p>
     </div>
 </div>
 <script>

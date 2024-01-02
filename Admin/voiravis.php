@@ -30,20 +30,19 @@ else{
         <p class="display-4 pt-4 pb-2 bold">Voir un avis</p>
     </div>
 
-    <div class="form-group row">
-        <div class="col-md-6">
-            <a class="h5">course commandé par </a> <a class="h4"> <?php echo $resultat['NomClient'].' '.$resultat['PrenomClient'];  ?></a>
-            <a class="h5">Effectué par </a> <a class="h4"> <?php echo $resultat['NomChauffeur'].' '.$resultat['PrenomChauffeur'];  ?></a>
-        </div>
-        <div class="col-md-6 text-center">
-            <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='voircourse.php?Id=<?php echo $Id; ?>'">voir la course au complet</button>
-        </div>
+    <div class="form-group">
+        <a class="h5">Course commandée par </a> <a class="h4"> <?php echo $resultat['NomClient'].' '.$resultat['PrenomClient'];  ?></a>
+        <a class="h5">et effectuée par </a> <a class="h4"> <?php echo $resultat['NomChauffeur'].' '.$resultat['PrenomChauffeur'];  ?></a>
     </div>
     <div class="form-group">
-        <a class="h5">Le client à noté le service à </a> <a class="h4"> <?php echo $avis['Note'];?></a <a class="h5">/5</a>
+        <a class="h5">Le client a noté le service à </a> <a class="h4"> <?php echo $avis['Note'];?>/5</a <a class="h5"></a>
     </div>
     <div class="form-group">
         <a class="h4">Il a laissé comme description : </a> <br> <a class="h5 p-4"> <?php echo $avis['Description'];?></a>
+    </div>
+
+    <div class="form-group">
+        <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='voircourse.php?Id=<?php echo $Id; ?>'">voir la course au complet</button>
     </div>
 
     <?php

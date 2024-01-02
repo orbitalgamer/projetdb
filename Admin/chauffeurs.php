@@ -16,7 +16,7 @@ function Afficher($liste){
             <td>' . $elem["NumeroDeTelephone"] . '</td>
             <td>' . $elem["CourseFaite"] . '</td>
             <td><button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`avis.php?IdPersonne=' . $elem["Id"] . '`">voir avis</button></td>
-            <td><button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`modificationchauffeur.php?Id=' . $elem["Id"] . '`">Supprimer</button></td>
+            <td><button type="button" class="btn btn-outline-danger" onclick="window.location.href=`modificationchauffeur.php?Id=' . $elem["Id"] . '`">Supprimer</button></td>
      </tr>';
         echo $ligne;
         $compteur += 1;
@@ -49,11 +49,11 @@ function Afficher($liste){
         <tr>
             <th scope="col h3">#</th>
             <th scope="col h3">Nom</th>
-            <th scope="col h3">Prenom</th>
+            <th scope="col h3">Prénom</th>
             <th scope="col h3">Email</th>
-            <th scope="col h3">Numero De Telephone</th>
-            <th scope="col h3">Course réalisées</th>
-            <th scope="col h3">avis</th>
+            <th scope="col h3">Numéro Téléphone</th>
+            <th scope="col h3">Courses Réalisées</th>
+            <th scope="col h3">Avis</th>
             <th scope="col h3">Supprimer</th>
 
         </tr>

@@ -206,7 +206,7 @@ if(!empty($adresseInitial_Input) && !empty($adresseFinal_Input)){
    
 
 
-   $CourseToReturn->DateReservation = $Date_Heure_actuelle->format("Y-m-d H:i:s");
+   $CourseToReturn->DateReservation = date("Y-m-d H:i:s");
    // $CourseToReturn->Payee = 0;
     //var_dump($array_data_initial);
    $CourseToReturn->IdAdresseDepart = $array_data_initial["Id"];

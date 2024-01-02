@@ -53,9 +53,9 @@ function Afficher($liste){
         <thead class="table-light">
         <tr>
             <th scope="col h3">#</th>
-            <th scope="col h3">DateReservation</th>
+            <th scope="col h3">Date Reservation</th>
             <th scope="col h3">Plaque</th>
-            <th scope="col h3">Nom</th>
+            <th scope="col h3">Nom Client</th>
             <th scope="col h3">Adresse Depart</th>
             <th scope="col h3">Adresse Fin</th>
             <th scope="col-md-1 h3"></th>

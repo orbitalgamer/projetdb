@@ -41,9 +41,9 @@ else{
         <tr>
             <th scope="col h3">#</th>
             <th scope="col h3">Nom</th>
-            <th scope="col h3">Prenom</th>
+            <th scope="col h3">Prénom</th>
             <th scope="col h3">Email</th>
-            <th scope="col h3">NumeroDeTelephone</th>
+            <th scope="col h3">Numéro Téléphone</th>
             <th scope="col h3">Impayé</th>
             <th scope="col h3">Avis</th>
             <th scope="col h3">Bannir</th>
@@ -91,9 +91,9 @@ else{
         <tr>
             <th scope="col h3">#</th>
             <th scope="col h3">Nom</th>
-            <th scope="col h3">Prenom</th>
+            <th scope="col h3">Prénom</th>
             <th scope="col h3">Email</th>
-            <th scope="col h3">NumeroDeTelephone</th>
+            <th scope="col h3">Numéro Téléphone</th>
             <th scope="col h3">Impayé</th>
             <th scope="col h3">Avis</th>
             <th scope="col h3">Débannir</th>
