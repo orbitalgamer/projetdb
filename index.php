@@ -230,7 +230,7 @@ $('#register-form-link').click(function(e) {
   <div class="navbar navbar-dark bg-dark shadow-sm">
     <div class="container">
       <a href="Index.php" class="navbar-brand d-flex align-items-center">
-      <img src="img/bag.png" width="20" height="20"/>
+
          
         <strong style="font-size: 20px;"> Taxeasy</strong>
       </a>
@@ -320,9 +320,7 @@ $('#register-form-link').click(function(e) {
 									<div class="form-group">
 										<input type="password" name="MdpConfirm" id="confirm-password" tabindex="2" class="form-control" placeholder="Confirmez votre mots de passe">
 									</div>
-									<div class="">
-										<h4>En vous inscrivant, vous acceptez <a href="Eula.php">les conditions d'utilisation </a> ainsi que les cookies</h4> <br>
-									</div>
+
 									<div class="form-group">
 										<div class="row">
 											<div class="col-sm-6 col-sm-offset-3">
