@@ -13,15 +13,7 @@ class localite {
     }
 
     public function creation(){
-        $query = "INSERT INTO $this->NomTable (
-          Ville,
-          CodePostal
-          )
-          VALUES
-          (
-          '$this->Ville',
-          '$this->CodePostal'
-          )";
+       $query = "INSERT INTO $this->NomTable (Ville,CodePostal) VALUES ('$this->Ville','$this->CodePostal')";
        $rq = $this->Bdd->prepare($query);
        $rq->execute();
        $rep = $rq->fetch();
