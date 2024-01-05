@@ -57,7 +57,7 @@ if(!empty($_POST)){
     else{
         echo'
         <div class="form-group text-center">
-        <a class="h3 p-2 alert-danger">Ce probleme n est pas réglé</a >
+        <a class="h3 p-2 alert-danger">Ce probleme n\'est pas réglé</a >
     </div >';
     }
     ?>
@@ -73,7 +73,7 @@ if(!empty($_POST)){
                     <a class="h5">Marque : <?php echo $prob['marque']; ?></a>
                 </div>
                 <div class="col-md-3">
-                    <a class="h5">Modele : <?php echo $prob['model']; ?></a>
+                    <a class="h5">Modèle : <?php echo $prob['model']; ?></a>
                 </div>
                 <div class="col-md-3">
                     <a class="h5">Kilométrage : <?php echo $prob['kilometrage']; ?> km</a>
@@ -83,7 +83,7 @@ if(!empty($_POST)){
     </div>
 
     <div class="form-group">
-        <a class="h4 pb-2">Remonter par <?php echo $prob['nomChauffeur'] . ' ' . $prob['prenomChauffeur']; ?> </a>
+        <a class="h4 pb-2">Signalé par <?php echo $prob['nomChauffeur'] . ' ' . $prob['prenomChauffeur']; ?> </a>
     </div>
 
     <div class="form-group">
@@ -125,7 +125,7 @@ if(!empty($_POST)){
 
 
     <div class="form-group">
-        <a class="h4 pb-2">Maintenance prévu</a>
+        <a class="h4 pb-2">Maintenance prévue</a>
         <?php
         $maintenance = $maintenanceObjet->GetId($Id);
         foreach ($maintenance as $elem){
@@ -164,7 +164,7 @@ if(!empty($_POST)){
                 </div>
                 <div class="row">
                     <div class=" col-md-12">
-                        <input type="submit" class="form-control bg-dark text-light pt-2" name="AjoutMaintenance" value="Ajotuer une Maintenance">
+                        <input type="submit" class="form-control bg-dark text-light pt-2" name="AjoutMaintenance" value="Ajotuer une maintenance">
                     </div>
                 </div>
             </form>
@@ -175,12 +175,12 @@ if(!empty($_POST)){
         if(!$prob['Regle']){
             echo'<div class="container pt-4">
             <a class="h4">Regler le problème ?</a><br>
-            <a class="h5">Erivez reglé pour reglé le problème</a>
+            <a class="h5">Ecrivez "regler" pour régler le problème</a>
             <form class="justify-content-center" method="POST">
                 <div class="row justify-content-center">
                     <div class="col-md-6 d-flex">
                         <input type="text" class="form-control" placeholder="regler" name="Supprimer" required>
-                        <input type="submit" class="form-control bg-dark text-light pt-2" name="Regler" value="Regler ce problème">
+                        <input type="submit" class="form-control bg-dark text-light pt-2" name="Regler" value="Régler ce problème">
                     </div>
             </form>
 

@@ -46,11 +46,12 @@ $pdf->Cell(40, 10, utf8_decode('Facture de la course N°'.$resultat['Id']));
 // Ajouter du contenu au PDF
 $pdf->SetFont('Arial', '', 12);
 $pdf->Ln(10); // Saut de ligne
-$pdf->MultiCell(0, 10, utf8_decode('Le client nommé '.$resultat['NomClient'].' '.$resultat['PrenomClient'].' a utilisé les services de Taxeasy le '.date('d-m-y',strtotime($resultat['DateDebut'] ))));
-$pdf->MultiCell(0, 10, utf8_decode('Il a demandé une course reliant '.$resultat['NumeroDepart'].' '.$resultat['RueDepart'].' à '.$resultat['CPDepart'].' '.$resultat['VileDepart'].' à '.$resultat['NumeroFin'].' '.$resultat['RueFin'].' à '.$resultat['CPFin'].' '.$resultat['VileFin'])) ;
-$pdf->MultiCell(0, 10, utf8_decode('Pour réaliser ce trajet, le chauffeur a parcouru '.$resultat['DistanceParcourue']. ' km pour un tarif lors du dit service de '.$resultat['Tarif']).' euro/km.' );
-$pdf->MultiCell(0, 10, utf8_decode('Le client se voit donc réclamé la somme de '.$resultat['Prix']).' euro '.utf8_decode('pour au plus tard le '.date("d-m-y",strtotime('+1 Months', strtotime($resultat['DateDebut']))))) ;
-$pdf->MultiCell(0, 10, utf8_decode('Le paiement peut être effectué sur les compte suivant BEBONNUMERODECOMPTE')) ;
+$pdf->MultiCell(0, 10, utf8_decode('Vous avez utilisé les services de Taxeasy le '.date('d-m-y',strtotime($resultat['DateDebut'] ))));
+$pdf->MultiCell(0, 10, utf8_decode('Vous avez demandé une course reliant '.$resultat['NumeroDepart'].' '.$resultat['RueDepart'].' à '.$resultat['CPDepart'].' '.$resultat['VileDepart'].' à '.$resultat['NumeroFin'].' '.$resultat['RueFin'].' à '.$resultat['CPFin'].' '.$resultat['VileFin'])) ;
+$pdf->MultiCell(0, 10, utf8_decode('Pour réaliser ce trajet, le chauffeur a parcouru '.$resultat['DistanceParcourue']. ' km à un tarif de '.$resultat['Tarif']).' euro/km.' );
+$pdf->MultiCell(0, 10, utf8_decode('Vous vous voyez réclamer la somme de '.$resultat['Prix']).' euro '.utf8_decode('pour au plus tard le '.date("d-m-y",strtotime('+1 Months', strtotime($resultat['DateDebut']))))) ;
+$pdf->MultiCell(0, 10, utf8_decode('Le paiement peut être effectué sur le compte suivant BEBONNUMERODECOMPTE')) ;
+
 
 $pdf->MultiCell(0, 10, 'Ce fut un plaisir de travailler avec vous') ;
 

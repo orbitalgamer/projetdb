@@ -76,7 +76,7 @@ function AfficherEncours($liste){
 <html>
 <div class="container">
     <div class="text-center">
-        <p class="display-4 pt-4 pb-2 bold">Course en cours</p>
+        <p class="display-4 pt-4 pb-2 bold">Courses en cours</p>
     </div>
 
     <?php
@@ -92,9 +92,9 @@ function AfficherEncours($liste){
         <thead class="table-light">
         <tr>
             <th scope="col h3">#</th>
-            <th scope="col h3">DateReservation</th>
+            <th scope="col h3">Date Reservation</th>
             <th scope="col h3">Plaque</th>
-            <th scope="col h3">Nom</th>
+            <th scope="col h3">Nom Client</th>
             <th scope="col h3">Adresse Depart</th>
             <th scope="col h3">Adresse Fin</th>
             <th scope="col-md-1 h3"></th>
@@ -131,9 +131,9 @@ function AfficherEncours($liste){
         <thead class="table-light">
         <tr>
             <th scope="col h3">#</th>
-            <th scope="col h3">DateReservation</th>
+            <th scope="col h3">Date Reservation</th>
             <th scope="col h3">Plaque</th>
-            <th scope="col h3">Nom</th>
+            <th scope="col h3">Nom Client</th>
             <th scope="col h3">Adresse Depart</th>
             <th scope="col h3">Adresse Fin</th>
             <th scope="col-md-1 h3"></th>

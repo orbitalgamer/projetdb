@@ -27,7 +27,7 @@ function Afficher($liste){
  
 
             <th>
-            <button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`ajouterprobleme.php?Id=' . $auto["Id"] . '`"> Ajouter probleme</button>
+            <button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`ajouterprobleme.php?Id=' . $auto["Id"] . '`"> Ajouter un problème</button>
             </th>
              <th>
             <button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`ajoutphotocourse.php?Id=' . $auto["Id"] . '`"> Ajouter des photos</button>
@@ -55,7 +55,7 @@ function Afficher($liste){
         <thead class="table-light">
         <tr>
             <th scope="col h3">Id</th>
-            <th scope="col h3">DateReservation</th>
+            <th scope="col h3">Date Reservation</th>
             <th scope="col h3">Nom</th>
             <th scope="col h3">Prenom</th>
             <th scope="col h3">Adresse Depart</th>

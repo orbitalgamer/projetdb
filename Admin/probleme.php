@@ -16,7 +16,7 @@ if(!empty($_GET['search'])){
 <html>
 <div class="container">
     <div class="text-center">
-        <p class="display-4 pt-4 pb-2 bold">Liste des problèmes lies au véhicule</p>
+        <p class="display-4 pt-4 pb-2 bold">Liste des problèmes liés aux véhicules</p>
     </div>
     <div class="row align-items-center">
         <form class="col-md-4 form-group" action="" method="">
@@ -27,10 +27,10 @@ if(!empty($_GET['search'])){
         <thead class="table-light">
         <tr>
             <th scope="col h3">Plaque</th>
-            <th scope="col h3">Type de problème</th>
-            <th scope="col h3">Peut rouler</th>
-            <th scope="col h3">Maintenance prevue</th>
-            <th scope="col h3">Reglé</th>
+            <th scope="col h3">Type Problème</th>
+            <th scope="col h3">Véhicule Fonctionnel</th>
+            <th scope="col h3">Maintenance Prévue</th>
+            <th scope="col h3">Problème Réglé</th>
             <th scope="col-md-1 h3"></th>
         </tr>
         </thead>

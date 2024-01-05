@@ -1029,6 +1029,7 @@ public function loadcourse($Idcourse){
     }
 
     public function NotifyCourseCreer(){
+
         $mail = new mail();
 
         $pers = new Personne();
@@ -1037,8 +1038,8 @@ public function loadcourse($Idcourse){
 
         //notifier client
         $Dest = $client['Email'];
-        $Titre = utf8_decode("[Nouvelle] taxeasy course du ").date('d-m-y',DateDebut);
-        $Message = utf8_decode("Nous vous remercions d'avoir choisir nos service pour votre course du ").date('d-m-y',DateDebut);
+        $Titre = utf8_decode("[Nouvelle] taxeasy course du ").date('d-m-y',(int)$this->DateReservation);
+        $Message = utf8_decode("Nous vous remercions d'avoir choisir nos service pour votre course du ").date('d-m-y',(int)$this->DateReservation);
         $mail->SendMail($Dest, $Titre, $Message);
 
         //notifier gestionnaire
@@ -1046,7 +1047,7 @@ public function loadcourse($Idcourse){
         $admin = $pers->GetAdmin();
         foreach($admin as $elem){
             $Dest = $elem['Email'];
-            $Titre = utf8_decode("[new reservation] course du ").date('d-m-y',DateDebut);
+            $Titre = utf8_decode("[new reservation] course du ").date('d-m-y',(int)$this->DateReservation);
             $mail->SendMail($Dest, $Titre, $Titre);
         }
     }

@@ -110,12 +110,12 @@ if(!empty($_GET)){
 <html>
 <div class="container">
     <div class="text-center">
-        <p class="display-4 pt-4 pb-2 bold">Ajouter d'un problème</p>
+        <p class="display-4 pt-4 pb-2 bold">Ajout d'un problème</p>
     </div>
 
     <form class="" method="POST" enctype="multipart/form-data">
         <div class="form-group">
-            <label for="probleme" class="h5">Type accident</label>
+            <label for="probleme" class="h5">Type de problème</label>
             <select class="form-control h5" id="probleme" name="TypeProbleme">
                 <?php
 
@@ -143,8 +143,8 @@ if(!empty($_GET)){
         </div>
 
         <div class="form-group h5">
-            <a class="">Adresse de l'accident</a>
-            <input type="number" class="form-control m-1" name="Numero" placeholder="Numero" required/>
+            <a class="">Adresse du problème </a>
+            <input type="number" class="form-control m-1" name="Numero" placeholder="Numéro" required/>
             <input type="text" class="form-control m-1" name="Rue" placeholder="Rue" required/>
             <input type="number" class="form-control m-1" name="CP" placeholder="CP" required/>
             <input type="text" class="form-control m-1" name="Ville" placeholder="Ville" required/>
@@ -158,7 +158,7 @@ if(!empty($_GET)){
 
         <div class="d-flex row">
             <div class="col-sm-4 justify-content-center">
-                <input type="submit" value="ajouter un problème" class="form-control bg-dark text-light" name="ajout"/>
+                <input type="submit" value="Ajouter le problème" class="form-control bg-dark text-light" name="ajout"/>
             </div>
         </div>
 

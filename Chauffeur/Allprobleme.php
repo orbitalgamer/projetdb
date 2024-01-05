@@ -41,13 +41,13 @@ function Afficher($liste){
 
 <div class="container">
     <div class="text-center">
-        <p class="display-4 pt-4 pb-2 bold">Liste de vos problemes recencé</p>
+        <p class="display-4 pt-4 pb-2 bold">Liste de vos problemes recensés</p>
     </div>
         
     <div class="row align-items-center">
     
         <form class="col-md-4 form-group" action="" method="">
-            <input type="search" class="form-control rounded" name="search" placeholder="rechercher" aria-label="Rechercher" aria-describedby="inputGroup-sizing-sm"/>
+            <input type="search" class="form-control rounded" name="search" placeholder="rechercher plaque, type" aria-label="Rechercher" aria-describedby="inputGroup-sizing-sm"/>
         </form>
     </div>
     <table class="table table-sortable table-striped table-responsive-md">
@@ -56,8 +56,8 @@ function Afficher($liste){
             <th scope="col h3">#</th>
             <th scope="col h3">Plaque</th>
             <th scope="col h3">Type Accident</th>
-            <th scope="col h3">Rouler</th>
-            <th scope="col h3">Regler</th>
+            <th scope="col h3">Peut Rouler</th>
+            <th scope="col h3">Problème Reglé</th>
             <th scope="col-md-1 h3"></th>
 
         </tr>

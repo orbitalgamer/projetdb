@@ -71,7 +71,7 @@ if(!empty($_POST)){
               echo "Ajouter un véhicule";
             }
             else{
-                echo "voir véhicule";
+                echo "Voir véhicule";
             }
             ?></p>
 
@@ -90,20 +90,20 @@ if(!empty($_POST)){
         <form class="" method="POST">
         <div class="form-group">
             <label class="h5" for="plaque">Plaque du véhicule</label>
-            <input type="text" class="form-control" name="plaque" placeholder="plaque du vehicule" required/>
+            <input type="text" class="form-control" name="plaque" placeholder="plaque du véhicule" required/>
         </div>
         <div class="form-group">
             <label for="marque" class="h5">Marque</label>
-            <input type="text" class="form-control" name="marque" placeholder="marque du vehicule" required/>
+            <input type="text" class="form-control" name="marque" placeholder="marque du véhicule" required/>
         </div>
         <div class="form-group">
             <a class="h5">Modèle</a>
-            <input type="text" class="form-control" name="modele" placeholder="modele" required/>
+            <input type="text" class="form-control" name="modele" placeholder="modèle" required/>
         </div>
         
         <div class="form-group">
-            <a class="h5">Killometrage</a>
-            <input type="number" class="form-control" name="killometrage" placeholder="killometrage" required/>
+            <a class="h5">Kilométrage</a>
+            <input type="number" class="form-control" name="killometrage" placeholder="kilométrage" required/>
         </div>
         
         
@@ -114,8 +114,8 @@ if(!empty($_POST)){
         </div>
         
         <div class="form-group">
-            <a class="h5">Annee</a>
-            <input type="number" class="form-control" name="Annee" placeholder="Annee" required/>
+            <a class="h5">Année</a>
+            <input type="number" class="form-control" name="Annee" placeholder="Année" required/>
         </div>
         <div class="form-group">
             
@@ -133,12 +133,12 @@ if(!empty($_POST)){
         </select>
         </div>
         <div class="form-group h5">
-            <a class="">Place disponible</a>
-            <input type="number" class="form-control" name="PlaceDisponible" placeholder="Place disponible" required/>
+            <a class="">Places disponibles</a>
+            <input type="number" class="form-control" name="PlaceDisponible" placeholder="Places disponibles" required/>
         </div>
         <div class="form-group">
             
-            <label for="PMR" class="h5" name="PMR"/>Adapté au personne a mobilité réduite</label>
+            <label for="PMR" class="h5" name="PMR"/>Adapté à une personnes à mobilité réduite</label>
             <select class="form-control" id="PMR" name="PMR">
                 <option selected="selected" value="Non"> Non</option>
                 <option value="PMR">Oui</option>
@@ -156,7 +156,7 @@ if(!empty($_POST)){
         
         <div class="d-flex row">
             <div class="col-sm-4 justify-content-center">
-                <input type="submit" value="ajouter vehicule" class="form-control bg-dark text-light" name="ajout"/>
+                <input type="submit" value="Ajouter le véhicule" class="form-control bg-dark text-light" name="ajout"/>
             </div>
         </div>
     
@@ -188,7 +188,7 @@ if(!empty($_POST)){
         </div>
         
         <div class="form-group">
-            <a class="h5">Killometrage</a>
+            <a class="h5">Kilométrage</a>
             <input type="number" class="form-control" name="killometrage" value="' . $info["Kilometrage"] . '" required/>
         </div>
         
@@ -200,7 +200,7 @@ if(!empty($_POST)){
         </div>
         
         <div class="form-group">
-            <a class="h5">Annee</a>
+            <a class="h5">Année</a>
             <input type="number" class="form-control" name="Annee" value="' . $info["Annee"] . '" required/>
         </div>
         <div class="form-group">
@@ -223,12 +223,12 @@ if(!empty($_POST)){
         </select>
         </div>
         <div class="form-group h5">
-            <a class="">Place disponible</a>
+            <a class="">Places disponibles</a>
             <input type="number" class="form-control" name="PlaceDisponible" value="' . $info["PlaceDisponible"] . '" required/>
         </div>
         <div class="form-group">
             
-            <label for="PMR" class="h5" name="PMR"/>Adapté au personne a mobilité réduite</label>
+            <label for="PMR" class="h5" name="PMR"/>Adapté à personne à mobilité réduite</label>
             <select class="form-control" id="PMR" name="PMR">';
 
             if ($info['PMR'] == 'PMR') {
@@ -264,7 +264,7 @@ if(!empty($_POST)){
                 </div>
                 <div class="d-flex row">
             <div class="col-sm-4 justify-content-center">
-                <input type="submit" value="modifier le vehicule" class="form-control bg-dark text-light" name="modif"/>
+                <input type="submit" value="Modifier le véhicule" class="form-control bg-dark text-light" name="modif"/>
             </div>
         </div>
     
@@ -313,16 +313,16 @@ if(!empty($_POST)){
             $c = count($accident);
             $stirng ='<form class="pt-4" method="POST">
             <div class="form-group">
-                <a class="h4 pb-2">Historique des accidents </a>
+                <a class="h4 pb-2">Historique des problèmes </a>
                 <div class="d-flex justify-content-center">
                 <table class=" table table-striped table-responsive-md">
         <thead class="table-light">
         <tr>
             <th scope="col-2 h3">#</th>
-            <th scope="col-2 h3 data-with">TypeAccident</th>
-            <th scope="col-2 h3">Peut rouler</th>
-            <th scope="col-2 h3">Regler</th>
-            <th scope="col-2 h3">Maintenance Prevu</th>
+            <th scope="col-2 h3 data-with">Type Problème</th>
+            <th scope="col-2 h3">Véhicule Fonctionnel</th>
+            <th scope="col-2 h3">Problème Reglé</th>
+            <th scope="col-2 h3">Maintenance Prévue</th>
             <th scope="col-2 h3"></th>
         </tr>
         </thead>
@@ -350,9 +350,9 @@ if(!empty($_POST)){
 
             $stirng = '
                     <form class="alert-danger p-2" method="POST">
-                        <a class="h4 pb-3">Supperimer le véhicule</a>
+                        <a class="h4 pb-3">Supprimer le véhicule</a>
                         <div class="container justify-content-center pb-2">
-                            <label class="h5" for="plaque">Entrer supprimer pour supprimer le véhicule</label>
+                            <label class="h5" for="plaque">Ecrivez "supprimer" pour supprimer le véhicule</label>
                             <div class="row">
                                 <div class="col-md-6">
                                     

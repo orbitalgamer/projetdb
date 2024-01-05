@@ -86,12 +86,12 @@ else{
     </div>
 
     <div class="form-group">
-        <p class="h4 pt-4">Vous pouvez ajouter des photos à une course au cas ou des clients ont abimé l'auto.</p>
+        <p class="h4 pt-4">Vous pouvez ajouter des photos à une course au cas où des clients ont abimé l'auto.</p>
     </div>
 
     <form class="" method="POST" enctype="multipart/form-data">
         <div class="form-group h5">
-            <a class="">Photo du problème<a>
+            <a class="">Photo du véhicule<a>
                 <span class="col-lg-8 col-sm-12 py-3">
                     <div class="d-flex flex-column px-3">
                         <div class="container-fluid  border bg-light mb-3 rounded">

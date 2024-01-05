@@ -33,11 +33,11 @@ function Afficher($liste){
 <html>
 <div class="container">
     <div class="text-center">
-        <p class="display-4 pt-4 pb-2 bold">Liste des véhicules</p>
+        <p class="display-4 pt-4 pb-2 bold">Liste des Véhicules</p>
     </div>
     <div class="row align-items-center">
         <form class="col-md-2 form-group" action="modificationvehicule.php">
-            <input type="submit" value="ajouter vehicule" class="form-control bg-dark text-light" name="New"/>
+            <input type="submit" value="Ajouter Véhicule" class="form-control bg-dark text-light" name="New"/>
         </form>
         <form class="col-md-4 form-group" action="" method="">
             <input type="search" class="form-control rounded" name="search" placeholder="rechercher plaque, PMR, Autnome, ..." aria-label="Rechercher" aria-describedby="inputGroup-sizing-sm"/>
@@ -47,9 +47,9 @@ function Afficher($liste){
         <thead class="table-light">
         <tr>
             <th scope="col h3">Plaque</th>
-            <th scope="col h3">Modele</th>
+            <th scope="col h3">Modèle</th>
             <th scope="col h3">Carburant</th>
-            <th scope="col h3">killométrage</th>
+            <th scope="col h3">Kilométrage</th>
             <th scope="col h3">PMR</th>
             <th scope="col h3">Autonome</th>
             <th scope="col h3">Tarrif (€/km)</th>

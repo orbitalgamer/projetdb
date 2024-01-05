@@ -35,29 +35,29 @@ else{
     if(!$resultat['Inpaye']) {
         echo'
         <div class="form-group text-center" >
-        <a class="h4 p-2 alert-danger">Cette course n est pas payée</a >
+        <a class="h4 p-2 alert-danger">Cette course n\'est pas payée</a >
     </div >';
     }
 
     ?>
 
     <div class="form-group">
-        <a class="h5">Commandé par </a> <a class="h4"> <?php echo $resultat['NomClient'].' '.$resultat['PrenomClient'];  ?></a>
+        <a class="h5">Commandée par </a> <a class="h4"> <?php echo $resultat['NomClient'].' '.$resultat['PrenomClient'];  ?></a>
         <a class="h5"> contactable par </a> <a class="h4"> <?php echo $resultat['TelClient']; ?></a> <a class="h5"> ou </a>
         <a class="h4"> <?php echo $resultat['EmailClient']; ?></a>
     </div>
     <div class="form-group">
-        <a class="h5">Effectué par </a> <a class="h4"> <?php echo $resultat['NomChauffeur'].' '.$resultat['PrenomChauffeur'];  ?></a>
+        <a class="h5">Effectuée par </a> <a class="h4"> <?php echo $resultat['NomChauffeur'].' '.$resultat['PrenomChauffeur'];  ?></a>
         <a class="h5"> contactable par </a> <a class="h4"> <?php echo $resultat['TelChauffeur']; ?></a> <a class="h5"> ou </a>
         <a class="h4"> <?php echo $resultat['EmailChauffeur']; ?></a>
     </div>
     <div class="form-group">
-        <a class="h5">La course a été effectué le </a> <a class="h5"> <?php echo $resultat['DateDebut'];  ?></a><br>
+        <a class="h5">La course a été effectuée le </a> <a class="h5"> <?php echo $resultat['DateDebut'];  ?></a><br>
         <a class="h5"> Partant de </a> <a class="h5"> <?php echo $resultat['NumeroDepart'].' '.$resultat['RueDepart'].' à '.$resultat['CPDepart'].' '.$resultat['VileDepart']; ?></a> <a class="h5"> jusque </a>
         <a class="h5"> <?php echo $resultat['NumeroFin'].' '.$resultat['RueFin'].' à '.$resultat['CPFin'].' '.$resultat['VileFin']; ?></a> <a class="h5"> par la voiture </a> <a class="h5"> <?php echo $resultat['Plaque'];?></a>
     </div>
     <div class="form-group">
-        <a class="h5">Le chauffeur à roulé sur </a> <a class="h4"> <?php echo $resultat['DistanceParcourue'];?></a>
+        <a class="h5">Le chauffeur a roulé sur </a> <a class="h4"> <?php echo $resultat['DistanceParcourue'];?></a>
         <a class="h5">km à un tarif de </a> <a class="h4"> <?php echo $resultat['Tarif']; ?></a> <a class="h5">€/km pour un prix total de</a>
         <a class="h4"> <?php echo $resultat['Prix'];?>€</a>
     </div>
@@ -90,7 +90,7 @@ else{
     if(!empty($avis)){
         echo '<div class="form-group">
         <a class="h4">Avis</a><br>
-        <a class="h5"> Le client à noté la coure à </a> <a class="h4"> </a> <a class="h5"> '.$avis['Note'].'/5</a><br>
+        <a class="h5"> Le client a noté la coure à </a> <a class="h4"> </a> <a class="h4"> '.$avis['Note'].'/5</a><br>
         <a class="h5"> Descripition : </a><br> <a class="h4 pl-4"> '.$avis['Description'].'</a>
     </div>';
     }
