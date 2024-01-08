@@ -1104,5 +1104,16 @@ public function loadcourse($Idcourse){
             $mail->SendMail($Dest, $Titre, $Titre);
         }
     }
+
+    public function Payer($Id){
+        $rq = $this->Bdd->prepare("INSERT INTO liencourseetat (IdCourse, IdEtat) VALUES (:Id, (SELECT Id FROM etat WHERE etat.Nom='Paye'))");
+        $rq->bindParam(':Id', $Id);
+        if($rq->execute()){
+            return array('Succes'=>1);
+        }
+        else{
+            return array('Error'=>1);
+        }
+    }
 }
 ?>
