@@ -114,8 +114,12 @@ class adresse{
 
 }
 public function selection(){
-    $query = "SELECT Id,Numero,Rue,Vile,NomAdresse,latitude,longitude FROM $this->NomTable WHERE Rue='$this->Rue' OR Id='$this->Id'";
+    $query = "SELECT Id,Numero,Rue,Vile,NomAdresse,latitude,longitude FROM $this->NomTable WHERE (Rue=:Rue AND Numero=:Numero AND Vile=:Vile) OR Id=:Id";
     $rq = $this->Bdd->prepare($query);
+    $rq->bindParam(':Rue', $this->Rue);
+    $rq->bindParam(':Numero', $this->Numero);
+    $rq->bindParam(':Vile', $this->Ville);
+    $rq->bindParam(':Id', $this->Id);
 
     if($rq->execute()){
       $rep=$rq->fetch(PDO::FETCH_ASSOC);
