@@ -181,11 +181,13 @@ class Course {
    } 
 
   public function selectionLastCourse(){
-    $query = "SELECT Id,DateReservation FROM course WHERE IdClient='$this->IdClient' ORDER BY `Id` DESC"; 
+    $query = "SELECT Id,DateReservation FROM course WHERE IdClient=:Id AND IdAdresseDepart=:IdD AND IdAdresseFin=:IdF";
     $rq = $this->Bdd->prepare($query);
+    $rq->bindParam(':Id', $this->IdClient);
+    $rq->bindParam(':IdD', $this->IdAdresseDepart);
+    $rq->bindParam(':IdF', $this->IdAdresseFin);
     $rq->execute();
-    $rep=$rq->fetch(PDO::FETCH_ASSOC);
-    print_r($rep);
+    $rep=$rq->fetch();
     return $rep;
   }
 
@@ -328,16 +330,21 @@ public function AbandonChauffeur($Id){
                                              chuffeur.Nom as 'NomChauffeur', 
                                              client.Nom as 'NomClient', 
                                              etat.Nom as 'NomEtat',
-                                             IF(paye.IdEtat = (SELECT Id FROM etat WHERE Nom='Paye') AND lien.IdEtat != (SELECT Id FROM etat WHERE Nom='Annule par chauffeur'), 1, 0) as 'Inpaye'
-                                    FROM course
-                                    INNER JOIN personne chuffeur on course.IdChauffeur = chuffeur.Id
-                                    INNER JOIN personne client on course.IdClient = client.Id
-                                    LEFT JOIN (SELECT * FROM liencourseetat WHERE IdEtat < (SELECT Id FROM etat WHERE Nom='Paye') ORDER BY IdEtat DESC) lien on course.Id = lien.IdCourse
-                                    LEFT JOIN (SELECT * FROM liencourseetat WHERE IdEtat = (SELECT Id FROM etat WHERE Nom='Paye')) paye on course.Id = paye.IdCourse
-                                    INNER JOIN etat on lien.IdEtat = etat.Id
-                                    WHERE lien.IdEtat > (SELECT Id FROM etat WHERE Nom='En cours')
-                                    GROUP BY course.Id
-                                    ORDER BY Inpaye ASC
+                                             IF(paye.IdEtat = (SELECT Id FROM etat WHERE Nom='Paye') AND lien.IdEtat != 
+                                                (SELECT Id FROM etat WHERE Nom='Annule par chauffeur'), 1, 0) as 'Inpaye'
+                                        FROM course
+                                        INNER JOIN personne chuffeur on course.IdChauffeur = chuffeur.Id
+                                        INNER JOIN personne client on course.IdClient = client.Id
+                                        LEFT JOIN (SELECT * FROM liencourseetat 
+                                                            WHERE IdEtat < (SELECT Id FROM etat WHERE Nom='Paye') 
+                                                            ORDER BY IdEtat DESC) lien on course.Id = lien.IdCourse
+                                        LEFT JOIN (SELECT * FROM liencourseetat 
+                                                            WHERE IdEtat = (SELECT Id FROM etat WHERE Nom='Paye')) 
+                                                    paye on course.Id = paye.IdCourse
+                                        INNER JOIN etat on lien.IdEtat = etat.Id
+                                        WHERE lien.IdEtat > (SELECT Id FROM etat WHERE Nom='En cours')
+                                        GROUP BY course.Id
+                                        ORDER BY Inpaye ASC
                                     ");
       //lien pour avoir les état
       //payé pour savoir si payé ou pas
@@ -394,6 +401,7 @@ public function AbandonChauffeur($Id){
                                              client.Prenom as 'PrenomClient',
                                              client.NumeroDeTelephone as 'TelClient',
                                              client.Email as 'EmailClient',
+                                             
                                              etat.Nom as 'NomEtat',
                                              
                                              IF(paye.IdEtat > (SELECT Id FROM etat WHERE Nom='En cours') AND paye.IdEtat != (SELECT Id FROM etat WHERE Nom='Annule par chauffeur') , 0, 1) as 'Inpaye',
@@ -1068,6 +1076,42 @@ public function loadcourse($Idcourse){
             $Dest = $elem['Email'];
             $Titre = utf8_decode("[info reservation] course # ").$IdCourse.utf8_decode(" abandonner par ").$info['NomChauffeur'];
             $mail->SendMail($Dest, $Titre, $Titre);
+        }
+    }
+
+    public function NotifyCourseEnded($IdCourse){
+
+        $mail = new mail();
+
+        $pers = new Personne();
+
+        $client = $this->Get($IdCourse);
+
+
+        //notifier client
+        $Dest = $client['EmailClient'];
+        $Titre = utf8_decode("[info] taxeasy course du ").date('d-m-y',(int)$this->DateReservation);
+        $Message = utf8_decode("Nous vous remercions d'avoir travailler avec nous pour votre dernière course");
+        $mail->SendMail($Dest, $Titre, $Message);
+
+        //notifier gestionnaire
+        $pers = new Personne();
+        $admin = $pers->GetAdmin();
+        foreach($admin as $elem){
+            $Dest = $elem['Email'];
+            $Titre = utf8_decode("[info coures] course du ").date('d-m-y',(int)$this->DateReservation).utf8_decode(" terminé");
+            $mail->SendMail($Dest, $Titre, $Titre);
+        }
+    }
+
+    public function Payer($Id){
+        $rq = $this->Bdd->prepare("INSERT INTO liencourseetat (IdCourse, IdEtat) VALUES (:Id, (SELECT Id FROM etat WHERE etat.Nom='Paye'))");
+        $rq->bindParam(':Id', $Id);
+        if($rq->execute()){
+            return array('Succes'=>1);
+        }
+        else{
+            return array('Error'=>1);
         }
     }
 }

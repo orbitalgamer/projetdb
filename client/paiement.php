@@ -49,7 +49,7 @@ function Afficher($liste,$base){
             <td>' . $elem["NomEtat"] . '</td>
             <td>' . $elem["Inpaye"] . '</td>
             <td><button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`facture.php?Id=' . $elem["Id"] . '`">voir facture</button></td>
-            <td><button type="button" class="btn btn-outline-secondary" onclick="../PageAcceuil.php">Payer</button></td>
+            <td><button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`payer.php?Id=' . $elem["Id"] . '`">Payer</button></td>
      </tr>';
         echo $ligne;
         $compteur += 1;

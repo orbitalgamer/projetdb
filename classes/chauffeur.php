@@ -394,14 +394,16 @@ public function GetnewCourse(){
 
     public function Recherche($requete){
         $req = $this->Bdd->prepare("SELECT personne.*, COUNT(course.IdChauffeur) as 'CourseFaite' FROM personne 
-            INNER JOIN typepersonne on personne.IdStatus = typepersonne.Id
-            LEFT JOIN course on course.IdChauffeur = personne.Id
-            WHERE typepersonne.NomTitre ='Chauffeur' AND
-                  (personne.Nom LIKE :rq OR
-                   personne.Prenom LIKE :rq OR 
-                   personne.Email LIKE :rq OR 
-                   personne.NumeroDeTelephone LIKE :rq)
-            GROUP BY personne.Id");
+                                            INNER JOIN typepersonne on personne.IdStatus = typepersonne.Id
+                                            LEFT JOIN course on course.IdChauffeur = personne.Id
+                                            WHERE typepersonne.NomTitre ='Chauffeur' AND
+                                                  (personne.Nom LIKE :rq OR
+                                                   personne.Prenom LIKE :rq OR 
+                                                   personne.Email LIKE :rq OR 
+                                                   personne.NumeroDeTelephone LIKE :rq)
+                                            GROUP BY personne.Id
+                                            
+                                            ");
         $requete = '%'.$requete.'%';
         $req->bindParam(':rq', $requete);
 

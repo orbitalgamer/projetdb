@@ -56,11 +56,13 @@
     session_start();    
     $IdClient = $_SESSION["Id"];
     $IdCourse = $_SESSION["IdCourse"];
+
     
-    $query = "SELECT adresse.Rue,adresse.Numero,adresse.Vile FROM adresse JOIN course ON adresse.Id = course.IdAdresseFin WHERE course.Id = '$IdCourse'";
 
 
-    $rq = $base->prepare($query);
+
+    $rq = $base->prepare("SELECT adresse.Rue,adresse.Numero,adresse.Vile FROM adresse JOIN course ON adresse.Id = course.IdAdresseFin WHERE course.Id = :Id");
+    $rq->bindParam(':Id', $IdCourse);
     $rq->execute();
     $rep=$rq->fetch(PDO::FETCH_ASSOC);
     

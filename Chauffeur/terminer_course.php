@@ -32,8 +32,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             //mets la distance parcourue dans la course
 
             $course->DefinirDinstance($_POST['Id'], $_POST['Distance'], $_SESSION['Id']); //définit
+            $course->NotifyCourseEnded($_POST['Id']);
+
 
             $vehicule->UpdateKilometrage($_POST['Id'], $_POST['Distance']);
+
+
+
+
 
             header("location:dashboard.php");
             //echo $_POST['Id'];

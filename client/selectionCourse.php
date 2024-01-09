@@ -86,19 +86,24 @@
 
      $Date_Heure_actuelle = new DateTime(); 
      $Date_Heure_actuelle = $Date_Heure_actuelle->format("Y-m-d H:i:s");
-    echo 
+    $string =
     "<div class='flex flex-col gap-16   w-1/2 h-3/4 border border-5 self-center indent'>
-    <h1 class='text-5xl text-center'> Confirmation de votre course </h1>
-    <form class=' w-3/4 h-96  flex flex-col' action='' method='POST'>
+    <h1 class='text-5xl text-center'> Confirmation de votre course </h1>";
+
+        if(!empty($_GET['Error'])){
+            $string .= "<h2 class='text-3xl text-center text-red'> Veuillez encoder correctement les adresse </h2>";
+        }
+
+    $string .= "<form class=' w-3/4 h-96  flex flex-col' action='' method='POST'>
     <label  for='AdresseInitial' class='text-lg underline underline-offset-1'>Lieu du rendez-vous :</label>
     <input type='text' class='border border-2 h-24 shadow-inner rounded-lg bg-white duration-1000'
-        value='$adresseInitial_Input'   name='AdresseInitial'>  
+        value='$adresseInitial_Input'   name='AdresseInitial' placeholder='Numéro rue, ville code postal' required>  
         <label  for='AdresseInitial' class='text-lg underline underline-offset-1'>Destination :</label>
     <input type='text' class='border border-2 h-24 shadow-inner rounded-lg bg-white' name='AdresseFinal'
-        value='$adresseFinal_Input'>
+        value='$adresseFinal_Input' placeholder='Numéro rue, ville code postal' required>
     <label for='dateReservation' class='text-lg underline underline-offset-1'>Date/Heure de réservation</label>
     <input type='datetime' class='border border-2 h-24 shadow-inner rounded-lg bg-white'
-        value='$Date_Heure_actuelle' name='dateReservation'>
+        value='$Date_Heure_actuelle' name='dateReservation' required>
         
         <div class='flex flex-row gap-5'>
         <label for='autonome'>Autonome
@@ -115,6 +120,8 @@
         value='Confirmer' name='confirmer'>
 </form>
     </div>";
+
+        echo $string;
 
 
 
@@ -150,12 +157,20 @@ if(!empty($adresseInitial_Input) && !empty($adresseFinal_Input)){
    
    $infosAdresse_array_initial = InfoAdresse2($adresseInitial_Input,$base);
    $infosAdresse_array_final = InfoAdresse2($adresseFinal_Input,$base);
-    
+
 
    $AdresseInitial = new adresse();
    $AdresseFinal = new adresse();
    
-   
+   if(empty($infosAdresse_array_initial['Rue']) || empty($infosAdresse_array_initial['Numero']) || empty($infosAdresse_array_initial['Ville']) || empty($infosAdresse_array_initial['codePostal'] )){ //si adresse mal définit
+       header('location: selectionCourse.php?Error=1');
+       var_dump($infosAdresse_array_initial);
+   }
+
+    if(empty($infosAdresse_array_final['Rue']) || empty($infosAdresse_array_final['Numero']) || empty($infosAdresse_array_final['Ville']) || empty($infosAdresse_array_final['codePostal']) ){ //si adresse mal définit
+        header('location: selectionCourse.php?Error=1');
+        var_dump($infosAdresse_array_final);
+    }
    $AdresseInitial->Rue =  $infosAdresse_array_initial['Rue'];
    $AdresseFinal->Rue =  $infosAdresse_array_final['Rue'];
    //eepep
@@ -183,7 +198,6 @@ if(!empty($adresseInitial_Input) && !empty($adresseFinal_Input)){
    $AdresseFinal->creation();
   
    $array_data_initial = array();
-
    $array_data_initial = $AdresseInitial->selection();
    $array_data_final = array();
    $array_data_final = $AdresseFinal->selection();
@@ -216,7 +230,8 @@ if(!empty($adresseInitial_Input) && !empty($adresseFinal_Input)){
    $CourseToReturn->IdTarification = 7;
    $CourseToReturn->IdMajoration = 2;
    $CourseToReturn->duree = $array_distance_time_latitude_longitude["total_time"];
-   $Info_array_course = array();
+
+
    $Info_array_course = $CourseToReturn->selectionLastCourse();
    
    
@@ -256,6 +271,7 @@ if(!empty($adresseInitial_Input) && !empty($adresseFinal_Input)){
    $idEtat = 1;
    $id=$Info_array_course["Id"];
    $_SESSION["IdCourse"] = $id;
+   //var_dump($Info_array_course);
    echo "IDCOURSE  : ";
    echo $id;
    $DateReservation = $Info_array_course['DateReservation'];
