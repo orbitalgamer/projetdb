@@ -125,7 +125,6 @@ class Course {
      $query = "INSERT INTO $this->NomTable (
        Id,
        DateReservation,
-
        DistanceParcourue,
        IdClient,
        IdChauffeur,
@@ -640,11 +639,11 @@ public function AbandonChauffeur($Id){
      $next_course_adresse->Id = $IdAdresseDepart;
      $previous_course_adresse_array = $previous_course_adresse->selection();
      $next_course_adresse_array = $next_course_adresse->selection();
-     //$previous_course_adresse_string = $previous_course_adresse_array["Numero"] . " " . $previous_course_adresse_array["Rue"] . " " . $previous_course_adresse_array["Vile"];
-     //$next_course_adresse_string = $next_course_adresse_array["Numero"] . " " . $next_course_adresse_array["Rue"] . " " . $next_course_adresse_array["Vile"];
+     $previous_course_adresse_string = $previous_course_adresse_array["Numero"] . " " . $previous_course_adresse_array["Rue"] . " " . $previous_course_adresse_array["Ville"];
+     $next_course_adresse_string = $next_course_adresse_array["Numero"] . " " . $next_course_adresse_array["Rue"] . " " . $next_course_adresse_array["Ville"];
 
 
-     // $Next_Course_Array = $this->itineraire($previous_course_adresse_string,$next_course_adresse_string);
+     $Next_Course_Array = $this->itineraire($previous_course_adresse_string,$next_course_adresse_string);
      $Next_Course_Array = [
        "time"=> 1735.1,
      ];     
@@ -688,14 +687,14 @@ public function AbandonChauffeur($Id){
      $next_course_adresse_array = $next_course_adresse->selection();
   
    
-     //$previous_course_adresse_string = $previous_course_adresse_array["Numero"] . " " . $previous_course_adresse_array["Rue"] . " " . $previous_course_adresse_array["Vile"];
-     //$next_course_adresse_string = $next_course_adresse_array["Numero"] . " " . $next_course_adresse_array["Rue"] . " " . $next_course_adresse_array["Vile"];
+     $previous_course_adresse_string = $previous_course_adresse_array["Numero"] . " " . $previous_course_adresse_array["Rue"] . " " . $previous_course_adresse_array["Ville"];
+     $next_course_adresse_string = $next_course_adresse_array["Numero"] . " " . $next_course_adresse_array["Rue"] . " " . $next_course_adresse_array["Ville"];
       
      
-     // $Next_Course_Array = $this->itineraire($previous_course_adresse_string,$next_course_adresse_string);
-     $Next_Course_Array = [
-       "time"=>2922.8,
-     ];
+     $Next_Course_Array = $this->itineraire($previous_course_adresse_string,$next_course_adresse_string);
+    //  $Next_Course_Array = [
+    //    "time"=>2922.8,
+    //  ];
      // print_r($Next_Course_Array);
      
      $time_btw_course_next = $Next_Course_Array["time"];

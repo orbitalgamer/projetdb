@@ -124,16 +124,16 @@ if(!empty($adresseInitial_Input) && !empty($adresseFinal_Input)){
     //Creation de ma course
    $CourseToReturn = new Course($base); 
    $array_distance_time_latitude_longitude = array() ;
-//    $array_distance_time_latitude_longitude = $CourseToReturn->itineraire($adresseInitial_Input,$adresseFinal_Input); 
+   $array_distance_time_latitude_longitude = $CourseToReturn->itineraire($adresseInitial_Input,$adresseFinal_Input); 
 
-   $array_distance_time_latitude_longitude = array(
-    "total_distance" => 75883.1,
-    "total_time" => 3585.7,
-    "Latitude_Adresse_Initial" => 50.4024632,
-    "Latitude_Adresse_Final" => 50.8256535,
-    "Longitude_Adresse_Initial" => 3.890471,
-    "Longitude_Adresse_Final" => 4.370667
-);
+//    $array_distance_time_latitude_longitude = array(
+//     "total_distance" => 75883.1,
+//     "total_time" => 3585.7,
+//     "Latitude_Adresse_Initial" => 50.4024632,
+//     "Latitude_Adresse_Final" => 50.8256535,
+//     "Longitude_Adresse_Initial" => 3.890471,
+//     "Longitude_Adresse_Final" => 4.370667
+// );
 
 
   
