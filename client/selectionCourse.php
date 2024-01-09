@@ -91,7 +91,7 @@
     <h1 class='text-5xl text-center'> Confirmation de votre course </h1>";
 
         if(!empty($_GET['Error'])){
-            $string .= "<h2 class='text-3xl text-center text-red'> Veuillez encoder correctement les adresse </h2>";
+            $string .= "<h2 class='text-3xl text-center text-red-500'> Veuillez encoder correctement les adresse </h2>";
         }
 
     $string .= "<form class=' w-3/4 h-96  flex flex-col' action='' method='POST'>
@@ -129,19 +129,7 @@
    
 if(!empty($adresseInitial_Input) && !empty($adresseFinal_Input)){
     //Creation de ma course
-   $CourseToReturn = new Course($base); 
-   $array_distance_time_latitude_longitude = array() ;
-   $array_distance_time_latitude_longitude = $CourseToReturn->itineraire($adresseInitial_Input,$adresseFinal_Input); 
-
-//    $array_distance_time_latitude_longitude = array(
-//     "total_distance" => 75883.1,
-//     "total_time" => 3585.7,
-//     "Latitude_Adresse_Initial" => 50.4024632,
-//     "Latitude_Adresse_Final" => 50.8256535,
-//     "Longitude_Adresse_Initial" => 3.890471,
-//     "Longitude_Adresse_Final" => 4.370667
-// );
-
+    $CourseToReturn = new Course($base);
 
   
    
@@ -154,24 +142,46 @@ if(!empty($adresseInitial_Input) && !empty($adresseFinal_Input)){
      $CourseToReturn->IdChauffeur = $rep[0]["Id"];
    }
 
+   //var_dump($adresseInitial_Input);
    
    $infosAdresse_array_initial = InfoAdresse2($adresseInitial_Input,$base);
    $infosAdresse_array_final = InfoAdresse2($adresseFinal_Input,$base);
 
 
+
    $AdresseInitial = new adresse();
    $AdresseFinal = new adresse();
-   
+
+
    if(empty($infosAdresse_array_initial['Rue']) || empty($infosAdresse_array_initial['Numero']) || empty($infosAdresse_array_initial['Ville']) || empty($infosAdresse_array_initial['codePostal'] )){ //si adresse mal définit
-       header('location: selectionCourse.php?Error=1');
+      header('location: selectionCourse.php?Error=1');
        var_dump($infosAdresse_array_initial);
+       die();
    }
 
     if(empty($infosAdresse_array_final['Rue']) || empty($infosAdresse_array_final['Numero']) || empty($infosAdresse_array_final['Ville']) || empty($infosAdresse_array_final['codePostal']) ){ //si adresse mal définit
-        header('location: selectionCourse.php?Error=1');
+      header('location: selectionCourse.php?Error=1');
         var_dump($infosAdresse_array_final);
+        die();
     }
-   $AdresseInitial->Rue =  $infosAdresse_array_initial['Rue'];
+
+
+
+    $array_distance_time_latitude_longitude = array() ;
+    $array_distance_time_latitude_longitude = $CourseToReturn->itineraire($adresseInitial_Input,$adresseFinal_Input);
+
+//    $array_distance_time_latitude_longitude = array(
+//     "total_distance" => 75883.1,
+//     "total_time" => 3585.7,
+//     "Latitude_Adresse_Initial" => 50.4024632,
+//     "Latitude_Adresse_Final" => 50.8256535,
+//     "Longitude_Adresse_Initial" => 3.890471,
+//     "Longitude_Adresse_Final" => 4.370667
+// );
+
+
+
+    $AdresseInitial->Rue =  $infosAdresse_array_initial['Rue'];
    $AdresseFinal->Rue =  $infosAdresse_array_final['Rue'];
    //eepep
    $AdresseInitial->Numero =   $infosAdresse_array_initial['Numero'];

@@ -33,7 +33,7 @@ class Course {
   private $NomTableLien = "liencourseetat";
 
   
-  private  $API_KEY = "7b4c8d7743b6c61264f7955d3305fe99"; 
+  private  $API_KEY = "47773fb81cab254622128272f7b69c59";
  
    
       public function getLatitude($adresse){
@@ -56,9 +56,14 @@ class Course {
         $json_url = $json_url . "" . implode("+",$adresse_array) . "+Belgique&sensor=false&key=".  $this->API_KEY;
         $json = file_get_contents($json_url);
         $data = json_decode($json, TRUE);
-       
-        $longitude = $data["results"][0]["geometry"]["location"]["lng"];
-        return $longitude;
+
+        if(!empty($data)) {
+            $longitude = $data["results"][0]["geometry"]["location"]["lng"];
+            return $longitude;
+        }
+        else{
+
+        }
 
         
     }
@@ -647,8 +652,8 @@ public function AbandonChauffeur($Id){
      $next_course_adresse->Id = $IdAdresseDepart;
      $previous_course_adresse_array = $previous_course_adresse->selection();
      $next_course_adresse_array = $next_course_adresse->selection();
-     $previous_course_adresse_string = $previous_course_adresse_array["Numero"] . " " . $previous_course_adresse_array["Rue"] . " " . $previous_course_adresse_array["Ville"];
-     $next_course_adresse_string = $next_course_adresse_array["Numero"] . " " . $next_course_adresse_array["Rue"] . " " . $next_course_adresse_array["Ville"];
+     $previous_course_adresse_string = $previous_course_adresse_array["Numero"] . " " . $previous_course_adresse_array["Rue"] . " " . $previous_course_adresse_array["Vile"];
+     $next_course_adresse_string = $next_course_adresse_array["Numero"] . " " . $next_course_adresse_array["Rue"] . " " . $next_course_adresse_array["Vile"];
 
 
      $Next_Course_Array = $this->itineraire($previous_course_adresse_string,$next_course_adresse_string);
@@ -695,8 +700,8 @@ public function AbandonChauffeur($Id){
      $next_course_adresse_array = $next_course_adresse->selection();
   
    
-     $previous_course_adresse_string = $previous_course_adresse_array["Numero"] . " " . $previous_course_adresse_array["Rue"] . " " . $previous_course_adresse_array["Ville"];
-     $next_course_adresse_string = $next_course_adresse_array["Numero"] . " " . $next_course_adresse_array["Rue"] . " " . $next_course_adresse_array["Ville"];
+     $previous_course_adresse_string = $previous_course_adresse_array["Numero"] . " " . $previous_course_adresse_array["Rue"] . " " . $previous_course_adresse_array["Vile"];
+     $next_course_adresse_string = $next_course_adresse_array["Numero"] . " " . $next_course_adresse_array["Rue"] . " " . $next_course_adresse_array["Vile"];
       
      
      $Next_Course_Array = $this->itineraire($previous_course_adresse_string,$next_course_adresse_string);
@@ -705,7 +710,7 @@ public function AbandonChauffeur($Id){
     //  ];
      // print_r($Next_Course_Array);
      
-     $time_btw_course_next = $Next_Course_Array["time"];
+     $time_btw_course_next = $Next_Course_Array["total_time"];
      
 
      if((abs($min_Diff_Time_Next) > $time_btw_course_next) || (empty($min_Diff_Time_Next))){
