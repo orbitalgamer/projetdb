@@ -296,7 +296,7 @@ public function GetInfo($plaque){
         $pers = new chauffeur();
         $personne = $pers->GetIdChauffeurAutonome($plaque);
 
-        $req = $this->Bdd->prepare('UPDATE personne SET Prenom="supprimer" WHERE Id=:Id'); //peux pas supprimer complètement car besoin du chauffeur pour garder l'intégrité des course qu'il a fait
+        $req = $this->Bdd->prepare('UPDATE personne SET Prenom="supprimer", IdStatus=(SELECT Id FROM typepersonne WHERE NomTitre="Ancien") WHERE Id=:Id'); //peux pas supprimer complètement car besoin du chauffeur pour garder l'intégrité des course qu'il a fait
         $req->bindParam(':Id', $personne['Id']);
         $req->execute();
     }

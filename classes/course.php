@@ -33,9 +33,45 @@ class Course {
   private $NomTableLien = "liencourseetat";
 
   
-  private  $API_KEY = "47773fb81cab254622128272f7b69c59";
- 
-   
+  private  $API_KEY = "7b4c8d7743b6c61264f7955d3305fe99";
+
+    /**
+     * pour avoir une clé api valide
+     * @return void
+     */
+    public function getApiKey(){
+        //liste de tous les clé api pour faire requètes
+        $keys = array(
+            "7b4c8d7743b6c61264f7955d3305fe99",
+            "f3ef6bfcc87cd61c6b2c91d945b02603",
+            "a4a4936879cd843dda2ed3c491cb6039",
+            "ec0ace40f484009da44b699727be6e56",
+            "f86a7de37298b2e8e5f6facd5405ccb3",
+            "47773fb81cab254622128272f7b69c59",
+            "4a30bcf784a03f502f0970cab0a35043",
+            "dd0dcfa650c269a2328c19232755a8c2",
+            "706eed3338bd569d17439b5905c6b129",
+            "b1fa4ce7b0cd635a3e88f7210414c3a6",
+            "04de1b50aab0af9471893e923edd6865",
+            "d90914b40b4d6bd8451a705c81b3bf51",
+            "01285c2afed0d3989144981228cc9ab8",
+            "fcb8897bcd67a3ee84bd95e6b18da5a4",
+            "691ca685d6b93ce4d25742028cafa681",
+            "683f833671bd61da4acd53eb0c45587e",
+            "846a3948b3145d0226f46821500551fd",
+            "019c0222edb9699afc45008d019dd8e0",
+            "5f9b5fba53986d70405682fc6911ffea",
+            "0e1ec3464a9907d253f424536fe794be");
+        $index = array_search($this->API_KEY, $keys);
+        if($index<sizeof($keys)) {
+            $this->API_KEY = $keys[$index + 1];
+        }
+        else{
+            $this->API_KEY = $keys[0];
+        }
+    }
+
+
       public function getLatitude($adresse){
 
         $adresse_array = explode(" ",$adresse);
@@ -44,9 +80,14 @@ class Course {
         $json_url = $json_url . "" . implode("+",$adresse_array) . "+Belgique&sensor=false&key=". $this->API_KEY;
         $json = file_get_contents($json_url);
         $data = json_decode($json, TRUE);
-        
-        $latitude = $data["results"][0]["geometry"]["location"]["lat"];
-        return $latitude;
+        if(!empty($data)  && $data['status'] != "LIMIT_REACHED") {
+            $latitude = $data["results"][0]["geometry"]["location"]["lat"];
+            return $latitude;
+        }
+        else{
+            $this->getApiKey();
+            return $this->getLatitude($adresse);
+        }
     }
     public function getLongitude($adresse){
 
@@ -57,12 +98,13 @@ class Course {
         $json = file_get_contents($json_url);
         $data = json_decode($json, TRUE);
 
-        if(!empty($data)) {
+        if(!empty($data) && $data['status'] != "LIMIT_REACHED") {
             $longitude = $data["results"][0]["geometry"]["location"]["lng"];
             return $longitude;
         }
         else{
-
+            $this->getApiKey();
+            return $this->getLongitude($adresse);
         }
 
         
@@ -136,7 +178,8 @@ class Course {
        IdAdresseDepart,
        IdAdresseFin,
        IdTarification,
-       IdMajoration)
+       IdMajoration,
+        duree)
        VALUES 
        (NULL,
        :DateReservation,
@@ -146,9 +189,16 @@ class Course {
        :IdAdresseDepart,
        :IdAdresseFin,
        :IdTarification,
-       :IdMajoration
+       :IdMajoration,
+        :Duree
        )";
       $rq = $this->Bdd->prepare($query);
+
+      if($this->IdChauffeur==-1){
+          $rqq = $this->Bdd->query("SELECT personne.Id FROM personne INNER JOIN typepersonne on personne.IdStatus = typepersonne.Id WHERE typepersonne.NomTitre='Attente'");
+          $this->IdChauffeur = $rqq->fetch()['Id'];
+      }
+
 
       $rq->bindParam(':DateReservation',$this->DateReservation);
       $rq->bindParam(':DistanceParcourue',$this->DistanceParcourue);
@@ -158,13 +208,16 @@ class Course {
       $rq->bindParam(':IdAdresseFin',$this->IdAdresseFin);
       $rq->bindParam(':IdTarification',$this->IdTarification);
       $rq->bindParam(':IdMajoration',$this->IdMajoration);
+      $rq->bindParam(':Duree',$this->duree);
       if($rq->execute()){
         $rep=$rq->fetch(PDO::FETCH_ASSOC);
      
         echo json_decode($rep);
+        return array("succes"=>1);
       }
       else 
       {
+          return array("error"=>1);
         echo "pas marché";
     };
 
@@ -1024,10 +1077,11 @@ public function loadcourse($Idcourse){
         $mail = new mail();
         $info = $this->Get($IdCourse);
 
+
         //notifier client
         $Dest = $info['EmailClient'];
-        $Titre = utf8_decode("[info] taxeasy course du ").date('d-m-y',DateDebut);
-        $Message = utf8_decode("Nous vous confirmons qu'un chauffeur pourra bien être présent pour votre course du ").date('d-m-y',DateDebut);
+        $Titre = utf8_decode("[info] taxeasy course du ").date('d-m-y', (int) $info['DateDebut']);
+        $Message = utf8_decode("Nous vous confirmons qu'un chauffeur pourra bien être présent pour votre course du ").date('d-m-y', (int) $info['DateDebut']);
         $mail->SendMail($Dest, $Titre, $Message);
 
         //notifier gestionnaire
@@ -1050,8 +1104,8 @@ public function loadcourse($Idcourse){
 
         //notifier client
         $Dest = $client['Email'];
-        $Titre = utf8_decode("[Nouvelle] taxeasy course du ").date('d-m-y',(int)$this->DateReservation);
-        $Message = utf8_decode("Nous vous remercions d'avoir choisir nos service pour votre course du ").date('d-m-y',(int)$this->DateReservation);
+        $Titre = utf8_decode("[Nouvelle] taxeasy course du ").date('d-m-y', (int) $this->DateReservation);
+        $Message = utf8_decode("Nous vous remercions d'avoir choisir nos service pour votre course du ").date('d-m-y',(int) $this->DateReservation);
         $mail->SendMail($Dest, $Titre, $Message);
 
         //notifier gestionnaire
@@ -1059,7 +1113,7 @@ public function loadcourse($Idcourse){
         $admin = $pers->GetAdmin();
         foreach($admin as $elem){
             $Dest = $elem['Email'];
-            $Titre = utf8_decode("[new reservation] course du ").date('d-m-y',(int)$this->DateReservation);
+            $Titre = utf8_decode("[new reservation] course du ").date('d-m-y', (int) $this->DateReservation);
             $mail->SendMail($Dest, $Titre, $Titre);
         }
     }
@@ -1070,8 +1124,8 @@ public function loadcourse($Idcourse){
 
         //notifier client
         $Dest = $info['EmailClient'];
-        $Titre = utf8_decode("[info] taxeasy course du ").date('d-m-y',DateDebut);
-        $Message = utf8_decode("Nous avons la malheure de vous annoncer que la course que vous avez comandé pour le ").date('d-m-y',DateDebut).utf8_decode(" sera remplie. Nous mettons tous en oeuvre pour trouver une solutions");
+        $Titre = utf8_decode("[info] taxeasy course du ").date('d-m-y',(int) $info['DateDebut']);
+        $Message = utf8_decode("Nous avons la malheure de vous annoncer que la course que vous avez comandé pour le ").date('d-m-y', (int) $info['DateDebut']).utf8_decode(" sera remplie. Nous mettons tous en oeuvre pour trouver une solutions");
         $mail->SendMail($Dest, $Titre, $Message);
 
         //notifier gestionnaire
@@ -1110,14 +1164,24 @@ public function loadcourse($Idcourse){
     }
 
     public function Payer($Id){
-        $rq = $this->Bdd->prepare("INSERT INTO liencourseetat (IdCourse, IdEtat) VALUES (:Id, (SELECT Id FROM etat WHERE etat.Nom='Paye'))");
+        $rq = $this->Bdd->prepare("SELECT * FROM liencourseetat WHERE Id=:Id AND IdEtat = (SELECT Id FROM Etat WHERE Nom='Paye')");
         $rq->bindParam(':Id', $Id);
-        if($rq->execute()){
-            return array('Succes'=>1);
+        $rq->execute();
+
+        if(!$rq->fetch()) {
+            $rq = $this->Bdd->prepare("INSERT INTO liencourseetat (IdCourse, IdEtat) VALUES (:Id, (SELECT Id FROM etat WHERE etat.Nom='Paye'))");
+            $rq->bindParam(':Id', $Id);
+            if ($rq->execute()) {
+                return array('Succes' => 1);
+            } else {
+                return array('Error' => 1);
+            }
         }
         else{
-            return array('Error'=>1);
+            return array('Error' => 1);
         }
     }
+
+
 }
 ?>

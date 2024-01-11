@@ -72,11 +72,10 @@ public function __construct(){
         course.IdChauffeur = :Id
         
         AND (
-            SELECT MAX(liencourseetat.Date)
+            SELECT MAX(liencourseetat.IdEtat)
             FROM liencourseetat
             WHERE IdCourse = course.Id
-        ) = liencourseetat.Date
-        AND liencourseetat.IdEtat = 7;
+        ) = 7;
 
     "); 
     $req->bindParam(':Id', $Id);
@@ -105,11 +104,10 @@ public function Getcoursefutur($Id){
             course.IdChauffeur = :Id
             
             AND (
-                SELECT MAX(liencourseetat.Date)
+                SELECT MAX(liencourseetat.IdEtat)
                 FROM liencourseetat
                 WHERE IdCourse = course.Id
-            ) = liencourseetat.Date
-            AND liencourseetat.IdEtat = 2;
+            ) = 2;
             
     ");
 
@@ -144,11 +142,10 @@ public function Getcourseencours($Id){
             course.IdChauffeur = :Id
             
             AND (
-                SELECT MAX(liencourseetat.Date)
+                SELECT MAX(liencourseetat.IdEtat)
                 FROM liencourseetat
                 WHERE IdCourse = course.Id
-            ) = liencourseetat.Date
-            AND liencourseetat.IdEtat = 4;
+            ) = 4;
             
     ");
 

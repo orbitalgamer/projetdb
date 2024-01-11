@@ -20,10 +20,13 @@ else{
 
 if(!empty($_POST)){
     if(!empty($_POST['AjoutMaintenance'])){ //regarde si bien demander ajoute d'une nouvelle maintenanc
-        $maintenanceObjet->DateFin = $_POST['DateFin'];
-        $maintenanceObjet->DateDebut = $_POST['DateDebut'];
+        $maintenanceObjet->DateFin = date("Y-m-d",strtotime($_POST['DateFin']));
+        $maintenanceObjet->DateDebut = date("Y-m-d",strtotime($_POST['DateDebut']));
         $maintenanceObjet->Description = $_POST['Description'];
+
         $maintenanceObjet->Insert($Id); //ajoute de la nouvelle maintenance
+
+        //header("location: voirproblem.php?Id=".$Id);
     }
     if(!empty($_POST['Regler'])){
         if($_POST['Supprimer'] == "regler") {
@@ -131,12 +134,12 @@ if(!empty($_POST)){
         foreach ($maintenance as $elem){
             echo '<div class="container pt-2">
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-md-6">
                         <a class="h5"> Prévue de '.$elem['DateDebut'].' à '.$elem['DateFin'].'</a>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-md-6">
                         <a class="h5">Description : '.$elem['Description'].'</a>
                     </div>
                 </div>

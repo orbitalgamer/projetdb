@@ -5,7 +5,7 @@ include_once '../classes/course.php';
 require_once "../classes/bdd.php";
 $course = new course();
 $base = new Bdd();
-$base = $base->getBdd();
+$bdd = $base->getBdd();
 if(empty($_GET['search'])) {
     $resultats = $course->GetAll();
 }
@@ -16,11 +16,12 @@ else{
 function Afficher($liste,$base){
 
 
-    
+
 
 
     $compteur = 1;
     foreach ($liste as $elem) {
+
         //Recherche du nom de l'adresse 
         $query = 'SELECT Rue,Numero,Vile FROM adresse WHERE Id='.$elem['IdAdresseDepart'];
         $rq = $base->prepare($query);
@@ -47,8 +48,9 @@ function Afficher($liste,$base){
             <td>' . $adresseDepartString. '</td>
             <td>' . $adresseFinString . '</td>
             <td>' . $elem["NomEtat"] . '</td>
-            <td>' . $elem["Inpaye"] . '</td>
+            <td>' . $elem["Paye"] . '</td>
             <td><button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`facture.php?Id=' . $elem["Id"] . '`">voir facture</button></td>
+            <td><button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`avis.php?Id=' . $elem["Id"] . '`">Mettre un avis</button></td>
             <td><button type="button" class="btn btn-outline-secondary" onclick="window.location.href=`payer.php?Id=' . $elem["Id"] . '`">Payer</button></td>
      </tr>';
         echo $ligne;
@@ -98,12 +100,11 @@ function Afficher($liste,$base){
 
 
                 <a href="../index.php" class="text-white font-medium shadow-2xl hover:text-slate-300">à propos</a>
-                <a href="../paiement.php" class="text-white font-medium shadow-2xl  hover:text-slate-300">Vos historiques de courses</a>
+                <a href="paiement.php" class="text-white font-medium shadow-2xl  hover:text-slate-300">Vos historiques de courses</a>
                 <!-- <a href="../index.php" class="text-white font-medium shadow-2xl">à propos</a> -->
 
-                <form action="../deconnection.php">
-                    <input type="submit" class="text-white font-medium shadow-2xl  hover:text-slate-300" name="Deconnexion" value="Deconnexion">Deconnexion</button>
-                </form>
+                <a href="../deconnection.php" class="text-white font-medium shadow-2xl  hover:text-slate-300">Deconnexion</a>
+
             </div>
 
         </div>
@@ -123,8 +124,11 @@ function Afficher($liste,$base){
             <th scope="col h3">Date de Reservation</th>
             <th scope="col h3">Adresse de départ </th>
             <th scope="col h3">Adresse d'arrivé</th>
+            <th scope="col h3">Etat</th>
             <th scope="col h3">Payé</th>
             <th scope="col h3">Facture</th>
+            <th scope="col h3">Avis</th>
+            <th scope="col h3"></th>
       
 
         </tr>
@@ -147,23 +151,31 @@ function Afficher($liste,$base){
           chuffeur.Nom as 'NomChauffeur', 
           client.Nom as 'NomClient', 
           etat.Nom as 'NomEtat',
-          IF(paye.IdEtat = (SELECT Id FROM etat WHERE Nom='Paye') AND lien.IdEtat != (SELECT Id FROM etat WHERE Nom='Annule par chauffeur'), 1, 0) as 'Inpaye'
+          IF(paye.IdEtat = (SELECT Id FROM etat WHERE Nom='Paye') AND lien.IdEtat != (SELECT Id FROM etat WHERE Nom='Annule par chauffeur'), 1, 0) as 'Inpaye',
+          count(paye.Id) as 'Paye'
       FROM course
       INNER JOIN personne chuffeur on course.IdChauffeur = chuffeur.Id
       INNER JOIN personne client on course.IdClient = client.Id
-      LEFT JOIN (SELECT * FROM liencourseetat WHERE IdEtat < (SELECT Id FROM etat WHERE Nom='Paye') ORDER BY IdEtat DESC) lien on course.Id = lien.IdCourse
+      LEFT JOIN (SELECT Id, Date, IdCourse, Max(IdEtat) as 'IdEtat' FROM liencourseetat WHERE IdEtat < (SELECT Id FROM etat WHERE Nom='Paye') GROUP BY IdCourse DESC) lien on course.Id = lien.IdCourse
       LEFT JOIN (SELECT * FROM liencourseetat WHERE IdEtat = (SELECT Id FROM etat WHERE Nom='Paye')) paye on course.Id = paye.IdCourse
       INNER JOIN etat on lien.IdEtat = etat.Id
-      WHERE  course.IdClient= :IdClient
+      WHERE  course.IdClient = :IdClient
       GROUP BY course.Id
       ORDER BY Inpaye ASC";
-          $rq = $base->prepare($query);
-          $rq->bindParam(":IdClient",$_SESSION["Id"]);
+          $rq = $bdd->prepare($query);
+          $Id = (int) $_SESSION['Id'];
+          $rq->bindParam(":IdClient",$Id);
           $rq->execute();
-          $rep = $rq->fetchAll();
-      
 
-        Afficher($rep,$base);
+          $retour = array();
+          while($rep = $rq->fetch()){
+              
+              array_push($retour, $rep);
+          }
+
+
+
+        Afficher($retour,$base);
         ?>
         </tbody>
     </table>

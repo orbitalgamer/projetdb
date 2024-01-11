@@ -195,7 +195,7 @@ class Personne  {
                                                 LEFT JOIN tarification on course.IdTarification = tarification.Id
                                                 INNER JOIN etat on liencourseetat.IdEtat = etat.Id
                                                 WHERE etat.Nom = 'Termine'
-                                                GROUP BY course.IdClient) prix ON personne.Id = course.IdClient
+                                                GROUP BY course.IdClient) prix ON personne.Id = prix.IdClient
                                     LEFT JOIN liencourseetat ON course.Id = liencourseetat.IdCourse
                                     WHERE typepersonne.NomTitre = 'Client'
                                     GROUP BY personne.Id");
@@ -212,7 +212,7 @@ class Personne  {
                                     LEFT JOIN course ON personne.Id = course.IdClient
                                     LEFT JOIN (SELECT course.Id, 
                                                       course.IdClient, 
-                                                      count(tarification.PrixAuKilometre * course.DistanceParcourue) as 'Inpaye' 
+                                                      SUM(tarification.PrixAuKilometre * course.DistanceParcourue) as 'Inpaye' 
                                                 FROM course
                                                 LEFT JOIN  liencourseetat on course.Id = liencourseetat.IdCourse
                                                 LEFT JOIN tarification on course.IdTarification = tarification.Id
@@ -297,12 +297,12 @@ class Personne  {
                                     LEFT JOIN course ON personne.Id = course.IdClient
                                     LEFT JOIN (SELECT course.Id, 
                                                       course.IdClient, 
-                                                      count(tarification.PrixAuKilometre * course.DistanceParcourue) as 'Inpaye' 
+                                                      SUM(tarification.PrixAuKilometre * course.DistanceParcourue) as 'Inpaye' 
                                                 FROM course
                                                 LEFT JOIN  liencourseetat on course.Id = liencourseetat.IdCourse
                                                 LEFT JOIN tarification on course.IdTarification = tarification.Id
-                                                WHERE liencourseetat.IdEtat = 6
-                                                GROUP BY course.IdClient) prix ON personne.Id = course.IdClient
+                                                WHERE liencourseetat.IdEtat = (SELECT Id FROM etat WHERE Nom ='Termine')
+                                                GROUP BY course.IdClient) prix ON personne.Id = prix.IdClient
                                     LEFT JOIN liencourseetat ON course.Id = liencourseetat.IdCourse
                                     WHERE typepersonne.NomTitre = 'Banni'
                                     GROUP BY personne.Id");

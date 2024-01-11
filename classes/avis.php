@@ -221,6 +221,20 @@ class avis
 
     }
 
+    public function MettreAvis(){
+        $req = $this->Bdd->prepare("INSERT INTO avis (Description, Note, IdCourse) VALUE  (:Desc, :Note, :IdC)");
+        $req->bindParam(":Desc", $this->Description);
+        $req->bindParam(":Note", $this->Note);
+        $req->bindParam(':IdC', $this->IdCourse);
+
+        if($req->execute()){
+            return array("succes"=>1);
+        }
+        else{
+            return array("error"=>1);
+        }
+    }
+
 }
 
 ?>

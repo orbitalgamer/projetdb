@@ -54,9 +54,12 @@ if(!empty($_POST)){
 
     }
     if(!empty($_POST['Suppression'])){ //si c'est bien pour supprimer
-        $retour =$voiture->Delete($Id);
-        if($retour == array('succes'=>'1')){
-            header('location: vehicule.php');
+        if($_POST['Suppression'] == "supprimer") {
+            $retour = $voiture->Delete($Id);
+
+            if ($retour == array('succes' => '1')) {
+                header('location: vehicule.php');
+            }
         }
 
     }

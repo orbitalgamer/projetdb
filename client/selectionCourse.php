@@ -63,6 +63,7 @@
         require_once "../classes/bdd.php";
         include_once "../classes/course.php";
         include_once "../classes/personne.php";
+        include_once "../classes/vehicule.php";
         require_once "../classes/adresse.php";
         require_once "info_adresse.php";
         $base = new Bdd();
@@ -84,14 +85,22 @@
    $adresseInitial_Input = isset($_POST["AdresseInitial"]) ? $_POST["AdresseInitial"] : "";
    $adresseFinal_Input = isset($_POST["AdresseFinal"]) ? $_POST["AdresseFinal"] : "";
 
-     $Date_Heure_actuelle = new DateTime(); 
-     $Date_Heure_actuelle = $Date_Heure_actuelle->format("Y-m-d H:i:s");
+
+        $now = new \DateTime("now", new \DateTimeZone('Europe/Paris') );
+     $Date_Heure_actuelle = $now->format("Y-m-d H:i");
+
     $string =
     "<div class='flex flex-col gap-16   w-1/2 h-3/4 border border-5 self-center indent'>
     <h1 class='text-5xl text-center'> Confirmation de votre course </h1>";
 
         if(!empty($_GET['Error'])){
             $string .= "<h2 class='text-3xl text-center text-red-500'> Veuillez encoder correctement les adresse </h2>";
+        }
+        if(!empty($_GET['Errors'])){
+            $string .= "<h2 class='text-3xl text-center text-red-500'> Aucun taxy autonome disponible </h2>";
+        }
+        if(!empty($_GET['Erreur'])){
+            $string .= "<h2 class='text-3xl text-center text-red-500'> Aucun taxy disponible veuillez essayer pour un autre instant </h2>";
         }
 
     $string .= "<form class=' w-3/4 h-96  flex flex-col' action='' method='POST'>
@@ -102,7 +111,7 @@
     <input type='text' class='border border-2 h-24 shadow-inner rounded-lg bg-white' name='AdresseFinal'
         value='$adresseFinal_Input' placeholder='Numéro rue, ville code postal' required>
     <label for='dateReservation' class='text-lg underline underline-offset-1'>Date/Heure de réservation</label>
-    <input type='datetime' class='border border-2 h-24 shadow-inner rounded-lg bg-white'
+    <input type='datetime-local' class='border border-2 h-24 shadow-inner rounded-lg bg-white'
         value='$Date_Heure_actuelle' name='dateReservation' required>
         
         <div class='flex flex-row gap-5'>
@@ -215,8 +224,8 @@ if(!empty($adresseInitial_Input) && !empty($adresseFinal_Input)){
  
    // Initialisation de toutes ces caractéristiques
    if(isset($_POST["dateReservation"])){
-    $Date_Heure_actuelle = $_POST["dateReservation"];
-    $Date_Heure_actuelle = new DateTime($Date_Heure_actuelle);   
+
+    $Date_Heure_actuelle = date("Y-m-d H:i:s" ,strtotime($_POST['dateReservation']));
     }
     else
     {
@@ -230,19 +239,23 @@ if(!empty($adresseInitial_Input) && !empty($adresseFinal_Input)){
    
 
 
-   $CourseToReturn->DateReservation = date("Y-m-d H:i:s");
+   $CourseToReturn->DateReservation = $Date_Heure_actuelle;
    // $CourseToReturn->Payee = 0;
     //var_dump($array_data_initial);
    $CourseToReturn->IdAdresseDepart = $array_data_initial["Id"];
    $CourseToReturn->IdAdresseFin= $array_data_final["Id"];
    $CourseToReturn->DistanceParcourue = $array_distance_time_latitude_longitude["total_distance"];
    $CourseToReturn->IdClient = $_SESSION["Id"]; //L'information provient de l'objet client se trouvant en parametre qui est le user qui commande la course;
-   $CourseToReturn->IdTarification = 7;
+    $vehicule = new vehicule();
+    $allVehicule = $vehicule->GetAll();
+    $index = array_rand($allVehicule);
+
+   $CourseToReturn->IdTarification = (int) $vehicule->GetAllPrix($allVehicule[$index]['PlaqueVoiture'])[0]['Id']; //pour prend des véhicule differnt pas du tout suffisant
    $CourseToReturn->IdMajoration = 2;
    $CourseToReturn->duree = $array_distance_time_latitude_longitude["total_time"];
 
 
-   $Info_array_course = $CourseToReturn->selectionLastCourse();
+
    
    
    
@@ -258,35 +271,53 @@ if(!empty($adresseInitial_Input) && !empty($adresseFinal_Input)){
     $rq = $base->prepare($query);
     $rq->execute();
     $rep=$rq->fetchAll(PDO::FETCH_ASSOC);
+        for($i=0;$i < count($rep);$i++)
+            {
 
-   
-    for($i=0;$i < count($rep);$i++)
-    {
-     
-     $IdChauffeur = $rep[$i]["Id"];
-    
-     $value = $CourseToReturn->Verification_disponibilite($CourseToReturn,$IdChauffeur);
-     if($value){
-         $number_free_chauffeur_autonome++;
-         
-     }
-     //echo $value;
- }
+                $CourseToReturn->IdChauffeur = $rep[$i]["Id"];
+
+             $value = $CourseToReturn->Verification_disponibilite($CourseToReturn,$CourseToReturn->IdChauffeur);
+             if($value){
+
+                 if($CourseToReturn->creation() != array("error"=>1)) {//Fonction qui fait la requete SQL (INSERT INTO ...) permettant de créer l'objet $CourseToReturn;
+
+                     $Info_array_course = $CourseToReturn->selectionLastCourse(); //récupère id
+
+                     $idEtat = 1;
+                     $id = $Info_array_course["Id"];
+                     $_SESSION["IdCourse"] = $id;
+                     $DateReservation = $Info_array_course['DateReservation'];
+                     $DateReservation = new DateTime($DateReservation);
+                     $DateReservation = $DateReservation->format("Y-m-d H:i:s");
+
+
+                     $query = "INSERT INTO liencourseetat (Id,Date,IdCourse,idEtat) VALUES (NULL,'$DateReservation','$id','$idEtat')";
+                     $rq = $base->prepare($query);
+                     $rq->execute();
+                     $rep = $rq->fetch(PDO::FETCH_ASSOC);
+
+                     $CourseToReturn->NotifyCourseCreer();
+
+
+                     header("Location:CourseCommande.php");
+                     break;
+                 }
+                 else{
+                     header('location: selectionCourse.php?Erreur=0');
+                 }
+             }
+             //echo $value;
+        }
+        header('location: selectionCourse.php?Errors=1');
+
     }
+
    }
 
 
 
 
-   $idEtat = 1;
-   $id=$Info_array_course["Id"];
-   $_SESSION["IdCourse"] = $id;
-   //var_dump($Info_array_course);
-   echo "IDCOURSE  : ";
-   echo $id;
-   $DateReservation = $Info_array_course['DateReservation'];
-   $DateReservation = new DateTime($DateReservation);
-   $DateReservation = $DateReservation->format("Y-m-d H:i:s");
+
    $query = "SELECT id FROM personne WHERE idStatus = '2'";
    $rq = $base->prepare($query);
    $rq->execute(); 
@@ -305,29 +336,49 @@ if(!empty($adresseInitial_Input) && !empty($adresseFinal_Input)){
    
     $value = $CourseToReturn->Verification_disponibilite($CourseToReturn,$IdChauffeur);
     if($value){
-        $number_free_chauffeur++;
+
+        $CourseToReturn->IdChauffeur = -1;
+        //var_dump($CourseToReturn);
+        if($CourseToReturn->creation() != array("error"=>1)) {//Fonction qui fait la requete SQL (INSERT INTO ...) permettant de créer l'objet $CourseToReturn;
+
+            $Info_array_course = $CourseToReturn->selectionLastCourse(); //récupère id
+
+
+            $idEtat = 1;
+            $id = $Info_array_course["Id"];
+            $_SESSION["IdCourse"] = $id;
+            //var_dump($Info_array_course);
+            echo "IDCOURSE  : ";
+            echo $id;
+            $DateReservation = $Info_array_course['DateReservation'];
+            $DateReservation = new DateTime($DateReservation);
+            $DateReservation = $DateReservation->format("Y-m-d H:i:s");
+
+
+            $query = "INSERT INTO liencourseetat (Id,Date,IdCourse,idEtat) VALUES (NULL,'$DateReservation','$id','$idEtat')";
+            $rq = $base->prepare($query);
+            $rq->execute();
+            $rep = $rq->fetch(PDO::FETCH_ASSOC);
+
+            $CourseToReturn->NotifyCourseCreer();
+
+
+            header("Location:CourseCommande.php");
+            exit;
+        }
+        else{
+            header("Location:selectionCourse.php?Erreur");
+        }
         
     }
-    $CourseToReturn->IdChauffeur = $rep[0]["id"];
-}
 
-$CourseToReturn->creation();//Fonction qui fait la requete SQL (INSERT INTO ...) permettant de créer l'objet $CourseToReturn;
+    }
 
-
-
-
+   if($number_free_chauffeur == 0){
+       header('location: selectionCourse.php?Erreur=1');
+   }
 
 
-   $query = "INSERT INTO liencourseetat (Id,Date,IdCourse,idEtat) VALUES (NULL,'$DateReservation','$id','$idEtat')";
-   $rq = $base->prepare($query);
-   $rq->execute();
-   $rep=$rq->fetch(PDO::FETCH_ASSOC);
-
-    $CourseToReturn->NotifyCourseCreer();
-
-
-   header("Location:CourseCommande.php");
-   exit;
  
 
 

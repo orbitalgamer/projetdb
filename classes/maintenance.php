@@ -39,7 +39,7 @@ class Maitenance
 
     public function Insert($IdProbleme){
         if(!empty($this->DateDebut) && !empty($this->DateFin) && !empty($this->Description)){
-            if($this->DateDebut < $this->DateFin){
+            if($this->DateDebut <= $this->DateFin){
                 //verifier pas que ajoute 2 fois là même cause d'un F5
                 $req = $this->Bdd->prepare("SELECT Id FROM maintenance WHERE 
                                    DateDebut =:DateDebut AND 
@@ -52,7 +52,8 @@ class Maitenance
                 $req->bindParam(':IdProblem', $IdProbleme);
                 $req->execute();
 
-                if(!$rep=$req->fetch()) { //si existe pas
+                if(!$req->fetch()) { //si existe pas
+
                     $req = $this->Bdd->prepare('INSERT INTO maintenance 
                                                     (Description, DateDebut, DateFin, IdProbleme) 
                                                     VALUES (:Description, :DateDebut, :DateFin, :IdProblem) ');
