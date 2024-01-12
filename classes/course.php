@@ -553,16 +553,18 @@ public function AbandonChauffeur($Id){
                                         chauffeur.Nom as "NomChauffeur", 
                                         client.Nom as "NomClient", 
                                         
-                                        course.DateReservation
+                                        course.DateReservation,
+                                        etats.IdEtat
                                 FROM course
                                 
                                 
                                 INNER JOIN personne chauffeur on course.IdChauffeur = chauffeur.Id
                                 INNER JOIN personne client on course.IdClient = client.Id
                                 INNER JOIN tarification on course.IdTarification = tarification.Id
+                                LEFT JOIN (SELECT MAX(IdEtat) as "IdEtat", IdCourse FROM liencourseetat GROUP BY IdCourse) etats on etats.IdCourse = course.Id
                                 
-                                WHERE DateReservation > CURRENT_TIMESTAMP
-                                GROUP BY tarification.PlaqueVehicule');
+                                WHERE DateReservation > CURRENT_TIMESTAMP AND etats.IdEtat < (SELECT Id FROM etat WHERE etat.Nom = "En cours")
+                                GROUP BY course.Id');
         $retour = array();
         while($rep = $req->fetch()){
             array_push($retour, $rep);
