@@ -156,7 +156,7 @@ function Afficher($liste,$base){
       FROM course
       INNER JOIN personne chuffeur on course.IdChauffeur = chuffeur.Id
       INNER JOIN personne client on course.IdClient = client.Id
-      LEFT JOIN (SELECT Id, Date, IdCourse, Max(IdEtat) as 'IdEtat' FROM liencourseetat WHERE IdEtat < (SELECT Id FROM etat WHERE Nom='Paye') GROUP BY IdCourse DESC) lien on course.Id = lien.IdCourse
+      LEFT JOIN (SELECT Id, Date, IdCourse, Max(IdEtat) as 'IdEtat' FROM liencourseetat WHERE IdEtat < (SELECT Id FROM etat WHERE Nom='Paye') GROUP BY IdCourse) lien on course.Id = lien.IdCourse
       LEFT JOIN (SELECT * FROM liencourseetat WHERE IdEtat = (SELECT Id FROM etat WHERE Nom='Paye')) paye on course.Id = paye.IdCourse
       INNER JOIN etat on lien.IdEtat = etat.Id
       WHERE  course.IdClient = :IdClient

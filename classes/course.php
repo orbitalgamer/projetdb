@@ -1082,8 +1082,8 @@ public function loadcourse($Idcourse){
 
         //notifier client
         $Dest = $info['EmailClient'];
-        $Titre = utf8_decode("[info] taxeasy course du ").date('d-m-y', (int) $info['DateDebut']);
-        $Message = utf8_decode("Nous vous confirmons qu'un chauffeur pourra bien être présent pour votre course du ").date('d-m-y', (int) $info['DateDebut']);
+        $Titre = utf8_decode("[info] taxeasy course du ").date('d-m-y', strtotime($info['DateDebut']));
+        $Message = utf8_decode("Nous vous confirmons qu'un chauffeur pourra bien être présent pour votre course du ").date('d-m-y', strtotime($info['DateDebut']));
         $mail->SendMail($Dest, $Titre, $Message);
 
         //notifier gestionnaire
@@ -1091,7 +1091,7 @@ public function loadcourse($Idcourse){
         $admin = $pers->GetAdmin();
         foreach($admin as $elem){
             $Dest = $elem['Email'];
-            $Titre = utf8_decode("[info reservation] course # ").$IdCourse.utf8_decode("sera effectué par ").$info['NomChauffeur'];
+            $Titre = utf8_decode("[info réservation] course #").$IdCourse.utf8_decode(" sera effectuée par ").$info['NomChauffeur'];
             $mail->SendMail($Dest, $Titre, $Titre);
         }
     }
@@ -1106,8 +1106,8 @@ public function loadcourse($Idcourse){
 
         //notifier client
         $Dest = $client['Email'];
-        $Titre = utf8_decode("[Nouvelle] taxeasy course du ").date('d-m-y', (int) $this->DateReservation);
-        $Message = utf8_decode("Nous vous remercions d'avoir choisir nos service pour votre course du ").date('d-m-y',(int) $this->DateReservation);
+        $Titre = utf8_decode("[Nouvelle] taxeasy course du ").date('d-m-y', strtotime($this->DateReservation));
+        $Message = utf8_decode("Nous vous remercions d'avoir choisis nos service pour votre course du ").date('d-m-y', strtotime($this->DateReservation));
         $mail->SendMail($Dest, $Titre, $Message);
 
         //notifier gestionnaire
@@ -1115,9 +1115,10 @@ public function loadcourse($Idcourse){
         $admin = $pers->GetAdmin();
         foreach($admin as $elem){
             $Dest = $elem['Email'];
-            $Titre = utf8_decode("[new reservation] course du ").date('d-m-y', (int) $this->DateReservation);
+            $Titre = utf8_decode("[new réservation] course du ").date('d-m-y', strtotime($this->DateReservation));
             $mail->SendMail($Dest, $Titre, $Titre);
         }
+
     }
 
     public function NotifyCourseDecline($IdCourse){
@@ -1126,8 +1127,8 @@ public function loadcourse($Idcourse){
 
         //notifier client
         $Dest = $info['EmailClient'];
-        $Titre = utf8_decode("[info] taxeasy course du ").date('d-m-y',(int) $info['DateDebut']);
-        $Message = utf8_decode("Nous avons la malheure de vous annoncer que la course que vous avez comandé pour le ").date('d-m-y', (int) $info['DateDebut']).utf8_decode(" sera remplie. Nous mettons tous en oeuvre pour trouver une solutions");
+        $Titre = utf8_decode("[info] taxeasy course du ").date('d-m-y', strtotime($info['DateDebut']));
+        $Message = utf8_decode("Nous avons la malheure de vous annoncer que la course que vous avez comandé pour le ").date('d-m-y', strtotime($info['DateDebut'])).utf8_decode(" sera remplie. Nous mettons tous en oeuvre pour trouver une solutions");
         $mail->SendMail($Dest, $Titre, $Message);
 
         //notifier gestionnaire
@@ -1135,7 +1136,7 @@ public function loadcourse($Idcourse){
         $admin = $pers->GetAdmin();
         foreach($admin as $elem){
             $Dest = $elem['Email'];
-            $Titre = utf8_decode("[info reservation] course # ").$IdCourse.utf8_decode(" abandonner par ").$info['NomChauffeur'];
+            $Titre = utf8_decode("[info réservation] course #").$IdCourse.utf8_decode(" abandonner par ").$info['NomChauffeur'];
             $mail->SendMail($Dest, $Titre, $Titre);
         }
     }
@@ -1151,8 +1152,8 @@ public function loadcourse($Idcourse){
 
         //notifier client
         $Dest = $client['EmailClient'];
-        $Titre = utf8_decode("[info] taxeasy course du ").date('d-m-y',(int)$this->DateReservation);
-        $Message = utf8_decode("Nous vous remercions d'avoir travailler avec nous pour votre dernière course");
+        $Titre = utf8_decode("[info] taxeasy course du ").date('d-m-y',strtotime($this->DateReservation));
+        $Message = utf8_decode("Nous vous remercions d'avoir travaillé avec nous pour votre dernière course");
         $mail->SendMail($Dest, $Titre, $Message);
 
         //notifier gestionnaire
@@ -1160,7 +1161,7 @@ public function loadcourse($Idcourse){
         $admin = $pers->GetAdmin();
         foreach($admin as $elem){
             $Dest = $elem['Email'];
-            $Titre = utf8_decode("[info coures] course du ").date('d-m-y',(int)$this->DateReservation).utf8_decode(" terminé");
+            $Titre = utf8_decode("[info coures] course du ").date('d-m-y',strtotime($this->DateReservation)).utf8_decode(" terminée");
             $mail->SendMail($Dest, $Titre, $Titre);
         }
     }
