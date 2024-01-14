@@ -1152,7 +1152,7 @@ public function loadcourse($Idcourse){
 
         //notifier client
         $Dest = $client['EmailClient'];
-        $Titre = utf8_decode("[info] taxeasy course du ").date('d-m-y',strtotime($this->DateReservation));
+        $Titre = utf8_decode("[info] taxeasy course du ").date('d-m-y',strtotime($client['DateDebut']));
         $Message = utf8_decode("Nous vous remercions d'avoir travaillé avec nous pour votre dernière course");
         $mail->SendMail($Dest, $Titre, $Message);
 
@@ -1161,7 +1161,7 @@ public function loadcourse($Idcourse){
         $admin = $pers->GetAdmin();
         foreach($admin as $elem){
             $Dest = $elem['Email'];
-            $Titre = utf8_decode("[info coures] course du ").date('d-m-y',strtotime($this->DateReservation)).utf8_decode(" terminée");
+            $Titre = utf8_decode("[info coures] course du ").date('d-m-y',strtotime($client['DateDebut'])).utf8_decode(" terminée");
             $mail->SendMail($Dest, $Titre, $Titre);
         }
     }
